@@ -6,7 +6,7 @@ This repository is to share and store data files from project 111160402: Cultura
 ## How to use it (on linux)
 
 1. install [R](https://www.r-project.org/) and/or [RStudio](https://www.rstudio.com/)
-1. clone the repo
+1. clone the repo (or do a `git pull` if you cloned it already)
 ```
 git clone https://github.com/nmontalva/ccaa-surnames.git
 ```
@@ -14,12 +14,14 @@ git clone https://github.com/nmontalva/ccaa-surnames.git
 ```
 $ cd ccaa-surnames/bienes-raices_2017
 ```
-3. install the dependencies for this project and download [tabula](https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar) on the `bienes-raices_2017` folder
+3. install the dependencies for this project and download [tabula](https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar) on the `bienes-raices_2017` folder (you'll need `gcc-fortran` to compile `tidyverse` and `tk` to use `install.packages` in the R console)
 ```
-$ wget https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar
+$ wget https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar # optional (you can download it from the browser too)
 $ R
 > install.packages("tidyverse")
 > install.packages("rvest")
+> install.packages("ghit")
+> ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"))
 ```
 4. run the first script
 ```
