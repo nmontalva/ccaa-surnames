@@ -21,27 +21,6 @@ getPDFUrls <- function(nominasUrl) {
   unlist(map(curls, getChildUrls))
 }
 
-# basename <- function(url)
-#   url %>% str_split("/") %>% .[[1]] %>% tail(1)
-# 
-# # pdfnames <- map(pdfs, basename)
-# download <- function(url) {
-#   bn <- basename(url)
-#   # fn <- function(i) {
-#   #   fname <- if (i == 1) bn else
-#   #     bn %>% str_split("\\.") %>% .[[1]] %>%
-#   #       c(str_c("-", i, ".")) %>% .[c(1,3,2)] %>%
-#   #       str_c(collapse="")
-#   #   if (file.exists(fname)) fn(i+1)
-#   #   else fname
-#   # }
-#   # fname <- fn(1)
-#   comuna <- url %>% str_split("/") %>% .[[1]] %>%
-#     .[(length(.)-1)] # tail(2) %>% head(1)
-#   fname <- str_c("pdfs/", comuna, "-", bn)
-#   download.file(url, fname, mode="wb")
-# }
-
 typosFn <- "typos.csv"
 typoMap <- function(filename) {
   tbl <- read_csv(filename, col_types = "cc")
@@ -90,6 +69,7 @@ main <- function() {
   pdfs <- getPDFUrls(nominasUrl)
   typos <- typoMap(typosFn)
   infoTbl <- infoTable(pdfs, typos)
+  dir.create("pdfs", showWarnings=FALSE)
   download(infoTbl)
   infoTbl %>% select(-last_year) %>%
     write_csv("info.csv")
