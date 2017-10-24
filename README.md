@@ -3,6 +3,40 @@
 ## What is this?
 This repository is to share and store data files from project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.
 
+## How to use it (on linux)
+
+1. install [R](https://www.r-project.org/) and/or [RStudio](https://www.rstudio.com/)
+1. clone the repo
+```
+git clone https://github.com/nmontalva/ccaa-surnames.git
+```
+2. go to the `bienes-raices_2017` folder
+```
+$ cd ccaa-surnames/bienes-raices_2017
+```
+3. install the dependencies for this project and download [tabula](https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar) on the `bienes-raices_2017` folder
+```
+$ wget https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-1.0.1-jar-with-dependencies.jar
+$ R
+> install.packages("tidyverse")
+> install.packages("rvest")
+```
+4. run the first script
+```
+$ R
+> source('download-pdfs.R')
+> main()
+```
+5. this downloads all the most recent pdf files from the [OTCA](http://www.comunidadesagricolas.cl/) in a folder `pdfs`
+6. run the second R script
+```
+$ R
+> source('extract-pdfs.R')
+> df <- main()
+```
+7. all information from the pdf files is stored in data frame `df` and saved in csv file `comuneros.csv`
+8. run analyses
+
 ## Abstract
 
 Cultural norms of wealth inheritance and property rights are regarded as important mechanisms in the emergence of inequality and social conflict. Cross-cultural analyses and case-studies in the anthropological literature on the subject suggest a relationship between subsistence patterns, ecological and economic conditions faced by the societies and the characteristics of wealth and property exhibited by different groups. The main aim of this project is to better understand this relationship in the Agricultural Communities of the Coquimbo region, considered here as an advantageous study model due to their agropastoralist subsistence pattern, their system of communal land tenure, and the impact of unstable economic and ecological conditions in their livelihood.
