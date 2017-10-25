@@ -434,10 +434,22 @@ fix_repeated <- function(df) {
 # fix_surnames <- function(df) {
 #   w <- which(df$surname == "")
 # }
-# 
-# surname_set <- function(df) {
-#   w <- which(df$surname == "")
-# }
+
+words_in_col <- function(df, col, ind) {
+  df[[col]][ind] %>%
+    str_split("[ ]+") %>%
+    unlist %>%
+    unique %>%
+    sort
+}
+
+firstname_set <- function(df) {
+  words_in_col(df, "firstname", which(df$surname != ""))
+}
+
+surname_set <- function(df) {
+  words_in_col(df, "surname", which(df$surname != ""))
+}
 
 check_table <- function(df) {
   all(df$comunidad != "") &&
