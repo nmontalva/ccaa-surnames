@@ -5,12 +5,6 @@ library(tabulizer)
 
 on <- function(f, x) { f(x); x }
 view <- function(x) on(View, x)
-# n <- 0
-# printn <- function(x) {
-#   n <- n + 1
-#   cat(n, ": ")
-#   print(x)
-# }
 
 # read.csv(..., fill=TRUE) doesn't work!
 my_read_csv <- function(filename, ncol=5) {
@@ -63,40 +57,6 @@ num_shares <- function(s, fname) {
   }
 }
 
-# is.complete <- function(df, fname) {
-#   check_ids <- function(col, i, j, maybe_bigger) {
-#     if (i >= length(col)) TRUE
-#     else {
-#       jc <- as.character(j)
-#       if (col[[i]] == jc)
-#         check_ids(col, i+1, j+1, FALSE)
-#       else if (startsWith(col[[i]], jc))
-#         check_ids(col, i+1, j, TRUE)
-#       else if (maybe_bigger) {
-#         jc <- as.character(j+1)
-#         if (col[[i]] == jc)
-#           check_ids(col, i+1, j+2, FALSE)
-#         else if (startsWith(col[[i]], jc))
-#           check_ids(col, i+1, j+1, TRUE)
-#         else {
-#           warning(str_interp(
-#             c("expecting \"${jc}\" at row ${i} ",
-#               "but found \"${col[[i]]}\" ",
-#               "in file \"${fname}\"")))
-#           FALSE
-#         }
-#       } else {
-#         warning(str_interp(
-#           c("expecting \"${jc}\" at row ${i} ",
-#             "but found \"${col[[i]]}\" ",
-#             "in file \"${fname}\"")))
-#         FALSE
-#       }
-#     }
-#   }
-#   check_ids(df$right_id, 1, 1, FALSE)
-# }
-
 is.complete <- function(df, fname, flexible=TRUE) {
   check_ids <- function(col, i, j) {
     if (i >= length(col)) TRUE
@@ -107,12 +67,6 @@ is.complete <- function(df, fname, flexible=TRUE) {
     else if (flexible && col[[i]] == as.character(j+2))
       check_ids(col, i+1, j+2)
     else FALSE
-    #   warning(str_interp(
-    #     c("expecting \"${j}\" or \"${j+1}\" ",
-    #       "at row ${i} but found \"${col[[i]]}\" ",
-    #       "in file \"${fname}\"")))
-    #   FALSE
-    # }
   }
   length(df) == 5 && !is_empty(df) &&
     if (str_detect(fname, "limari-2010-oruro"))
@@ -123,7 +77,7 @@ is.complete <- function(df, fname, flexible=TRUE) {
       check_ids(df$right_id, 1, 1)
 }
 
-communityTable <- function(m, fname) {
+community_table <- function(m, fname) {
   if (is_empty(m) || ncol(m) != 5)
     return(NULL)
   tibble(comunidad=m[,1],
@@ -139,12 +93,12 @@ tidy <- function(df) {
   if (!is.data.frame(df) || is_empty(df))
     return(NULL)
   df %>%
-    filter(right_id != "") %>% # firstname != "ELIMINADO") %>%
+    filter(right_id != "") %>%
     mutate(right_id=as.integer(right_id)) %>%
     arrange(right_id)
 }
 
-formatTable <- function(m, filename) {
+format_table <- function(m, filename) {
   if (str_detect(filename, "totoralillo")) {
     m <- m[,-c(1,2)]
     m[,1] <- rep("TOTORALILLO", nrow(m))
@@ -154,34 +108,17 @@ formatTable <- function(m, filename) {
     m <- cbind(rep("LOS CLONQUIS", nrow(m)-1), m[-1,1:4])
   else if (str_detect(filename, "los_morales"))
     m <- cbind(rep("LOS MORALES", nrow(m)-1), m[-1,1:4])
-  # else if (str_detect(filename, "peral_ojo_de_agua"))
-  #   m <- cbind(rep("PERAL OJO DE AGUA", nrow(m)-1), m[-1,])
   else if (str_detect(filename, "diaz_y_ocaranza"))
     m[,1] <- rep("DIAZ Y OCARANZA", nrow(m))
-    # m <- cbind(rep("DIAZ Y OCARANZA", nrow(m)), m)
   else if (str_detect(filename, "atelcura|carrizo"))
     m <- cbind(m[,1:4], rep("UN DERECHO", nrow(m)))
   for (i in c(1,2,3)) {
-    if (nrow(m) >= i && endsWith(m[i,2], "NOMBRES")) {
-      # x <- m[,2]
-      # ids <- str_replace(x, "^0*([0-9]*).*$", "\\1")
-      # nms <- str_replace(x, "^([0-9]*)[^ ]* ", "")
-      # if (ncol(m) == 5) {
-      #   m[,2] <- ids
-      #   m[,3] <- nms
-      # } else if (ncol(m) == 4) {
-      #   m <- cbind(m[,1], ids, nms, m[,3:4])
-      # } else
-      #   warning("table has ", ncol(m), " columns")
+    if (nrow(m) >= i && endsWith(m[i,2], "NOMBRES"))
       m <- m[-(1:i),]
-      # return(m)
-    }
   }
   for (i in c(1,2,3)) {
-    if (nrow(m) >= i && startsWith(m[i,3], "NOMBRES")) {
+    if (nrow(m) >= i && startsWith(m[i,3], "NOMBRES"))
       m <- m[-(1:i),]
-      # return(m)
-    }
   }
   if (ncol(m) == 5 &&
       any(str_detect(m[,2], "^[0-9].* [A-Z][A-Z]+"))) {
@@ -195,8 +132,6 @@ formatTable <- function(m, filename) {
           m[w,j] <- m[w,j-1]
         }
     }
-    # m[w,5] <- m[w,4]
-    # m[w,4] <- m[w,3]
     m[w,3] <- nms
     m[w,2] <- ids
   }
@@ -230,18 +165,6 @@ formatTable <- function(m, filename) {
     } else
       m[,5][w] <- t[,3][w]
   }
-  # if (m[1,3] == "NOMBRES")
-  #   m <- m[-1,]
-  # else if (nrow(m) >= 2 && m[2,3] == "NOMBRES")
-  #   m <- m[-c(1,2),]
-  # else if (nrow(m) >= 3 && m[3,3] == "NOMBRES")
-  #   m <- m[-c(1,2,3),]
-  # if (m[1,5] == "DERECHOS")
-  #   m <- m[-1,]
-  # else if (nrow(m) >= 2 && m[2,5] == "DERECHOS")
-  #   m <- m[-c(1,2),]
-  # else if (nrow(m) >= 3 && m[3,5] == "DERECHOS")
-  #   m <- m[-c(1,2,3),]
   m
 }
 
@@ -277,14 +200,13 @@ read_pdf_tabulizer <- function(filename) {
       warning("error executing tabulizer::extract_tables(\"",
               filename, "\"): ", e)
     })
-  if (is.character(tbls)) tbls # tbls contains the warning
+  if (is.character(tbls)) tbls # when tbls contains the warning
   else if (length(tbls) > 0) {
     tbls %>% map_dfr(function(m) {
-      m %>% formatTable(filename) %>%
-        communityTable(filename)
+      m %>% format_table(filename) %>%
+        community_table(filename)
     }) %>% tidy
   } else NULL
-    # warning(str_interp("\"${filename}\" has a weird format"))
 }
 
 read_pdf_tabula <- function(filename) {
@@ -293,23 +215,9 @@ read_pdf_tabula <- function(filename) {
     system(str_interp(
       c("java -jar tabula-1.0.1-jar-with-dependencies.jar ",
         "${filename} -o ${basename}.csv -p all")))
-  # m <- read.csv(str_c(basename, ".csv"),
-  #               header=FALSE,
-  #               stringsAsFactors=FALSE)
-  # m <- read_csv(str_c(basename, ".csv"),
-  #               col_names=c("X1","X2","X3","X4","X5"),
-  #               col_types="ccccc", na=character()) %>% as.matrix
   m <- my_read_csv(str_c(basename, ".csv"))
-  m %>% formatTable(filename) %>%
-    communityTable(filename) %>% tidy
-  # if (nrow(m) == 0)
-  #   warning("\"", filename, "\" is empty")
-  # else if (ncol(m) != 5) NULL
-  #   # warning("\"", filename, "\" contains ",
-  #   #         ncol(m), " instead of 5 columns")
-  # else {
-  #   m %>% formatTable %>% communityTable(filename) %>% tidy
-  # }
+  m %>% format_table(filename) %>%
+    community_table(filename) %>% tidy
 }
 
 read_pdf_pdftohtml <- function(filename) {
@@ -359,34 +267,6 @@ remove_nonpeople <- function(df) {
 }
 
 fix_shares <- function(df) {
-  # fix <- function(df, i, j) {
-  #   if (j < i) stop(j, " < ", i, "!")
-  #   if (sum(df$shares[i:j]) != df$shares[[i]])
-  #     stop("sum(df$shares[", i, ":", j, "]) == ",
-  #          sum(df$shares[i:j]), " != ", df$shares[[i]],
-  #          " == df$shares[[", i, "]]")
-  #   df$shares[i:j] <- df$shares[[i]] / (j-i+1)
-  #   df
-  # }
-  # by_row <- function(df, i, last=NA, from=NA) {
-  #   if (i >= nrow(df)) return(df)
-  #   else if (is.na(last) ||
-  #            df$comunidad[[last]] != df$comunidad[[i]]) {
-  #     if (df$shares[[i]] == 0)
-  #       stop("community \"", df$comunidad[[i]],
-  #            "\" starts with commoner with zero shares")
-  #     if (!is.na(from))
-  #       df <- fix(df, from, i-1)
-  #     from <- NA
-  #   } else if (is.na(from) && df$shares[[i]] == 0) {
-  #     from <- last
-  #   } else if (!is.na(from) && df$shares[[i]] > 0) {
-  #     df <- fix(df, from, i-1)
-  #     from <- NA
-  #   }
-  #   by_row(df, i+1, i, from)
-  # }
-  # by_row(df, 1)
   check <- function(i, j) {
     if (j < i) stop(j, " < ", i, "!")
     if (sum(df$shares[i:j]) != df$shares[[i]])
@@ -406,7 +286,6 @@ fix_shares <- function(df) {
       if (!is.na(from)) {
         check(from, i-1)
         df$shares[from:i-1] <- df$shares[[from]] / (i-from)
-        # df <- fix(df, from, i-1)
       }
       from <- NA
     } else if (is.na(from) && df$shares[[i]] == 0) {
@@ -414,7 +293,6 @@ fix_shares <- function(df) {
     } else if (!is.na(from) && df$shares[[i]] > 0) {
       check(from, i-1)
       df$shares[from:i-1] <- df$shares[[from]] / (i-from)
-      # df <- fix(df, from, i-1)
       from <- NA
     }
     last <- i
