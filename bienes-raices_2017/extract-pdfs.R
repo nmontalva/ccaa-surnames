@@ -1,4 +1,5 @@
 library(stringr)
+library(stringi)
 library(tidyverse)
 library(tabulizer)
 
@@ -341,6 +342,18 @@ read_community_csv <- function(filename) {
            col_types = "ciccd")
 }
 
+remove_accents <- function(df) {
+  for (col in c("comunidad", "firstname", "surname")) {
+    if (any(str_detect(df[[col]], "_")))
+      stop("\"_\" found in column \"", col,"\"")
+    df[[col]] <- df[[col]] %>%
+      str_replace_all("Ñ", "_") %>%
+      stri_trans_general("latin-ascii") %>%
+      str_replace_all("_", "Ñ")
+  }
+  df
+}
+
 remove_nonpeople <- function(df) {
   df %>% filter(firstname != "ELIMINADO")
 }
@@ -441,12 +454,15 @@ comuneros <- function() {
   files <- files[!str_detect(files, skipr)]
   rbind(
     files[1] %>% map_dfr(~read_pdf(print(.))),
-    manually_extracted_csvs %>% map_dfr(read_community_csv),
+    manually_extracted_csvs %>%
+      map_dfr(~read_community_csv(print(.))) %>%
+      mutate_if(is.character, ~str_replace_na(., "")),
     stringsAsFactors=FALSE)
 }
 
 main <- function() {
   comuneros() %>%
+    remove_accents %>%
     remove_nonpeople %>%
     fix_shares %>%
     fix_repeated %>%
