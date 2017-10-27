@@ -509,6 +509,42 @@ add_commune <- function(df) {
             by="community")
 }
 
+get <- function(v, i, default=NA) {
+  if (i <= length(v)) v[[i]]
+  else default
+}
+
+split_names <- function(df, col, fst, snd) {
+  names <- str_split(df[[col]], " +")
+  df[[fst]] <- map_chr(names, ~get(., 1, ""))
+  df[[snd]] <- map_chr(names, ~get(., 2, ""))
+  df
+}
+
+split_surnames <- function(df)
+  split_names(df, "surname",
+              "surname_father",
+              "surname_mother")
+
+split_firstnames <- function(df)
+  split_names(df, "firstname",
+              "firstname1",
+              "firstname2")
+
+assign_sex <- function(df) {
+  df$sex <- rep("A", n=nrow(df))
+  b1 <- endsWith(df$firstname1, "A")
+  df$sex[b1] <- "F"
+  b2 <- endsWith(df$firstname1, "O")
+  df$sex[b2] <- "M"
+  b3 <- !b1 & !b2
+  b4 <- endsWith(df$firstname2[b3], "A")
+  df$sex[b3][b4] <- "F"
+  b5 <- endsWith(df$firstname2[b3], "O")
+  df$sex[b3][b5] <- "M"
+  df
+}
+
 read_pdfs <- function() {
   files <- list.files(path="pdfs", pattern="\\.pdf$",
                       full.names=TRUE)
@@ -591,5 +627,8 @@ extract_pdfs <- function(commoners_df) {
     fix_shares %>%
     fix_repeated %>%
     add_commune %>%
+    split_firstnames %>%
+    split_surnames %>%
+    assign_sex %>%
     write_csv("commoners.csv")
 }
