@@ -480,13 +480,13 @@ fix_shares <- function(df) {
 
 fix_repeated <- function(df) {
   df %>%
-    mutate(i=row_number()) %>%
+    mutate(i = row_number()) %>%
     group_by(community, firstname, surname) %>%
     summarise(right_id = first(right_id),
               shares = sum(shares),
               i = first(i)) %>%
     arrange(i) %>% # reorder rows
-    .[,col_names] # reorder columns
+    .[,col_names] # reorder columns and get rid of "i"
 }
 
 check_table <- function(df) {

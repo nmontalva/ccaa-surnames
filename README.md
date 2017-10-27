@@ -40,7 +40,6 @@ $ R
 5. this downloads all the most recent pdf files from the [OTCA](http://www.comunidadesagricolas.cl/) in a folder `pdfs`
 6. run the second R script
 ```r
-$ R
 > source('extract-pdfs.R')
 > df <- extract_pdfs(read_pdfs())
 ```
@@ -49,9 +48,8 @@ $ R
 ### Run the analysis
 
 ```r
-$ R
 > source('analysis.R')
-> dendrogram <- ...
+> dendrogram(df)
 ```
 
 
