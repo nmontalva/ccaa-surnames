@@ -15,14 +15,6 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccdccccc")
 }
 
-# frequencies <- function(df, col="surname_father") {
-#   df %>%
-#     # group_by_(col, "community") %>%
-#     group_by_("community", col) %>%
-#     summarise(freq=n()) %>%
-#     arrange(community)
-# }
-
 dendrogram <- function(df) {
   # cross tabulate
   surnames_freq <- table(df$surname_father, df$community)
