@@ -3,7 +3,7 @@ library(stringi)
 library(tidyverse)
 library(tabulizer)
 
-on <- function(f, x) { f(x); x }
+on <- function(f, .x) { f(.x); .x }
 view <- function(x) on(View, x)
 
 # read.csv(..., fill=TRUE) doesn't work!
@@ -57,7 +57,7 @@ num_shares <- function(s, fname) {
   }
 }
 
-is.complete <- function(df, fname, flexible=TRUE) {
+is_complete <- function(df, fname, flexible=TRUE) {
   check_ids <- function(col, i, j) {
     if (i >= length(col)) TRUE
     else if (col[[i]] == as.character(j))
@@ -80,7 +80,7 @@ is.complete <- function(df, fname, flexible=TRUE) {
 community_table <- function(m, fname) {
   if (is_empty(m) || ncol(m) != 5)
     return(NULL)
-  tibble(comunidad=m[,1],
+  tibble(community=m[,1],
          right_id= # the identifier of the commoner right
            str_replace(m[,2], "^0*([0-9]+).*", "\\1"),
          firstname=m[,3],
@@ -154,15 +154,15 @@ format_table <- function(m, filename) {
   }
   if (ncol(m) >= 4 && all(is.na(m[,4])))
     m[,4] <- rep("", nrow(m))
-  if (ncol(m) >= 4 && any(endsWith(m[,4], "DERECHO"))) {
-    x <- m[,4]
-    t <- str_match(x, "^(.*) ([^ ]* DERECHO)$")
+  if (ncol(m) >= 4 && any(str_detect(m[,4], "DERECHOS?$"))) {
+    t <- str_match(m[,4], "^(.* )?([^ ]* DERECHOS?)$")
     w <- which(!is.na(t[,1]))
-    m[,4][w] <- t[,2][w]
-    if (ncol(m) == 4) {
-      m <- cbind(m, t[,3])
-      m[,5][which(is.na(m[,5]))] <- ""
-    } else
+    m[,4][w] <- str_replace_na(t[,2][w], "")
+    if (ncol(m) == 4)
+      m <- cbind(m, str_replace_na(t[,3], ""))
+      # m[,5] <- str_replace_na(m[,5], "")
+      # m[,5][which(is.na(m[,5]))] <- ""
+    else
       m[,5][w] <- t[,3][w]
   }
   m
@@ -186,7 +186,7 @@ read_pdf <- function(filename, method=c("tabulizer",
     } else if (m == "pdftotext") {
       read_pdf_pdftotext(filename)
     } else stop("method \"${method}\" not recognised")
-    if (is.data.frame(df) && is.complete(df, filename)) df
+    if (is.data.frame(df) && is_complete(df, filename)) df
     else read_pdf(filename, method[-1])
   }
 }
@@ -242,7 +242,7 @@ skip <- c(
 manually_extracted_csvs <-
   str_c("manually-extracted/", skip, "-M.csv")
 
-col_names <- c("comunidad", "right_id",
+col_names <- c("community", "right_id",
                "firstname", "surname", "shares")
 
 read_community_csv <- function(filename) {
@@ -251,7 +251,7 @@ read_community_csv <- function(filename) {
 }
 
 remove_accents <- function(df) {
-  for (col in c("comunidad", "firstname", "surname")) {
+  for (col in c("community", "firstname", "surname")) {
     if (any(str_detect(df[[col]], "_")))
       stop("\"_\" found in column \"", col,"\"")
     df[[col]] <- df[[col]] %>%
@@ -264,58 +264,46 @@ remove_accents <- function(df) {
 
 remove_nonpeople <- function(df) {
   df %>% filter(firstname != "ELIMINADO")
+  # df %>% filter(firstname != "ELIMINADO",
+  #               !startsWith(firstname, "COMUNIDAD AGRICOLA"),
+  #               !str_detect(firstname, "CIA\.|LTDA\."))
 }
 
-fix_shares <- function(df) {
-  check <- function(i, j) {
-    if (j < i) stop(j, " < ", i, "!")
-    if (sum(df$shares[i:j]) != df$shares[[i]])
-      stop("sum(df$shares[", i, ":", j, "]) == ",
-           sum(df$shares[i:j]), " != ", df$shares[[i]],
-           " == df$shares[[", i, "]]")
-  }
-  last <- NA
-  from <- NA
-  for (i in seq_along(df$shares)) {
-    if (is.na(last) ||
-        df$comunidad[[last]] != df$comunidad[[i]]) {
-      if (df$shares[[i]] == 0)
-        warning("community \"", df$comunidad[[i]],
-                "\" starts with commoner with zero shares ",
-                "at row ", i)
-      if (!is.na(from)) {
-        check(from, i-1)
-        df$shares[from:i-1] <- df$shares[[from]] / (i-from)
-      }
-      from <- NA
-    } else if (is.na(from) && df$shares[[i]] == 0) {
-      from <- last
-    } else if (!is.na(from) && df$shares[[i]] > 0) {
-      check(from, i-1)
-      df$shares[from:i-1] <- df$shares[[from]] / (i-from)
-      from <- NA
-    }
-    last <- i
+fix_compound_names <- function(df) {
+  for (col in c("firstname", "surname")) {
+    df[[col]] <- df[[col]] %>%
+      str_replace_all("DEL BUEN PASTOR", "DEL_BUEN_PASTOR") %>%
+      str_replace_all("CASAS DEL VALLE", "CASAS_DEL_VALLE") %>%
+      str_replace_all("(?<![A-Z])SAN +(MARTIN|LUIS|JUAN)",
+                      "SAN_\\1") %>%
+      str_replace_all("(?<![A-Z])DE +(LAS?|LOS) +", "DE_\\1_") %>%
+      # negative lookbehind (?<![A-Z]) so that DEL is not
+      # the end of a word (like in "FINDEL")
+      str_replace_all("(?<![A-Z])(DEL?) +", "\\1_") %>%
+      # str_replace_all("(?<![A-Z])(DEL?) ([A-Z]([A-Z]+|.))",
+      #                 "\\1_\\2") %>%
+      # replace twice to catch cases like "VDA DE DEL CAMPO"
+      str_replace_all("(?<![A-Z])(DEL?) +", "\\1_") %>%
+      # str_replace_all("(?<![A-Z])(DEL?) ([A-Z][A-Z]+)",
+      #                 "\\1_\\2") %>%
+      str_replace_all("(VIUDA|VDA.?) +", "VDA_")
   }
   df
 }
 
-fix_repeated <- function(df) {
-  df %>%
-    group_by(comunidad, firstname, surname) %>%
-    summarise(right_id = first(right_id),
-              shares = sum(shares)) %>%
-              # count = n())
-    .[,col_names] # reorder columns
+remove_abbrev <- function(df) {
+  for (col in c("firstname", "surname")) {
+    df[[col]] <- df[[col]] %>%
+      str_replace_all(" [A-Z]\\.", "") %>%
+      # if the name starts by an initial
+      str_replace_all("(?<![A-Z])[A-Z]\\.", "")
+  }
+  df
 }
 
-# fix_surnames <- function(df) {
-#   w <- which(df$surname == "")
-# }
-
-words_in_col <- function(df, col, ind) {
+words_in_col <- function(df, col, ind=seq_along(df[[col]])) {
   df[[col]][ind] %>%
-    str_split("[ ]+") %>%
+    str_split(" +") %>%
     unlist %>%
     unique %>%
     sort
@@ -329,33 +317,279 @@ surname_set <- function(df) {
   words_in_col(df, "surname", which(df$surname != ""))
 }
 
+alt_regex <- function(options, complete_match=TRUE) {
+  options %>%
+    str_c(collapse="|") %>%
+    str_c(if (complete_match) "^(", .,
+          if (complete_match) ")$") %>%
+    # for some weird reason the replacement string
+    # is not "\\." but "\\\\."
+    str_replace_all("\\.", "\\\\.")
+}
+
+show_row <- function(df, i)
+  str_c(df[i,], collapse=",")
+
+fix_names <- function(df, surnames=surname_set(df),
+                      not_surnames=c(),
+                      firstnames=firstname_set(df),
+                      not_firstnames=c()) {
+  sns <- alt_regex(surnames)
+  # fill empty surnames
+  ind <- which(df$surname == "")
+  for (i in ind) {
+    xs <- str_split(df$firstname[[i]], " +")[[1]]
+    ys <- head(xs, -2)
+    zs <- tail(xs, 2)
+    df$firstname[[i]] <- str_c("", ys, collapse=" ")
+    if (length(xs) >= 4) {
+      df$surname[[i]] <- str_c("", zs, collapse=" ")
+    } else {
+      for (z in zs) {
+        if (str_detect(z, sns)) {
+          df$surname[[i]] <- str_c(
+            df$surname[[i]], if (df$surname[[i]] != "") " ", z)
+        } else {
+          df$firstname[[i]] <- str_c(
+            df$firstname[[i]], if (df$firstname[[i]] != "") " ", z)
+        }
+      }
+    }
+  }
+  # move nots from column "from" to column "to"
+  move_nots_from_to <- function(df, from, to, nots,
+                                in_reverse) {
+    rgx <- alt_regex(nots, FALSE)
+    ind <- which(str_detect(df[[from]], rgx))
+    r <- function(...)
+      if (in_reverse) rev(c(...)) else c(...)
+    for (i in ind) {
+      xs <- r(str_split(df[[i, from]], " +")[[1]])
+      js <- c()
+      # for firstnames one has to go in reverse order
+      for (j in seq_along(xs)) {
+        if (xs[[j]] %in% nots)
+          js <- c(js, j)
+      }
+      j <- max(c(0, js))
+      if (j == 0)
+        next
+      else if (length(js) != j)
+        warning("\"", xs[[j]],
+                "\" found in position ", j,
+                " in row \"", show_row(df, i), "\"")
+      keep <- seq_along(xs)[-js]
+      df[[i, from]] <- str_c(r(xs[keep]), collapse=" ")
+      # add xs[js] (possibly in reverse order)
+      # to the column "to"
+      # either at the end (when in_reverse=FALSE)
+      # or at the beginning (when in_reverse=TRUE)
+      df[[i, to]] <- str_c(r(xs[js]), collapse=" ") %>%
+        r(df[[i, to]], .) %>%
+        str_c(collapse=" ")
+    }
+    df
+  }
+  df %>%
+    # move not_surnames from surnames to firstnames
+    move_nots_from_to("surname", "firstname", not_surnames, FALSE) %>%
+    # move not_firstnames from firstnames to surnames
+    move_nots_from_to("firstname", "surname", not_firstnames, TRUE)
+}
+
+remove_sucesiones <- function(df) {
+  ind <- which(str_detect(df$firstname, "^SUC(ESION|.)"))
+  # fix surnames in sucesiones first
+  for (i in ind) {
+    from <- i + 1
+    last <- from
+    while (df$shares[[last]] == 0)
+      last <- last + 1
+    last <- last - 1
+    empties <- df$surname[from:last] == ""
+    if (all(empties)) {
+      surname <- df$surname[[i]]
+      if (surname == "") {
+        print(df[i:last,])
+        stop("empty surname")
+      } else if (str_detect(surname, " "))
+        df$surname[from:last] <- surname
+      else {
+        warning("sucesion only has one surname: ", surname)
+        df$surname[from:last] <- surname
+      }
+    } else if (any(empties)) {
+      surname <- df$surname[from:last][!empties] %>% unique
+      if (length(surname) > 1)
+        stop("too many surnames to choose from (",
+             str_c(surname, collapse=","),
+             ") between rows ", from, " and ", last)
+      df$surname[from:last] <- surname[[1]]
+    }
+  }
+  sucesiones_ocultas <- c()
+  for (i in ind) {
+    if (df$shares[[i+1]] == 0)
+      df$shares[[i+1]] <- df$shares[[i]]
+    else {
+      df$firstname[[i]] <- df$firstname[[i]] %>%
+        str_replace("^SUC(ESION|.) ", "")
+      sucesiones_ocultas <- c(sucesiones_ocultas, i)
+      # warning("the share of the first commoner of a ",
+      #         "succesion isn't zero but ", df$shares[[i+1]],
+      #         "(", df[i+1,], ")")
+    }
+  }
+  ind <- ind[!(ind %in% sucesiones_ocultas)]
+  df[-ind,]
+}
+
+fix_shares <- function(df) {
+  check <- function(i, j) {
+    if (j < i) stop(j, " < ", i, "!")
+    if (sum(df$shares[i:j]) != df$shares[[i]])
+      stop("sum(df$shares[", i, ":", j, "]) == ",
+           sum(df$shares[i:j]), " != ", df$shares[[i]],
+           " == df$shares[[", i, "]]")
+  }
+  from <- NA
+  for (i in seq_along(df$shares)) {
+    if (i == 1 ||
+        df$community[[i-1]] != df$community[[i]]) {
+      if (df$shares[[i]] == 0)
+        warning("community \"", df$community[[i]],
+                "\" starts with commoner with zero shares ",
+                "at row ", i)
+      if (!is.na(from)) {
+        check(from, i-1)
+        divided_share <- df$shares[[from]] / (i-from)
+        df$shares[from:i-1] <- divided_share
+      }
+      from <- NA
+    } else if (is.na(from) && df$shares[[i]] == 0) {
+      from <- i-1
+    } else if (!is.na(from) && df$shares[[i]] > 0) {
+      check(from, i-1)
+      divided_share <- df$shares[[from]] / (i-from)
+      df$shares[from:(i-1)] <- divided_share
+      from <- NA
+    }
+  }
+  df
+}
+
+fix_repeated <- function(df) {
+  df %>%
+    mutate(i=row_number()) %>%
+    group_by(community, firstname, surname) %>%
+    summarise(right_id = first(right_id),
+              shares = sum(shares),
+              i = first(i)) %>%
+    arrange(i) %>% # reorder rows
+    .[,col_names] # reorder columns
+}
+
 check_table <- function(df) {
-  all(df$comunidad != "") &&
+  all(df$community != "") &&
     all(df$right_id > 0) &&
     all(df$firstname != "") &&
     all(df$shares > 0)
 }
 
-comuneros <- function() {
+communities_csv <- "communities.csv"
+add_commune <- function(df) {
+  col_names <- c("commune", "id", "community",
+                 "area", "num_houses", "num_commoners",
+                 "pop_size", "num_male", "num_female")
+  communities <- read_csv(communities_csv, skip=1,
+                          col_names=col_names,
+                          col_types="ciciiiiii") %>%
+    mutate_if(is.character, toupper)
+  left_join(df, communities[,c("commune", "community")],
+            by="community")
+}
+
+read_pdfs <- function() {
   files <- list.files(path="pdfs", pattern="\\.pdf$",
                       full.names=TRUE)
   # skip files in skip
   skipr <- str_c(skip, collapse="|")
   files <- files[!str_detect(files, skipr)]
   rbind(
-    files[1] %>% map_dfr(~read_pdf(print(.))),
+    files %>% map_dfr(~read_pdf(print(.))),
     manually_extracted_csvs %>%
       map_dfr(~read_community_csv(print(.))) %>%
       mutate_if(is.character, ~str_replace_na(., "")),
     stringsAsFactors=FALSE)
 }
 
-main <- function() {
-  comuneros() %>%
+extract_pdfs <- function(commoners_df) {
+  df <- commoners_df %>%
+    mutate_if(is.character, trimws) %>%
     remove_accents %>%
     remove_nonpeople %>%
+    fix_compound_names %>%
+    remove_abbrev
+  # fix specific entries
+  df$firstname <- df$firstname %>%
+    str_replace("DEL_TRANSITOESPINOZA",
+                "DEL_TRANSITO ESPINOZA") %>%
+    str_replace("GUILLERMO ENRIQUE DEL_ROSARVICENCIO CORTES",
+                "GUILLERMO ENRIQUE DEL_ROSARIO VICENCIO CORTES")
+  df$surname <- df$surname %>%
+    str_replace("HENRIQUE HENRIQUEZ",
+                "HENRIQUEZ HENRIQUEZ")
+  w <- which(str_detect(df$firstname, "(?<![A-Z])DEL$"))
+  if (w != c(12450))
+    stop("missing entry: ", str_c(w, collapse=" "))
+  df$firstname[[12450]] <- "ELISA DEL_ROSARIO"
+  df$surname[[12450]] <- "ARAYA"
+  # this makes the splitting of surnames easier
+  # for one case in community "canelilla"
+  # but I'm not sure it might have unintended consequences
+  df$surname <- df$surname %>%
+    str_replace_all(" \\(SUCESION\\)", "")
+  # fix surnames and firstnames
+  surnames <- surname_set(df)
+  firstnames <- firstname_set(df)
+  fis <- firstnames[firstnames %in% surnames]
+  # sif <- surnames[surnames %in% firstnames]
+  # all(fis == sif) # == TRUE
+  # "ALFONSO" is the surname of "JACOBITA DE LOURDES"
+  # in "LA CHACARILLA"
+  not_surnames <- c("AIRES", "ANTONIO", "AQUILES",
+                    "ASCENCIO", "BENEDICTO", "BAUTISTA",
+                    "BENITO",
+                    "DE_LA_CRUZ", "DE_LA_ROSA",
+                    "DEL_TRANSITO", "DIOGENES",
+                    "ENRIQUE", "ESTER", "GENERAL",
+                    "HUMBERTO",
+                    "MERCEDES", "MERY", "MIGUEL",
+                    "SAN_JUAN", "TOMAS")
+  not_firstnames <- c("ALFARO", "ALUCEMA", "ARAYA", "ANAIS",
+                      "AVILES", "BACHO", "BERNALES",
+                      "BUGUEÑO", "CASTRO", "CATALDO",
+                      "CIELO", "GODOY", "HONORES",
+                      "LEYTON", "MEDINA", "MOLINA",
+                      "OLIVARES", "OLMOS", "ORO",
+                      "ORREGO", "PIZARRO", "RIVERA",
+                      "ROJAS", "TAPIA", "VICENCIO")
+  w1 <- which(surnames %in% not_surnames)
+  surnames <- surnames[-w1]
+  w2 <- which(firstnames %in% not_firstnames)
+  firstnames <- firstnames[-w2]
+  # the first commoner in ALCONES, "YAMILET VANESSA",
+  # has no annotated shares. give her 1.
+  w <- which(str_detect(df$firstname, "YAMILET VANESSA"))
+  if (w[[1]] != 6685)
+    stop("missing entry: ", str_c(w, collapse=" "))
+  df$shares[[6685]] <- 1L
+  df %>%
+    fix_names(surnames, not_surnames,
+              firstnames, not_firstnames) %>%
+    remove_sucesiones %>%
     fix_shares %>%
     fix_repeated %>%
-    arrange(comunidad, right_id) %>%
-    write_csv("comuneros.csv")
+    add_commune %>%
+    write_csv("commoners.csv")
 }

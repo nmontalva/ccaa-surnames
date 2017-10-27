@@ -65,7 +65,7 @@ download <- function(infoTbl) {
 
 # TODO: change camelCase naming to snake_case
 
-main <- function() {
+download_pdfs <- function() {
   pdfs <- getPDFUrls(nominasUrl)
   typos <- typoMap(typosFn)
   infoTbl <- infoTable(pdfs, typos)
