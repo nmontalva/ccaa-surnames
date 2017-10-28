@@ -15,6 +15,60 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccdccccc")
 }
 
+dendroplot <- function(hc) {
+  # hcd = as.dendrogram(clust_hedkin)
+  # # plot(clust_hedkin, hang=-1, sub="", xlab="", ylab="")
+  # # xlab="Communities", ylab="Time")
+  # # cut dendrogram in 4 clusters
+  # # hcd2 = cutree(hcd, 4)
+  # # function to get color labels
+  # colour_labels <- function(n) {
+  #   if (is.leaf(n)) {
+  #     a <- attributes(n)
+  #     attr(n, "nodePar") <-
+  #       c(a$nodePar, lab.col=colour_community(a$label))
+  #   }
+  #   n
+  # }
+  # # hcd2 = dendrapply(hcd, colour_labels)
+  # # pdf("dendro.pdf", width=12, height=60)
+  # # plot(hcd, sub="", xlab="", ylab="", horiz=TRUE)
+  # pdf("dendro.pdf", width=60, height=12)
+  # plot(hcd, sub="", xlab="", ylab="", cex=30)
+  # # pdf("dendro.pdf", width=60, height=12)
+  # # plot(clust_hedkin, hang=-1, sub="", xlab="", ylab="")
+  # generate dendrogram from hclust data
+  hcd <- dendro_data(hc, type="rectangle")
+  # make palette
+  communes <- read_commune_csv()
+  colours <- colorRampPalette(c("yellow", "brown"))(
+    nrow(communes))
+  names(colours) <- communes$commune
+  # output to pdf
+  pdf("dendro.pdf", width=12, height=40)
+  # plot
+  p <- ggplot() +
+    geom_segment(data=segment(hcd),
+                 aes(x=x, y=y, xend=xend, yend=yend)) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y, label=label, hjust=0,
+                  colour=colours[label]),
+              nudge_y=0.01,
+              size=3,
+              show.legend=FALSE) +
+    coord_flip() + scale_y_reverse(expand=c(0, 0.6)) +
+    theme(axis.line=element_blank(),
+          axis.ticks=element_blank(),
+          axis.text=element_blank(),
+          axis.title=element_blank(),
+          panel.background=element_rect(fill="white"),
+          panel.grid=element_blank()) +
+    labs(y="")
+  # ggsave("dendro.pdf", width=12, height=60, units="cm")
+  print(p)
+  dev.off()
+}
+
 dendrogram <- function(df) {
   # cross tabulate
   surnames_freq <- table(df$surname_father, df$community)
@@ -22,11 +76,11 @@ dendrogram <- function(df) {
   # there are other methods (i.e. lasker, uri)
   hedkin <- hedrick(surnames_freq)
   # a very simple method. see also as.dist(), dist()
-  hedkin.dist <- as.dist(1-hedkin) 
+  hedkin_dist <- as.dist(1-hedkin)
   # hierarchical clustering of the distance matrix
-  clust_hedkin <- hclust(hedkin.dist)
+  clust_hedkin <- hclust(hedkin_dist)
   # plot the dendrogram
-  plot(clust_hedkin)
+  dendroplot(clust_hedkin)
 }
 
 surname_diversity <- function(surnames_freq) {
