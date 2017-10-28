@@ -16,27 +16,6 @@ read_commoners_csv <- function(filename=commoners_csv) {
 }
 
 dendroplot <- function(hc) {
-  # hcd = as.dendrogram(clust_hedkin)
-  # # plot(clust_hedkin, hang=-1, sub="", xlab="", ylab="")
-  # # xlab="Communities", ylab="Time")
-  # # cut dendrogram in 4 clusters
-  # # hcd2 = cutree(hcd, 4)
-  # # function to get color labels
-  # colour_labels <- function(n) {
-  #   if (is.leaf(n)) {
-  #     a <- attributes(n)
-  #     attr(n, "nodePar") <-
-  #       c(a$nodePar, lab.col=colour_community(a$label))
-  #   }
-  #   n
-  # }
-  # # hcd2 = dendrapply(hcd, colour_labels)
-  # # pdf("dendro.pdf", width=12, height=60)
-  # # plot(hcd, sub="", xlab="", ylab="", horiz=TRUE)
-  # pdf("dendro.pdf", width=60, height=12)
-  # plot(hcd, sub="", xlab="", ylab="", cex=30)
-  # # pdf("dendro.pdf", width=60, height=12)
-  # # plot(clust_hedkin, hang=-1, sub="", xlab="", ylab="")
   # generate dendrogram from hclust data
   hcd <- dendro_data(hc, type="rectangle")
   # make palette
