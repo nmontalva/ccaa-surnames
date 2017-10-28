@@ -250,8 +250,9 @@ read_community_csv <- function(filename) {
            col_types = "ciccd")
 }
 
-remove_accents <- function(df) {
-  for (col in c("community", "firstname", "surname")) {
+remove_accents <- function(df, cols=which(
+  sapply(df, class) == 'character')) {
+  for (col in cols) {
     if (any(str_detect(df[[col]], "_")))
       stop("\"_\" found in column \"", col,"\"")
     df[[col]] <- df[[col]] %>%
@@ -500,13 +501,33 @@ communities_csv <- "communities.csv"
 add_commune <- function(df) {
   col_names <- c("commune", "id", "community",
                  "area", "num_houses", "num_commoners",
-                 "pop_size", "num_male", "num_female")
+                 "population", "num_male", "num_female")
   communities <- read_csv(communities_csv, skip=1,
                           col_names=col_names,
                           col_types="ciciiiiii") %>%
-    mutate_if(is.character, toupper)
-  left_join(df, communities[,c("commune", "community")],
-            by="community")
+    mutate_if(is.character, toupper) %>%
+    select(community, commune) %>%
+    remove_accents %>%
+    rbind(c("TOTORAL", "COPIAPO"),
+          c("HUASCOALTINOS", "ALTO DEL CARMEN"))
+  left_join(df, communities, by="community")
+}
+
+communes_csv <- "communes.csv"
+read_commune_csv <- function(filename=communes_csv) {
+  col_names <- c("commune", "province", "region",
+                 "area", "population", "density", "IDH")
+  communes <- read_csv(communes_csv,
+                       skip=1,
+                       col_names=col_names,
+                       col_types="cccdidd") %>%
+    remove_accents %>%
+    mutate_if(is.character, toupper) %>%
+    select(commune, province, region)
+}
+
+add_province <- function(df) {
+  left_join(df, read_commune_csv(), by="commune")
 }
 
 get <- function(v, i, default=NA) {
@@ -571,7 +592,9 @@ extract_pdfs <- function(commoners_df) {
     str_replace("DEL_TRANSITOESPINOZA",
                 "DEL_TRANSITO ESPINOZA") %>%
     str_replace("GUILLERMO ENRIQUE DEL_ROSARVICENCIO CORTES",
-                "GUILLERMO ENRIQUE DEL_ROSARIO VICENCIO CORTES")
+                "GUILLERMO ENRIQUE DEL_ROSARIO VICENCIO CORTES") %>%
+    str_replace("CASIMIRA DEL_CARMEN CLAUDICORTES",
+                "CASIMIRA DEL_CARMEN CORTES")
   df$surname <- df$surname %>%
     str_replace("HENRIQUE HENRIQUEZ",
                 "HENRIQUEZ HENRIQUEZ")
@@ -611,7 +634,8 @@ extract_pdfs <- function(commoners_df) {
                       "ORREGO", "PIZARRO", "RIVERA",
                       "ROJAS", "TAPIA", "VICENCIO")
   w1 <- which(surnames %in% not_surnames)
-  surnames <- surnames[-w1]
+  surnames <- c(surnames[-w1],
+                "APEY", "ARGALUZA", "PRYOR", "MILTON")
   w2 <- which(firstnames %in% not_firstnames)
   firstnames <- firstnames[-w2]
   # the first commoner in ALCONES, "YAMILET VANESSA",
@@ -620,13 +644,51 @@ extract_pdfs <- function(commoners_df) {
   if (w[[1]] != 6685)
     stop("missing entry: ", str_c(w, collapse=" "))
   df$shares[[6685]] <- 1L
+  # correct community names
+  df[df$community == "ALHUEMILLAS LAS PALMAS", "community"] <-
+    "ALHUEMILLA LAS PALMAS"
+  df[df$community == "CUZ CUZ", "community"] <-
+    "CUZCUZ"
+  df[df$community == "UCHUMI - DIAGUITA", "community"] <-
+    "UCHUMI-DIAGUITAS"
+  df[df$community == "ATUNHUAICO", "community"] <-
+    "ATUHUAICO"
+  df[df$community == "CANELILLA", "community"] <-
+    "CANELILLA OVALLE"
+  df[df$community == "COIPO O COYUNCAVI", "community"] <-
+    "COIPO Y CUYUNCAVI"
+  df[df$community == "DAIN Y CORTADERILLA", "community"] <-
+    "DAIN Y CORTADERA"
+  df[df$community == "FUNDINA SUR", "community"] <-
+    "FUNDIDA SUR"
+  df[df$community == "FUNDINA NORTE", "community"] <-
+    "FUNDIDA NORTE"
+  df[df$community == "HUAPI LAS MOLLAQUITAS", "community"] <-
+    "HUAPILLAS MOLLAQUITAS"
+  df[df$community == "LA CHACARILLA", "community"] <-
+    "CHACARILLAS"
+  df[df$community == "MACANO", "community"] <-
+    "EL MACANO"
+  df[df$community == "QUEBRADA DE COLLIGUAYCITO", "community"] <-
+    "QUEBRADA DE COLLIGUACITO"
+  df[df$community == "CASTILLO MAL PASO Y OTROS", "community"] <-
+    "CASTILLO MAL PASO"
+  df[df$community == "RINCONADA DE PUNITAQUI", "community"] <-
+    "LA RINCONADA DE PUNITAQUI"
+  df[df$community == "CARRIZO MENDOZA Y ROMERO", "community"] <-
+    "CARRIZO, MENDOZA Y ROMERO"
   df %>%
+    # remove communities that appear as commoners
+    filter(!startsWith(firstname, "COMUNIDAD")) %>%
+    # remove companies that appear as commoners
+    filter(!str_detect(surname, "(?<![A-Z])LTDA")) %>%
     fix_names(surnames, not_surnames,
               firstnames, not_firstnames) %>%
     remove_sucesiones %>%
     fix_shares %>%
     fix_repeated %>%
     add_commune %>%
+    add_province %>%
     split_firstnames %>%
     split_surnames %>%
     assign_sex %>%
