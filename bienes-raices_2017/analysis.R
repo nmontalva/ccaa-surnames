@@ -18,8 +18,9 @@ read_commoners_csv <- function(filename=commoners_csv) {
 dendroplot <- function(df, hc) {
   # generate dendrogram from hclust data
   hcd <- dendro_data(hc, type="rectangle")
+  # get rid of those factors
+  hcd$labels$label <- as.character(hcd$labels$label)
   # make palette
-  # communes <- read_commune_csv()
   communities <- df %>%
     group_by(region, province, commune, community) %>%
     summarise()
@@ -29,24 +30,6 @@ dendroplot <- function(df, hc) {
   names(colours) <- communes
   commune <- communities$commune
   names(commune) <- communities$community
-  # commune_of <- function(cs) {
-  #   cs <- as.character(cs)
-  #   ys <- c()
-  #   for (x in cs) {
-  #     y <- commune[x]
-  #     ys <- c(ys, y)
-  #   }
-  #   ys
-  # }
-  # community_colour <- function(cs) {
-  #   zs <- c()
-  #   for (x in cs) {
-  #     y <- commune[x]
-  #     z <- colours[y]
-  #     zs <- c(zs, z)
-  #   }
-  #   zs
-  # }
   # output to pdf
   pdf("dendro.pdf", width=12, height=40)
   # plot
@@ -59,10 +42,8 @@ dendroplot <- function(df, hc) {
               size=3) +
     geom_text(data=label(hcd),
               aes(x=x, y=y,
-                  label=commune[as.character(label)],
-                  hjust=0,
-                  colour=colours[commune[
-                    as.character(label)]]),
+                  label=commune[label], hjust=0,
+                  colour=colours[commune[label]]),
               nudge_y=0.7,
               size=3,
               show.legend=FALSE) +
@@ -74,6 +55,7 @@ dendroplot <- function(df, hc) {
           panel.background=element_rect(fill="white"),
           panel.grid=element_blank()) +
     labs(y="")
+  # save plot
   # ggsave("dendro.pdf", width=12, height=60, units="cm")
   print(p)
   dev.off()
