@@ -15,14 +15,38 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccdccccc")
 }
 
-dendroplot <- function(hc) {
+dendroplot <- function(df, hc) {
   # generate dendrogram from hclust data
   hcd <- dendro_data(hc, type="rectangle")
   # make palette
-  communes <- read_commune_csv()
+  # communes <- read_commune_csv()
+  communities <- df %>%
+    group_by(region, province, commune, community) %>%
+    summarise()
+  communes <- unique(communities$commune)
   colours <- colorRampPalette(c("yellow", "brown"))(
-    nrow(communes))
-  names(colours) <- communes$commune
+    length(communes))
+  names(colours) <- communes
+  commune <- communities$commune
+  names(commune) <- communities$community
+  # commune_of <- function(cs) {
+  #   cs <- as.character(cs)
+  #   ys <- c()
+  #   for (x in cs) {
+  #     y <- commune[x]
+  #     ys <- c(ys, y)
+  #   }
+  #   ys
+  # }
+  # community_colour <- function(cs) {
+  #   zs <- c()
+  #   for (x in cs) {
+  #     y <- commune[x]
+  #     z <- colours[y]
+  #     zs <- c(zs, z)
+  #   }
+  #   zs
+  # }
   # output to pdf
   pdf("dendro.pdf", width=12, height=40)
   # plot
@@ -30,9 +54,16 @@ dendroplot <- function(hc) {
     geom_segment(data=segment(hcd),
                  aes(x=x, y=y, xend=xend, yend=yend)) +
     geom_text(data=label(hcd),
-              aes(x=x, y=y, label=label, hjust=0,
-                  colour=colours[label]),
+              aes(x=x, y=y, label=label, hjust=0),
               nudge_y=0.01,
+              size=3) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=commune[as.character(label)],
+                  hjust=0,
+                  colour=colours[commune[
+                    as.character(label)]]),
+              nudge_y=0.7,
               size=3,
               show.legend=FALSE) +
     coord_flip() + scale_y_reverse(expand=c(0, 0.6)) +
@@ -59,7 +90,7 @@ dendrogram <- function(df) {
   # hierarchical clustering of the distance matrix
   clust_hedkin <- hclust(hedkin_dist)
   # plot the dendrogram
-  dendroplot(clust_hedkin)
+  dendroplot(df, clust_hedkin)
 }
 
 surname_diversity <- function(surnames_freq) {
