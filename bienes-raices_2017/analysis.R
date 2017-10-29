@@ -47,6 +47,8 @@ dendroplot <- function(df, hc) {
               nudge_y=0.7,
               size=3,
               show.legend=FALSE) +
+    # scale_color_brewer(palette="Paired") +
+    # scale_color_discrete(l=50) +
     coord_flip() + scale_y_reverse(expand=c(0, 0.6)) +
     theme(axis.line=element_blank(),
           axis.ticks=element_blank(),
@@ -75,41 +77,59 @@ dendrogram <- function(df) {
   dendroplot(df, clust_hedkin)
 }
 
-
-##get S from "commoners" data
-fun_S <- function (commoners) {
-fun_s <- function(x){length(unique(x$surname_father))} # a self-made function to compute "s"
-ss <- by(commoners, commoners$community, fun_s) #get "s" of each population
-ns <- by(commoners, commoners$community, nrow) #get "n" of each population
-S_table <- cbind(sapply(ns,I),sapply(ss,I)) #This will make a table of n and s by population
-colnames(S_table) <- c("n","s") # To change colnames
-S_table <- as.data.frame(S_table)
-S_table$S <- S_table$s / S_table$n
-S_table
+# get S from "commoners" data
+fun_S <- function(commoners) {
+  # a self-made function to compute "s"
+  fun_s <- function(x) {
+    length(unique(x$surname_father))
+  }
+  # get "s" of each population
+  ss <- by(commoners, commoners$community, fun_s)
+  # get "n" of each population
+  ns <- by(commoners, commoners$community, nrow)
+  # this will make a table of n and s by population
+  S_table <- cbind(sapply(ns, I), sapply(ss, I))
+  # change colnames
+  colnames(S_table) <- c("n", "s")
+  # compute S and return the table
+  S_table <- as.data.frame(S_table)
+  S_table$S <- S_table$s / S_table$n
+  S_table
 }
 
-##get R from "commoners" data
-fun_R <- function (commoners) {
-fun_r <- function(x)sum(x$shares) # a self-made function to compute "r"
-rr <- by(commoners, commoners$community, fun_r) #get "r" of each population
-nr <- by(commoners, commoners$community, nrow) #get "n" of each population
-R_table <- cbind(sapply(nr,I),sapply(rr,I)) #This will make a table of n and a by population
-colnames(R_table) <- c("n","r") # To change colnames
-R_table <- as.data.frame(R_table)
-R_table$R <- R_table$r / R_table$n
-R_table
+# get R from "commoners" data
+fun_R <- function(commoners) {
+  # a self-made function to compute "r"
+  fun_r <- function(x) sum(x$shares)
+  # get "r" of each population
+  rr <- by(commoners, commoners$community, fun_r)
+  # get "n" of each population
+  nr <- by(commoners, commoners$community, nrow)
+  # this will make a table of n and a by population
+  R_table <- cbind(sapply(nr, I), sapply(rr, I))
+  # change colnames
+  colnames(R_table) <- c("n", "r")
+  # compute R and return the table
+  R_table <- as.data.frame(R_table)
+  R_table$R <- R_table$r / R_table$n
+  R_table
 }
 
-##get A from "commoners" data
-fun_A <- function (commoners) {
-fun_a <- function(x)sum(x$sex == "M") # a self-made function to compute "a"
-aa <- by(commoners, commoners$community, fun_a) #get "a" of each population
-na <- by(commoners, commoners$community, nrow) #get "n" of each population
-A_table <- cbind(sapply(na,I),sapply(aa,I)) #This will make a table of n and a by population
-colnames(A_table) <- c("n","a") # To change colnames
-A_table <- as.data.frame(A_table)
-A_table$A <- A_table$a / A_table$n
-A_table
+# get A from "commoners" data
+fun_A <- function(commoners) {
+  # a self-made function to compute "a"
+  fun_a <- function(x) sum(x$sex == "M")
+  # get "a" of each population
+  aa <- by(commoners, commoners$community, fun_a)
+  # get "n" of each population
+  na <- by(commoners, commoners$community, nrow)
+  # this will make a table of n and a by population
+  A_table <- cbind(sapply(na, I), sapply(aa, I))
+  # change colnames
+  colnames(A_table) <- c("n", "a")
+  # compute A and return the table
+  A_table <- as.data.frame(A_table)
+  A_table$A <- A_table$a / A_table$n
+  A_table
 }
-
 
