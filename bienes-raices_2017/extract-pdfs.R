@@ -521,8 +521,8 @@ read_commune_csv <- function(filename=communes_csv) {
                        skip=1,
                        col_names=col_names,
                        col_types="cccdidd") %>%
-    remove_accents %>%
     mutate_if(is.character, toupper) %>%
+    remove_accents %>%
     select(commune, province, region)
 }
 
