@@ -1,6 +1,8 @@
 library(stringr)
 library(tidyverse)
 library(Biodem)
+library(ggdendro)
+library(reldist)
 
 commoners_csv <- "commoners.csv"
 col_names <- c("community", "right_id",
@@ -15,23 +17,37 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccdccccc")
 }
 
-dendroplot <- function(df, hc) {
+stats_communities <- function(commoners) {
+  commoners %>%
+    group_by(region, province, commune, community) %>%
+    summarise(N=n(),
+              S=n_distinct(surname_father)/N,
+              R=mean(shares),
+              G=gini(shares),
+              A=mean(sex == "M"))
+}
+
+dendroplot <- function(hc, sc, save_as=NULL) {
   # generate dendrogram from hclust data
   hcd <- dendro_data(hc, type="rectangle")
   # get rid of those factors
   hcd$labels$label <- as.character(hcd$labels$label)
-  # make palette
-  communities <- df %>%
-    group_by(region, province, commune, community) %>%
-    summarise()
-  communes <- unique(communities$commune)
-  colours <- colorRampPalette(c("yellow", "brown"))(
-    length(communes))
-  names(colours) <- communes
-  commune <- communities$commune
-  names(commune) <- communities$community
+  # vectors to obtain commune, S, R, G, A of communities
+  vector_of <- function(col) {
+    v <- sc[[col]]
+    names(v) <- sc$community
+    v
+  }
+  # province <- vector_of("province")
+  commune <- vector_of("commune")
+  N <- vector_of("N")
+  S <- vector_of("S")
+  R <- vector_of("R")
+  G <- vector_of("G")
+  A <- vector_of("A")
   # output to pdf
-  pdf("dendro.pdf", width=12, height=40)
+  if (!is.null(save_as))
+    pdf(save_as, width=12, height=40)
   # plot
   p <- ggplot() +
     geom_segment(data=segment(hcd),
@@ -40,15 +56,61 @@ dendroplot <- function(df, hc) {
               aes(x=x, y=y, label=label, hjust=0),
               nudge_y=0.01,
               size=3) +
+    annotate("text", y=-0.30, x=172.5,
+             label="Community", fontface="bold", size=4) +
+    annotate("text", y=-1.30, x=172.5,
+             label="Commune", fontface="bold", size=4) +
+    annotate("text", y=-1.64, x=172.5,
+             label="#", fontface="bold", size=4) +
+    annotate("text", y=-1.86, x=172.5,
+             label="S", fontface="bold", size=4) +
+    annotate("text", y=-2.06, x=172.5,
+             label="R", fontface="bold", size=4) +
+    annotate("text", y=-2.26, x=172.5,
+             label="G", fontface="bold", size=4) +
+    annotate("text", y=-2.46, x=172.5,
+             label="A", fontface="bold", size=4) +
     geom_text(data=label(hcd),
-              aes(x=x, y=y,
-                  label=commune[label], hjust=0,
-                  colour=colours[commune[label]]),
-              nudge_y=0.7,
+              aes(x=x, y=y, hjust=0,
+                  label=commune[label],
+                  colour=commune[label]),
+              nudge_y=1.1,
               size=3,
               show.legend=FALSE) +
-    # scale_color_brewer(palette="Paired") +
-    # scale_color_discrete(l=50) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=N[label],
+                  size=N[label]*1.3/max(N[label])+2.7),
+              nudge_y=1.6,
+              hjust=0) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=prettyNum(S[label], digits=3),
+                  size=S[label]*1.3/max(S[label])+2.7),
+              nudge_y=1.8,
+              hjust=0) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=prettyNum(R[label], digits=3),
+                  size=R[label]*1.3/max(R[label])+2.7),
+              nudge_y=2.0,
+              hjust=0) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=prettyNum(G[label], digits=3),
+                  size=G[label]*1.3/max(G[label])+2.7),
+              nudge_y=2.2,
+              hjust=0) +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=prettyNum(A[label], digits=3),
+                  size=A[label]*1.3/max(A[label])+2.7),
+              nudge_y=2.4,
+              hjust=0) +
+    scale_size_identity() +
+    # scale_colour_manual(values=colours) +
+    # scale_colour_brewer(palette="Paired") +
+    # scale_colour_discrete(l=50) +
     coord_flip() + scale_y_reverse(expand=c(0, 0.6)) +
     theme(axis.line=element_blank(),
           axis.ticks=element_blank(),
@@ -58,14 +120,17 @@ dendroplot <- function(df, hc) {
           panel.grid=element_blank()) +
     labs(y="")
   # save plot
-  # ggsave("dendro.pdf", width=12, height=60, units="cm")
-  print(p)
-  dev.off()
+  if (!is.null(save_as)) {
+    # ggsave(save_as, width=12, height=60, units="cm")
+    print(p)
+    dev.off()
+  }
 }
 
-dendrogram <- function(df) {
+dendrogram <- function(commoners, save_as=NULL) {
   # cross tabulate
-  surnames_freq <- table(df$surname_father, df$community)
+  surnames_freq <- table(commoners$surname_father,
+                         commoners$community)
   # generates Hedrick (1971) kinship matrix
   # there are other methods (i.e. lasker, uri)
   hedkin <- hedrick(surnames_freq)
@@ -74,62 +139,7 @@ dendrogram <- function(df) {
   # hierarchical clustering of the distance matrix
   clust_hedkin <- hclust(hedkin_dist)
   # plot the dendrogram
-  dendroplot(df, clust_hedkin)
-}
-
-# get S from "commoners" data
-fun_S <- function(commoners) {
-  # a self-made function to compute "s"
-  fun_s <- function(x) {
-    length(unique(x$surname_father))
-  }
-  # get "s" of each population
-  ss <- by(commoners, commoners$community, fun_s)
-  # get "n" of each population
-  ns <- by(commoners, commoners$community, nrow)
-  # this will make a table of n and s by population
-  S_table <- cbind(sapply(ns, I), sapply(ss, I))
-  # change colnames
-  colnames(S_table) <- c("n", "s")
-  # compute S and return the table
-  S_table <- as.data.frame(S_table)
-  S_table$S <- S_table$s / S_table$n
-  S_table
-}
-
-# get R from "commoners" data
-fun_R <- function(commoners) {
-  # a self-made function to compute "r"
-  fun_r <- function(x) sum(x$shares)
-  # get "r" of each population
-  rr <- by(commoners, commoners$community, fun_r)
-  # get "n" of each population
-  nr <- by(commoners, commoners$community, nrow)
-  # this will make a table of n and a by population
-  R_table <- cbind(sapply(nr, I), sapply(rr, I))
-  # change colnames
-  colnames(R_table) <- c("n", "r")
-  # compute R and return the table
-  R_table <- as.data.frame(R_table)
-  R_table$R <- R_table$r / R_table$n
-  R_table
-}
-
-# get A from "commoners" data
-fun_A <- function(commoners) {
-  # a self-made function to compute "a"
-  fun_a <- function(x) sum(x$sex == "M")
-  # get "a" of each population
-  aa <- by(commoners, commoners$community, fun_a)
-  # get "n" of each population
-  na <- by(commoners, commoners$community, nrow)
-  # this will make a table of n and a by population
-  A_table <- cbind(sapply(na, I), sapply(aa, I))
-  # change colnames
-  colnames(A_table) <- c("n", "a")
-  # compute A and return the table
-  A_table <- as.data.frame(A_table)
-  A_table$A <- A_table$a / A_table$n
-  A_table
+  sc <- stats_communities(commoners)
+  dendroplot(clust_hedkin, sc, save_as)
 }
 

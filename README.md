@@ -27,6 +27,8 @@ $ R
 > install.packages("ghit")
 > ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"))
 > install.packages("Biodem")
+> install.packages("ggdendro")
+> install.packages("reldist")
 ```
 
 ### How to re-generate file `commoners.csv`
