@@ -3,6 +3,7 @@ library(tidyverse)
 library(Biodem)
 library(ggdendro)
 library(reldist)
+# library(ade4)
 
 commoners_csv <- "commoners.csv"
 col_names <- c("community", "right_id",
@@ -124,22 +125,66 @@ dendroplot <- function(hc, sc, save_as=NULL) {
     # ggsave(save_as, width=12, height=60, units="cm")
     print(p)
     dev.off()
-  }
+  } else p
 }
 
-dendrogram <- function(commoners, save_as=NULL) {
+surname_distance_matrix <- function(commoners) {
   # cross tabulate
   surnames_freq <- table(commoners$surname_father,
                          commoners$community)
   # generates Hedrick (1971) kinship matrix
   # there are other methods (i.e. lasker, uri)
   hedkin <- hedrick(surnames_freq)
-  # a very simple method. see also as.dist(), dist()
-  hedkin_dist <- as.dist(1-hedkin)
-  # hierarchical clustering of the distance matrix
-  clust_hedkin <- hclust(hedkin_dist)
-  # plot the dendrogram
-  sc <- stats_communities(commoners)
-  dendroplot(clust_hedkin, sc, save_as)
+  # hedrick returns values of similarity
+  # transform them into values of dissimilarity (distance)
+  as.dist(1-hedkin)
 }
+
+hclust_default_method <- "complete"
+surname_clustering <- function(commoners,
+                               method=hclust_default_method) {
+  surname_distance_matrix(commoners) %>%
+    # hierarchical clustering of the distance matrix
+    hclust(method=method)
+}
+
+surname_dendrogram <- function(commoners, save_as=NULL,
+                               method=hclust_default_method) {
+  hc <- surname_clustering(commoners, method)
+  sc <- stats_communities(commoners)
+  dendroplot(hc, sc, save_as=save_as)
+}
+
+k_histogram <- function(commoners,
+                        k,
+                        save_as=NULL,
+                        hclust_method=hclust_default_method) {
+  sc <- stats_communities(commoners)
+  sur_clust <- surname_clustering(commoners, hclust_method)
+  kgroups <- cutree(sur_clust, k=k)
+  sc <- tibble(community=names(kgroups),
+               branch=as.character(kgroups)) %>%
+    right_join(sc, by="community")
+  if (!is.null(save_as))
+    pdf(save_as, width=5, height=4)
+  p <- ggplot(data=sc) +
+    geom_histogram(aes(x=G, y=..density.., fill=branch),
+                   bins=10, alpha=1/k,
+                   position="identity", boundary=0)
+  if (!is.null(save_as)) {
+    # ggsave(save_as, width=12, height=60, units="cm")
+    print(p)
+    dev.off()
+  } else p
+}
+
+# compare surnames matrix with G matrix
+# compare_dist <- function(commoners) {
+#   sc <- stats_communities(commoners)
+#   G_dist <- dist(sc$G)
+#   hedkin_dist <- surname_distance_matrix(commoners)
+#   # R: I don't understand why one would use quasieuclid or not
+#   mantel.randtest(hedkin_dist, # quasieuclid(hedkin_dist),
+#                   G_dist, nrepet=9999)
+# }
 
