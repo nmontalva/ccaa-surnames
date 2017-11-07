@@ -1,11 +1,14 @@
 # ccaa-surnames
 
+##Acknowledgment
+This porject was funded by CONICYT Fondecyt Iniciacion N°11160402
+
 ## What is this?
 
 This repository is to share and store data files from project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.
 
 
-## How to use it (on gnu/linux)
+## How to use it (on GNU/linux)
 
 ### Prerequisites
 

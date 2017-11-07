@@ -137,7 +137,8 @@ surname_distance_matrix <- function(commoners) {
   hedkin <- hedrick(surnames_freq)
   # hedrick returns values of similarity
   # transform them into values of dissimilarity (distance)
-  as.dist(1-hedkin)
+  #hedkin[hedkin == 0] <- 0.00049 #as an option to run -log(hedkin)
+    as.dist(1-hedkin)
 }
 
 hclust_default_method <- "complete"
@@ -178,13 +179,13 @@ k_histogram <- function(commoners,
   } else p
 }
 
-# compare surnames matrix with G matrix
-# compare_dist <- function(commoners) {
-#   sc <- stats_communities(commoners)
-#   G_dist <- dist(sc$G)
-#   hedkin_dist <- surname_distance_matrix(commoners)
-#   # R: I don't understand why one would use quasieuclid or not
-#   mantel.randtest(hedkin_dist, # quasieuclid(hedkin_dist),
-#                   G_dist, nrepet=9999)
-# }
+#compare surnames matrix with ,S, A, R, or G matrices
+compare_dist <- function(commoners, trait, m = "euclid") {
+  sc <- stats_communities(commoners)
+  trait_dist <- dist(sc[[trait]], m)
+  hedkin_dist <- surname_distance_matrix(commoners)
+  # R: I don't understand why one would use quasieuclid or not
+  mantel.randtest(hedkin_dist,
+                  trait_dist, nrepet=99999)
+}
 
