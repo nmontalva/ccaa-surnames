@@ -20,7 +20,7 @@ my_read_csv <- function(filename, ncol=5) {
     matrix(ncol=ncol, byrow=TRUE)
 }
 
-num_shares <- function(s, fname) {
+num_rights <- function(s, fname) {
   if (s == "UN DERECHO") 1
   else if (s == "UNO") 1
   else if (s == "1 DERECHO") 1
@@ -85,8 +85,8 @@ community_table <- function(m, fname) {
            str_replace(m[,2], "^0*([0-9]+).*", "\\1"),
          firstname=m[,3],
          surname=m[,4],
-         shares=
-           map_dbl(m[,5], ~num_shares(., fname)))
+         rights=
+           map_dbl(m[,5], ~num_rights(., fname)))
 }
 
 tidy <- function(df) {
@@ -243,7 +243,7 @@ manually_extracted_csvs <-
   str_c("manually-extracted/", skip, "-M.csv")
 
 col_names <- c("community", "right_id",
-               "firstname", "surname", "shares")
+               "firstname", "surname", "rights")
 
 read_community_csv <- function(filename) {
   read_csv(filename, col_names = col_names,
@@ -264,10 +264,12 @@ remove_accents <- function(df, cols=which(
 }
 
 remove_nonpeople <- function(df) {
-  df %>% filter(firstname != "ELIMINADO")
-  # df %>% filter(firstname != "ELIMINADO",
-  #               !startsWith(firstname, "COMUNIDAD AGRICOLA"),
-  #               !str_detect(firstname, "CIA\.|LTDA\."))
+  df %>%
+    filter(firstname != "ELIMINADO") %>%
+    # remove communities that appear as commoners
+    filter(!startsWith(firstname, "COMUNIDAD")) %>%
+    # remove companies that appear as commoners
+    filter(!str_detect(surname, "(?<![A-Z])LTDA"))
 }
 
 fix_compound_names <- function(df) {
@@ -292,7 +294,7 @@ fix_compound_names <- function(df) {
   df
 }
 
-remove_abbrev <- function(df) {
+remove_initials <- function(df) {
   for (col in c("firstname", "surname")) {
     df[[col]] <- df[[col]] %>%
       str_replace_all(" [A-Z]\\.", "") %>%
@@ -404,7 +406,7 @@ remove_sucesiones <- function(df) {
   for (i in ind) {
     from <- i + 1
     last <- from
-    while (df$shares[[last]] == 0)
+    while (df$rights[[last]] == 0)
       last <- last + 1
     last <- last - 1
     empties <- df$surname[from:last] == ""
@@ -430,14 +432,14 @@ remove_sucesiones <- function(df) {
   }
   sucesiones_ocultas <- c()
   for (i in ind) {
-    if (df$shares[[i+1]] == 0)
-      df$shares[[i+1]] <- df$shares[[i]]
+    if (df$rights[[i+1]] == 0)
+      df$rights[[i+1]] <- df$rights[[i]]
     else {
       df$firstname[[i]] <- df$firstname[[i]] %>%
         str_replace("^SUC(ESION|.) ", "")
       sucesiones_ocultas <- c(sucesiones_ocultas, i)
       # warning("the share of the first commoner of a ",
-      #         "succesion isn't zero but ", df$shares[[i+1]],
+      #         "succesion isn't zero but ", df$rights[[i+1]],
       #         "(", df[i+1,], ")")
     }
   }
@@ -445,34 +447,34 @@ remove_sucesiones <- function(df) {
   df[-ind,]
 }
 
-fix_shares <- function(df) {
+fix_rights <- function(df) {
   check <- function(i, j) {
     if (j < i) stop(j, " < ", i, "!")
-    if (sum(df$shares[i:j]) != df$shares[[i]])
-      stop("sum(df$shares[", i, ":", j, "]) == ",
-           sum(df$shares[i:j]), " != ", df$shares[[i]],
-           " == df$shares[[", i, "]]")
+    if (sum(df$rights[i:j]) != df$rights[[i]])
+      stop("sum(df$rights[", i, ":", j, "]) == ",
+           sum(df$rights[i:j]), " != ", df$rights[[i]],
+           " == df$rights[[", i, "]]")
   }
   from <- NA
-  for (i in seq_along(df$shares)) {
+  for (i in seq_along(df$rights)) {
     if (i == 1 ||
         df$community[[i-1]] != df$community[[i]]) {
-      if (df$shares[[i]] == 0)
+      if (df$rights[[i]] == 0)
         warning("community \"", df$community[[i]],
-                "\" starts with commoner with zero shares ",
+                "\" starts with commoner with zero rights ",
                 "at row ", i)
       if (!is.na(from)) {
         check(from, i-1)
-        divided_share <- df$shares[[from]] / (i-from)
-        df$shares[from:i-1] <- divided_share
+        divided_share <- df$rights[[from]] / (i-from)
+        df$rights[from:i-1] <- divided_share
       }
       from <- NA
-    } else if (is.na(from) && df$shares[[i]] == 0) {
+    } else if (is.na(from) && df$rights[[i]] == 0) {
       from <- i-1
-    } else if (!is.na(from) && df$shares[[i]] > 0) {
+    } else if (!is.na(from) && df$rights[[i]] > 0) {
       check(from, i-1)
-      divided_share <- df$shares[[from]] / (i-from)
-      df$shares[from:(i-1)] <- divided_share
+      divided_share <- df$rights[[from]] / (i-from)
+      df$rights[from:(i-1)] <- divided_share
       from <- NA
     }
   }
@@ -484,17 +486,20 @@ fix_repeated <- function(df) {
     mutate(i = row_number()) %>%
     group_by(community, firstname, surname) %>%
     summarise(right_id = first(right_id),
-              shares = sum(shares),
+              rights = sum(rights),
               i = first(i)) %>%
     arrange(i) %>% # reorder rows
     .[,col_names] # reorder columns and get rid of "i"
 }
 
-check_table <- function(df) {
-  all(df$community != "") &&
-    all(df$right_id > 0) &&
-    all(df$firstname != "") &&
-    all(df$shares > 0)
+compute_shares <- function(df) {
+  community_rights <- df %>%
+    group_by(community) %>%
+    summarise(total_rights=sum(rights))
+  df %>%
+    left_join(community_rights, by="community") %>%
+    mutate(shares=rights/total_rights) %>%
+    select(-total_rights)
 }
 
 communities_csv <- "communities.csv"
@@ -526,7 +531,7 @@ read_commune_csv <- function(filename=communes_csv) {
     select(commune, province, region)
 }
 
-add_province <- function(df) {
+add_province_and_region <- function(df) {
   left_join(df, read_commune_csv(), by="commune")
 }
 
@@ -566,6 +571,24 @@ assign_sex <- function(df) {
   df
 }
 
+check_table <- function(df) {
+  all(!is.na(df$community) & df$community != "") &&
+    all(!is.na(df$right_id) & df$right_id > 0) &&
+    all(!is.na(df$firstname) & df$firstname != "") &&
+    all(!is.na(df$surname) & df$surname != "") &&
+    all(!is.na(df$rights) & df$rights > 0) &&
+    all(!is.na(df$shares) & df$shares > 0 & df$shares <= 1) &&
+    all(!is.na(df$commune) & df$commune != "") &&
+    all(!is.na(df$province) & df$province != "") &&
+    all(!is.na(df$region) & df$region != "") &&
+    all(!is.na(df$firstname1) & df$firstname1 != "") &&
+    all(!is.na(df$surname_father) & df$surname_father != "") &&
+    all(!is.na(df$sex) & (df$sex == "M" |
+                          df$sex == "F" |
+                          # TODO: ideally this wouldn't be necessary
+                          df$sex == "A"))
+}
+
 read_pdfs <- function() {
   files <- list.files(path="pdfs", pattern="\\.pdf$",
                       full.names=TRUE)
@@ -580,13 +603,13 @@ read_pdfs <- function() {
     stringsAsFactors=FALSE)
 }
 
-extract_pdfs <- function(commoners_df) {
-  df <- commoners_df %>%
+extract_pdfs <- function(commoners) {
+  df <- commoners %>%
     mutate_if(is.character, trimws) %>%
     remove_accents %>%
     remove_nonpeople %>%
     fix_compound_names %>%
-    remove_abbrev
+    remove_initials
   # fix specific entries
   df$firstname <- df$firstname %>%
     str_replace("DEL_TRANSITOESPINOZA",
@@ -599,10 +622,11 @@ extract_pdfs <- function(commoners_df) {
     str_replace("HENRIQUE HENRIQUEZ",
                 "HENRIQUEZ HENRIQUEZ")
   w <- which(str_detect(df$firstname, "(?<![A-Z])DEL$"))
-  if (w != c(12450))
+  elisa_row <- 12391
+  if (w != c(elisa_row))
     stop("missing entry: ", str_c(w, collapse=" "))
-  df$firstname[[12450]] <- "ELISA DEL_ROSARIO"
-  df$surname[[12450]] <- "ARAYA"
+  df$firstname[[elisa_row]] <- "ELISA DEL_ROSARIO"
+  df$surname[[elisa_row]] <- "ARAYA"
   # this makes the splitting of surnames easier
   # for one case in community "canelilla"
   # but I'm not sure it might have unintended consequences
@@ -639,11 +663,12 @@ extract_pdfs <- function(commoners_df) {
   w2 <- which(firstnames %in% not_firstnames)
   firstnames <- firstnames[-w2]
   # the first commoner in ALCONES, "YAMILET VANESSA",
-  # has no annotated shares. give her 1.
+  # has no annotated rights. give her 1.
   w <- which(str_detect(df$firstname, "YAMILET VANESSA"))
-  if (w[[1]] != 6685)
+  yamilet_rows <- c(6681, 6853)
+  if (any(w != yamilet_rows))
     stop("missing entry: ", str_c(w, collapse=" "))
-  df$shares[[6685]] <- 1L
+  df$rights[[yamilet_rows[[1]]]] <- 1L
   # correct community names
   df[df$community == "ALHUEMILLAS LAS PALMAS", "community"] <-
     "ALHUEMILLA LAS PALMAS"
@@ -678,17 +703,16 @@ extract_pdfs <- function(commoners_df) {
   df[df$community == "CARRIZO MENDOZA Y ROMERO", "community"] <-
     "CARRIZO, MENDOZA Y ROMERO"
   df %>%
-    # remove communities that appear as commoners
-    filter(!startsWith(firstname, "COMUNIDAD")) %>%
-    # remove companies that appear as commoners
-    filter(!str_detect(surname, "(?<![A-Z])LTDA")) %>%
     fix_names(surnames, not_surnames,
               firstnames, not_firstnames) %>%
     remove_sucesiones %>%
-    fix_shares %>%
+    fix_rights %>%
     fix_repeated %>%
+    # compute the proportion of the communities rights
+    # each commoner has
+    compute_shares %>%
     add_commune %>%
-    add_province %>%
+    add_province_and_region %>%
     split_firstnames %>%
     split_surnames %>%
     assign_sex %>%
