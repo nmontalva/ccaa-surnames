@@ -235,7 +235,7 @@ skip <- c(
   "limari-2010-el_espinal",
   "limari-2010-el_potrero_de_huatulame",
   "limari-2010-fundina_norte",
-  "limari-2010-rinconada_punitaqui",
+  "limari-2010-rinconada_de_punitaqui",
   "limari-2010-cerro_blanco"
 )
 
