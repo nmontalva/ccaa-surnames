@@ -1,0 +1,238 @@
+---
+title: "Surnames"
+output:
+  html_document:
+    highlight: zenburn
+    self_contained: false
+    css: surnames.css
+    df_print: paged
+    # code_folding: show
+  # github_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = FALSE,
+  collapse = TRUE,
+  cache = TRUE,
+  cache.comments = FALSE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618, # 1 / phi
+  fig.show = "hold"
+)
+```
+
+We'd like to study the genealogy
+of the agropastoralist communities
+in the Coquimbo region (Chile)
+and see to what extent the evolution
+of the different wealth inheritance
+and land tenure norms in these communities
+can be explained by their genealogy.
+
+
+## Downloading the files with the data
+
+The website of the
+[Oficina Tecnica de Comunidades Agricolas](http://www.comunidadesagricolas.cl/) (OTCA)
+hosts the registry of commoners
+for all agricultural communities
+in the Coquimbo and Atacama regions (Chile).
+The OTCA collected the registry of commoners
+of some of the agricultural communities
+in years 2008, 2009, 2010, and 2011.
+For this reason,
+a community can have its registry of commoners
+available as a pdf file on the website
+for some, all or none of those years.
+We crawl the website to compile
+a list of the communities for which there is data
+together with the years from which their data is available
+and the url of their latest pdf file.
+This is done by the `download_pdfs` function
+in `download-pdfs.R`,
+which then proceeds to download the pdf files
+in a `pdfs` folder that it creates.
+
+```{r download, cache=TRUE}
+source('download-pdfs.R')
+download_pdfs()
+```
+
+
+## Extracting the data
+
+After downloading the files,
+we want to extract the tables contained in them as dataframes.
+
+```{r read, cache=TRUE}
+source('extract-pdfs.R')
+commoners_untidy <- read_pdfs()
+```
+
+This function tries to read the pdf file
+using several different methods in sequence
+and accepts the first method that returns a valid dataframe.
+The sequence of methods is determined by
+the `method` parameter,
+which in its default value dictates the following order:
+
+1. [tabulizer](https://github.com/ropensci/tabulizer)
+2. [tabula](https://github.com/tabulapdf/tabula-java/)
+3. pdftohtml (not implemented yet)
+4. pdftotext (not implemented yet)
+
+This is needed because no method so far is infallible.
+<!-- For the purpose of this function, -->
+In the context of this function,
+a valid dataframe is an object
+for which `is.data.frame()` returns `TRUE`,
+contains 5 columns,
+is not empty,
+and the commoner ids (second column) start from 1
+and increase by 0, 1, or 2 with each row.
+
+Unfortunately, many pdf files do not return
+a valid dataframe with any method.
+This is either because a) two columns are too close together
+and so are detected as one,
+or because b) the last column didn't fit in a portrait page
+and so appears in the last pages.
+The latter was solved
+by transcribing the pdf files into csvs by hand
+or, in some lucky cases where the last column is trivial,
+by adding the last column to
+the 4-column extracted matrix.
+The former, on the other hand,
+can be solved programmatically by
+a1) separating the commoner number from the name
+when the second and third columns were merged
+(see function `format_table` of `extract-pdfs.R`),
+and by
+a2) separating the first name from the surname 
+when the third and fourth columns were merged
+(see function `fix_names`).
+To make (a2) possible,
+compound names had to be merged into one word
+by substituting an underscore for the space,
+e.g. Del Rosario into Del_Rosario
+(see function `fix_compound_names`).
+<!-- The former can be solved by programmatic means -->
+<!-- (see for instance the code in -->
+<!--  function `format_table` of `extract-pdfs.R`, -->
+<!--  although more is needed to fully solve the first issue) -->
+<!-- but the latter must be solved -->
+<!-- by transcribing the pdf files into csvs by hand. -->
+
+The dataframes so extracted have several other issues as well.
+They are presented in the following table
+together with the function that solves each issue.
+
+------------------------------------------------------------------
+            Issue                                    Function
+----------------------------------------------- ------------------
+The same name appears with and
+without accents.                                `remove_accents`
+
+Commoners that were removed
+from the registry sometimes appear              `remove_nonpeople`
+as a commoner with name "eliminado"
+(Spanish for "removed").
+
+Sometimes a company or community owns
+a right in a community but they can't           `remove_nonpeople`
+be subject to the surname analysis
+we will perform.
+
+Sometimes only the initial of a name            `remove_initials`
+or surname appears.
+
+Successions were sometimes
+annotated as a ficticious extra commoner        `remove_sucesiones`
+before the list of commoners
+in the succession.
+
+Only the first commoner in a succession
+shows the rights of the whole succession        `fix_rights`
+next to it.
+This number had to be divided by
+all commoners in the succession.
+
+Sometimes commoners appear more than once       `fix_repeated`
+in a community when they own more than
+one right.
+------------------------------------------------------------------
+
+Finally, some extra information was added
+to this dataframe to later be able to
+compute the gender bias (`assign_sex`)
+and do aggregated analyses per commune and province
+(`add_commune` and `add_province_and_region`).
+Also, in order to facilitate the surname analysis,
+the first surname (received from the father)
+and the second surname (received from the mother)
+were split.
+
+All these functions and a few other case-by-case tweaks
+are run by the `extract_pdfs` function.
+
+```{r extract, cache=TRUE, dependson="read"}
+commoners <- extract_pdfs(commoners_untidy)
+```
+
+
+## Analysis
+
+With the data we collected in the previous step
+we can now run some analyses.
+The first analysis we would like to see
+is a dendrogram (i.e. a tree) of the communities
+according to the similarity of
+their distribution of surnames.
+
+There are different metrics of
+the similarity of surname distributions.
+One commonly used is Hedrick's formula,
+which computes the similarity $H_{ij}$
+of a community $i$ and $j$ as:
+
+\[ H_{ij} = \frac{ \sum_s s_i s_j }{
+     \frac{1}{2} (\sum_s s_i^2 + \sum_s s_j^2) } \]
+     
+where $s \in \mathbb{N}^C$ is the vector
+containing the frecuencies $s_i$
+of a given surname in community $i \in C$.
+Dually, one can see a community
+as a surname-indexed vector
+$c \in \mathbb{N}^S$
+with elements $c_s = s_c$.
+<!-- We can then rewrite the expression for $H_{ij}$ as -->
+We can then rewrite $H_{ij}$ as
+
+\[ H_{ij} = \frac{ 2 \, (i \cdot j) }{
+     i \cdot i + j \cdot j } \]
+     
+where $i$ and $j$ are surname-indexed vectors as above
+and $i \cdot j$ is their dot product.
+Note that $H_{ij}$ has the peculiar property that
+if $i$ and $j$ are co-linear but not of the same magnitude,
+then $H_{ij}$ is strictly smaller than 1.
+In other words,
+two communities with the same
+relative composition (ie probability distribution) of surnames
+but different number of commoners will have $H_{ij} < 1$.
+
+
+
+```{r dendro, cache=TRUE, dependson="extract"}
+source('analysis.R')
+```
+
+
+
+
+
+

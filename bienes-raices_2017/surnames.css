@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro');
+@import url('https://fonts.googleapis.com/css?family=Ovo');
+
+body {
+  font-family: 'Raleway', 'Source Serif Pro', 'Ovo', sans-serif;
+	font-size: 14pt;
+}
+
+table { 
+  margin-right: auto;
+  margin-left: auto;
+}
