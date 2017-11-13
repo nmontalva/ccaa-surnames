@@ -179,7 +179,7 @@ k_histogram <- function(commoners,
                         k,
                         save_as=NULL,
                         hclust_method=hclust_default_method) {
-  tc <- traits_communities(commoners)
+  tc <- traits(commoners)
   sur_clust <- surname_clustering(commoners, hclust_method)
   kgroups <- cutree(sur_clust, k=k)
   tc <- tibble(community=names(kgroups),
@@ -200,7 +200,7 @@ k_histogram <- function(commoners,
 
 # compare surnames matrix with ,S, A, R, or G matrices
 compare_dist <- function(commoners, trait, dist_method = "euclid") {
-  tc <- traits_communities(commoners)
+  tc <- traits(commoners)
   trait_dist <- dist(tc[[trait]], dist_method)
   hedkin_dist <- surname_distance_matrix(commoners)
   # R: I don't understand why one would use quasieuclid or not
