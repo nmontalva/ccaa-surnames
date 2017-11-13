@@ -55,22 +55,23 @@ infoTable <- function(pdfs, typos) {
               url=last(url))
 }
 
-download <- function(infoTbl) {
+download <- function(infoTbl, overwrite=FALSE) {
   infoTbl %>% by(seq_len(nrow(infoTbl)), function(i) {
     fname <- str_c("pdfs/", i$comuna, "-", i$last_year,
                    "-", i$name, ".pdf")
-    download.file(i$url, fname, mode="wb")
+    if (overwrite || !file.exists(fname))
+      download.file(i$url, fname, mode="wb")
   })
 }
 
 # TODO: change camelCase naming to snake_case
 
-download_pdfs <- function() {
+download_pdfs <- function(overwrite=FALSE) {
   pdfs <- getPDFUrls(nominasUrl)
   typos <- typoMap(typosFn)
   infoTbl <- infoTable(pdfs, typos)
   dir.create("pdfs", showWarnings=FALSE)
-  download(infoTbl)
+  download(infoTbl, overwrite)
   infoTbl %>% select(-last_year) %>%
     write_csv("info.csv")
 }
