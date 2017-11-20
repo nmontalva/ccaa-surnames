@@ -230,6 +230,57 @@ two communities with the same
 relative composition (ie probability distribution) of surnames
 but different number of commoners will have $H_{ij} < 1$.
 
+For comparison, take the cosine of the angle $\theta$
+between vectors $i$ and $j$
+in the euclidean space $\mathbb{R}^S$.
+
+\[ D_{ij} = \cos(\theta) = \frac{ i \cdot j }{
+     \sqrt{i \cdot i} \sqrt{j \cdot j} } \]
+
+Despite the similarities between $D_{ij}$ and $H_{ij}$,
+$D_{ij}$ is equal to $1$ whenever $i$ and $j$
+have the same relative composition of surnames.
+Note also that $0 \leq D_{ij} \leq 1$
+<!-- one should say non-negative but it's ugly -->
+since $i$ and $j$ are always positive for all coordinates
+and thus the angle between them can be at most $90^\circ$.
+
+In euclidean geometry, the denominator of $H_{ij}$
+can be seen as the mean of the square of the lengths
+of $i$ and $j$.
+However, I do not have a geometric intution regarding
+the division of the dot product of $i$ and $j$
+by the mean of the square of their lenghts.
+
+The distance between two communities may also be computed
+by obtaining first their probability distribution of surnames
+and then using any metric on probability distributions,
+eg Kantorovich or Kullback-Leibler.
+
+<!-- After obtaining the distances between communities, -->
+<!-- we would like to compute the dendrogram -->
+<!-- from the distance matrix. -->
+<!-- Several methods exist for this. -->
+From the distance matrix obtained using any of the methods above
+we would like to build a dendrogram.
+The simplest methods are hierarchical clustering methods,
+of which there are several varieties depending on the way
+in which distances between groups of communities are computed.
+The method can be summarised as follows:
+
+1) put each element into its own group
+2) the distance between such singleton groups is
+   taken directly from the distance matrix
+3) join the closest groups into a new group
+4) compute the distance between the new group and the rest
+   using a function that takes as input the distance vectors
+   of each of the elements in the group
+
+It'd be nice to make a heatmap matrix
+indicating how similar two dendrograms computed with
+different distance and clustering methods are.
+
+TODO: check that Hedrick is indeed a metric between vectors.
 
 
 ```{r dendro, cache=TRUE, dependson="extract"}
