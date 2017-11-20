@@ -6,6 +6,11 @@ output:
     self_contained: false
     css: surnames.css
     df_print: paged
+    theme: null
+    includes:
+      in_header: header.html
+      before_body: prefix.html
+      after_body: suffix.html
     # code_folding: show
   # github_document: default
 ---
@@ -39,10 +44,10 @@ can be explained by their genealogy.
 The website of the
 [Oficina Tecnica de Comunidades Agricolas](http://www.comunidadesagricolas.cl/) (OTCA)
 hosts the registry of commoners
-for all agricultural communities
+for all Agricultural Communities
 in the Coquimbo and Atacama regions (Chile).
 The OTCA collected the registry of commoners
-of some of the agricultural communities
+of some of the Agricultural Communities
 in years 2008, 2009, 2010, and 2011.
 For this reason,
 a community can have its registry of commoners
@@ -135,7 +140,7 @@ together with the function that solves each issue.
             Issue                                    Function
 ----------------------------------------------- ------------------
 The same name appears with and
-without accents.                                `remove_accents`
+without diacritic marks.                        `remove_accents`
 
 Commoners that were removed
 from the registry sometimes appear              `remove_nonpeople`
@@ -201,7 +206,7 @@ of a community $i$ and $j$ as:
 
 \[ H_{ij} = \frac{ \sum_s s_i s_j }{
      \frac{1}{2} (\sum_s s_i^2 + \sum_s s_j^2) } \]
-     
+
 where $s \in \mathbb{N}^C$ is the vector
 containing the frecuencies $s_i$
 of a given surname in community $i \in C$.
@@ -214,7 +219,7 @@ We can then rewrite $H_{ij}$ as
 
 \[ H_{ij} = \frac{ 2 \, (i \cdot j) }{
      i \cdot i + j \cdot j } \]
-     
+
 where $i$ and $j$ are surname-indexed vectors as above
 and $i \cdot j$ is their dot product.
 Note that $H_{ij}$ has the peculiar property that
