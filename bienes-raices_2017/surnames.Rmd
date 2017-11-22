@@ -212,9 +212,8 @@ containing the frecuencies $s_i$
 of a given surname in community $i \in C$.
 Dually, one can see a community
 as a surname-indexed vector
-$c \in \mathbb{N}^S$
-with elements $c_s = s_c$.
-<!-- We can then rewrite the expression for $H_{ij}$ as -->
+$i \in \mathbb{N}^S$
+with elements $i_s = s_i$.
 We can then rewrite $H_{ij}$ as
 
 \[ H_{ij} = \frac{ 2 \, (i \cdot j) }{
@@ -222,45 +221,79 @@ We can then rewrite $H_{ij}$ as
 
 where $i$ and $j$ are surname-indexed vectors as above
 and $i \cdot j$ is their dot product.
-Note that $H_{ij}$ has the peculiar property that
-if $i$ and $j$ are co-linear but not of the same magnitude,
-then $H_{ij}$ is strictly smaller than 1.
-In other words,
-two communities with the same
-relative composition (ie probability distribution) of surnames
-but different number of commoners will have $H_{ij} < 1$.
+Note that $0 \leq H_{ij} \leq 1$ because
+$\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}$
 
-For comparison, take the cosine of the angle $\theta$
-between vectors $i$ and $j$
+1) $i \cdot i = \norm{i}^2$ and $j \cdot j = \norm{j}^2$
+   are both nonnegative;
+2) all coordinates of $i$ and $j$ are nonnegative,
+   so the angle between them can be at most $90^\circ$
+   and $i \cdot j$ is nonnegative; and
+3) the maximum value for $i \cdot j$ is obtained
+   when $i$ and $j$ are co-linear,
+   in which case $i \cdot j = \norm{i} \norm{j}$
+   and $2 \norm{i} \norm{j} \leq \norm{i}^2 + \norm{j}^2$.
+
+One then obtains a metric $G_{ij} = 1 - H_{ij}$ on $\mathbb{N}^S$.
+
+1) non-negativity: $G_{ij} \geq 0$ since $H_{ij} \leq 1$
+2) identity of indiscernibles: $G_{ij} = 0$ iff $i = j$
+   because $H_{ij} = 1$ only when
+   $2 \norm{i} \norm{j} = \norm{i}^2 + \norm{j}^2$
+3) symmetry: $G_{ij} = G_{ji}$
+   as the definition of $H_{ij}$ is symmetric
+4) triangle inequality: $G_{ik} \leq G_{ij} + G_{jk}$
+
+TODO: prove triangle inequality.
+
+As a metric on the non-normalised vectors,
+$G_{ij}$ has the property that if $i$ and $j$ are co-linear
+but not of the same magnitude,
+then $G_{ij}$ is strictly greater than 0.
+In other words, two communities with the same
+relative composition (ie probability distribution) of surnames
+but different number of commoners
+will have $H_{ij} < 1$ and thus $G_{ij} > 0$.
+This scale dependence is unfortunate.
+Instead we would like to have a scale-independent metric.
+An interesting scale-independent pseudometric is $1$ minus
+the cosine of the angle $\theta$ between vectors $i$ and $j$
 in the euclidean space $\mathbb{R}^S$.
 
-\[ D_{ij} = \cos(\theta) = \frac{ i \cdot j }{
-     \sqrt{i \cdot i} \sqrt{j \cdot j} } \]
+\[ D_{ij} = 1 - \cos \theta = 1 - \frac{ i \cdot j }{
+     \sqrt{i \cdot i} \sqrt{j \cdot j} } =
+   1 - \frac{ i \cdot j }{ \norm{i} \norm{j} } \]
 
 Despite the similarities between $D_{ij}$ and $H_{ij}$,
 $D_{ij}$ is equal to $1$ whenever $i$ and $j$
 have the same relative composition of surnames.
-Note also that $0 \leq D_{ij} \leq 1$
-<!-- one should say non-negative but it's ugly -->
-since $i$ and $j$ are always positive for all coordinates
-and thus the angle between them can be at most $90^\circ$.
+This implies that $D_{ij}$ is not a metric on $\mathbb{R}^S$
+but a metric on the normalised vectors $i/\norm{i}$.
+As before, we have $0 \leq D_{ij} \leq 1$.
 
-In euclidean geometry, the denominator of $H_{ij}$
-can be seen as the mean of the square of the lengths
-of $i$ and $j$.
-However, I do not have a geometric intution regarding
-the division of the dot product of $i$ and $j$
-by the mean of the square of their lenghts.
+Expressing $i \cdot j$ in terms of the cosine of $\theta$,
+one can rewrite $H_{ij}$ yet again as
+
+\[ H_{ij} = \frac{ 2 \, (i \cdot j) }{ \norm{i}^2 + \norm{j}^2 } =
+   \frac{ 2 \cos \theta \norm{i} \norm{j} }{
+   \norm{i}^2 + \norm{j}^2 } =
+   \frac{ 2 \cos \theta }{ \frac{\norm{i}}{\norm{j}} +
+   \frac{\norm{i}}{\norm{j}} } \]
+
+Notice that whenever $i$ and $j$ are normalised
+(ie $\norm{i} = 1 = \norm{j}$) then $H_{ij} = \cos \theta$.
+Interestingly, Hedrick's similarity is usually
+computed on the normalised vectors.
+<!-- Still, I have no geometric intution -->
+<!-- for these expressions in the general case. -->
 
 The distance between two communities may also be computed
-by obtaining first their probability distribution of surnames
-and then using any metric on probability distributions,
-eg Kantorovich or Kullback-Leibler.
+by using any standard metric for probability distributions
+on the normalised vectors,
+eg [Wasserstein](https://en.wikipedia.org/wiki/Wasserstein_metric).
+For the Wasserstein metric see R package
+[transport](https://www.rdocumentation.org/packages/transport/versions/0.9-4).
 
-<!-- After obtaining the distances between communities, -->
-<!-- we would like to compute the dendrogram -->
-<!-- from the distance matrix. -->
-<!-- Several methods exist for this. -->
 From the distance matrix obtained using any of the methods above
 we would like to build a dendrogram.
 The simplest methods are hierarchical clustering methods,
@@ -279,8 +312,6 @@ The method can be summarised as follows:
 It'd be nice to make a heatmap matrix
 indicating how similar two dendrograms computed with
 different distance and clustering methods are.
-
-TODO: check that Hedrick is indeed a metric between vectors.
 
 
 ```{r dendro, cache=TRUE, dependson="extract"}

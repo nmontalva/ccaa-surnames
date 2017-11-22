@@ -226,20 +226,36 @@ $(document).ready(function () {
 <p>There are different metrics of the similarity of surname distributions. One commonly used is Hedrick’s formula, which computes the similarity <span class="math inline">\(H_{ij}\)</span> of a community <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> as:</p>
 <p><span class="math display">\[ H_{ij} = \frac{ \sum_s s_i s_j }{
      \frac{1}{2} (\sum_s s_i^2 + \sum_s s_j^2) } \]</span></p>
-<p>where <span class="math inline">\(s \in \mathbb{N}^C\)</span> is the vector containing the frecuencies <span class="math inline">\(s_i\)</span> of a given surname in community <span class="math inline">\(i \in C\)</span>. Dually, one can see a community as a surname-indexed vector <span class="math inline">\(c \in \mathbb{N}^S\)</span> with elements <span class="math inline">\(c_s = s_c\)</span>. <!-- We can then rewrite the expression for $H_{ij}$ as --> We can then rewrite <span class="math inline">\(H_{ij}\)</span> as</p>
+<p>where <span class="math inline">\(s \in \mathbb{N}^C\)</span> is the vector containing the frecuencies <span class="math inline">\(s_i\)</span> of a given surname in community <span class="math inline">\(i \in C\)</span>. Dually, one can see a community as a surname-indexed vector <span class="math inline">\(i \in \mathbb{N}^S\)</span> with elements <span class="math inline">\(i_s = s_i\)</span>. We can then rewrite <span class="math inline">\(H_{ij}\)</span> as</p>
 <p><span class="math display">\[ H_{ij} = \frac{ 2 \, (i \cdot j) }{
      i \cdot i + j \cdot j } \]</span></p>
-<p>where <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are surname-indexed vectors as above and <span class="math inline">\(i \cdot j\)</span> is their dot product. Note that <span class="math inline">\(H_{ij}\)</span> has the peculiar property that if <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are co-linear but not of the same magnitude, then <span class="math inline">\(H_{ij}\)</span> is strictly smaller than 1. In other words, two communities with the same relative composition (ie probability distribution) of surnames but different number of commoners will have <span class="math inline">\(H_{ij} &lt; 1\)</span>.</p>
-<p>For comparison, take the cosine of the angle <span class="math inline">\(\theta\)</span> between vectors <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> in the euclidean space <span class="math inline">\(\mathbb{R}^S\)</span>.</p>
-<p><span class="math display">\[ D_{ij} = \cos(\theta) = \frac{ i \cdot j }{
-     \sqrt{i \cdot i} \sqrt{j \cdot j} } \]</span></p>
-<p>Despite the similarities between <span class="math inline">\(D_{ij}\)</span> and <span class="math inline">\(H_{ij}\)</span>, <span class="math inline">\(D_{ij}\)</span> is equal to <span class="math inline">\(1\)</span> whenever <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> have the same relative composition of surnames. Note also that <span class="math inline">\(0 \leq D_{ij} \leq 1\)</span> <!-- one should say non-negative but it's ugly --> since <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are always positive for all coordinates and thus the angle between them can be at most <span class="math inline">\(90^\circ\)</span>.</p>
-<p>In euclidean geometry, the denominator of <span class="math inline">\(H_{ij}\)</span> can be seen as the mean of the square of the lengths of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. However, I do not have a geometric intution regarding the division of the dot product of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> by the mean of the square of their lenghts.</p>
-<p>The distance between two communities may also be computed by obtaining first their probability distribution of surnames and then using any metric on probability distributions, eg Kantorovich or Kullback-Leibler.</p>
-<!-- After obtaining the distances between communities, -->
-<!-- we would like to compute the dendrogram -->
-<!-- from the distance matrix. -->
-<!-- Several methods exist for this. -->
+<p>where <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are surname-indexed vectors as above and <span class="math inline">\(i \cdot j\)</span> is their dot product. Note that <span class="math inline">\(0 \leq H_{ij} \leq 1\)</span> because <span class="math inline">\(\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}\)</span></p>
+<ol type="1">
+<li><span class="math inline">\(i \cdot i = \norm{i}^2\)</span> and <span class="math inline">\(j \cdot j = \norm{j}^2\)</span> are both nonnegative;</li>
+<li>all coordinates of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are nonnegative, so the angle between them can be at most <span class="math inline">\(90^\circ\)</span> and <span class="math inline">\(i \cdot j\)</span> is nonnegative; and</li>
+<li>the maximum value for <span class="math inline">\(i \cdot j\)</span> is obtained when <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are co-linear, in which case <span class="math inline">\(i \cdot j = \norm{i} \norm{j}\)</span> and <span class="math inline">\(2 \norm{i} \norm{j} \leq \norm{i}^2 + \norm{j}^2\)</span>.</li>
+</ol>
+<p>One then obtains a metric <span class="math inline">\(G_{ij} = 1 - H_{ij}\)</span> on <span class="math inline">\(\mathbb{N}^S\)</span>.</p>
+<ol type="1">
+<li>non-negativity: <span class="math inline">\(G_{ij} \geq 0\)</span> since <span class="math inline">\(H_{ij} \leq 1\)</span></li>
+<li>identity of indiscernibles: <span class="math inline">\(G_{ij} = 0\)</span> iff <span class="math inline">\(i = j\)</span> because <span class="math inline">\(H_{ij} = 1\)</span> only when <span class="math inline">\(2 \norm{i} \norm{j} = \norm{i}^2 + \norm{j}^2\)</span></li>
+<li>symmetry: <span class="math inline">\(G_{ij} = G_{ji}\)</span> as the definition of <span class="math inline">\(H_{ij}\)</span> is symmetric</li>
+<li>triangle inequality: <span class="math inline">\(G_{ik} \leq G_{ij} + G_{jk}\)</span></li>
+</ol>
+<p>TODO: prove triangle inequality.</p>
+<p>As a metric on the non-normalised vectors, <span class="math inline">\(G_{ij}\)</span> has the property that if <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are co-linear but not of the same magnitude, then <span class="math inline">\(G_{ij}\)</span> is strictly greater than 0. In other words, two communities with the same relative composition (ie probability distribution) of surnames but different number of commoners will have <span class="math inline">\(H_{ij} &lt; 1\)</span> and thus <span class="math inline">\(G_{ij} &gt; 0\)</span>. This scale dependence is unfortunate. Instead we would like to have a scale-independent metric. An interesting scale-independent pseudometric is <span class="math inline">\(1\)</span> minus the cosine of the angle <span class="math inline">\(\theta\)</span> between vectors <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> in the euclidean space <span class="math inline">\(\mathbb{R}^S\)</span>.</p>
+<p><span class="math display">\[ D_{ij} = 1 - \cos \theta = 1 - \frac{ i \cdot j }{
+     \sqrt{i \cdot i} \sqrt{j \cdot j} } =
+   1 - \frac{ i \cdot j }{ \norm{i} \norm{j} } \]</span></p>
+<p>Despite the similarities between <span class="math inline">\(D_{ij}\)</span> and <span class="math inline">\(H_{ij}\)</span>, <span class="math inline">\(D_{ij}\)</span> is equal to <span class="math inline">\(1\)</span> whenever <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> have the same relative composition of surnames. This implies that <span class="math inline">\(D_{ij}\)</span> is not a metric on <span class="math inline">\(\mathbb{R}^S\)</span> but a metric on the normalised vectors <span class="math inline">\(i/\norm{i}\)</span>. As before, we have <span class="math inline">\(0 \leq D_{ij} \leq 1\)</span>.</p>
+<p>Expressing <span class="math inline">\(i \cdot j\)</span> in terms of the cosine of <span class="math inline">\(\theta\)</span>, one can rewrite <span class="math inline">\(H_{ij}\)</span> yet again as</p>
+<p><span class="math display">\[ H_{ij} = \frac{ 2 \, (i \cdot j) }{ \norm{i}^2 + \norm{j}^2 } =
+   \frac{ 2 \cos \theta \norm{i} \norm{j} }{
+   \norm{i}^2 + \norm{j}^2 } =
+   \frac{ 2 \cos \theta }{ \frac{\norm{i}}{\norm{j}} +
+   \frac{\norm{i}}{\norm{j}} } \]</span></p>
+<p>Notice that whenever <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are normalised (ie <span class="math inline">\(\norm{i} = 1 = \norm{j}\)</span>) then <span class="math inline">\(H_{ij} = \cos \theta\)</span>. Interestingly, Hedrick’s similarity is usually computed on the normalised vectors. <!-- Still, I have no geometric intution --> <!-- for these expressions in the general case. --></p>
+<p>The distance between two communities may also be computed by using any standard metric for probability distributions on the normalised vectors, eg <a href="https://en.wikipedia.org/wiki/Wasserstein_metric">Wasserstein</a>. For the Wasserstein metric see R package <a href="https://www.rdocumentation.org/packages/transport/versions/0.9-4">transport</a>.</p>
 <p>From the distance matrix obtained using any of the methods above we would like to build a dendrogram. The simplest methods are hierarchical clustering methods, of which there are several varieties depending on the way in which distances between groups of communities are computed. The method can be summarised as follows:</p>
 <ol type="1">
 <li>put each element into its own group</li>
@@ -248,7 +264,6 @@ $(document).ready(function () {
 <li>compute the distance between the new group and the rest using a function that takes as input the distance vectors of each of the elements in the group</li>
 </ol>
 <p>It’d be nice to make a heatmap matrix indicating how similar two dendrograms computed with different distance and clustering methods are.</p>
-<p>TODO: check that Hedrick is indeed a metric between vectors.</p>
 <pre class="sourceCode r" id="cb4"><code class="sourceCode r"><div class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">source</span>(<span class="st">&#39;analysis.R&#39;</span>)</div></code></pre>
 </section>
 
