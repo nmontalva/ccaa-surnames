@@ -246,8 +246,9 @@ col_names <- c("community", "right_id",
                "firstname", "surname", "rights")
 
 read_community_csv <- function(filename) {
-  read_csv(filename, col_names = col_names,
-           col_types = "ciccd")
+  read_csv(filename,
+           col_names=col_names,
+           col_types="ciccd")
 }
 
 remove_accents <- function(df, cols=which(
@@ -557,18 +558,33 @@ split_firstnames <- function(df)
               "firstname1",
               "firstname2")
 
-assign_sex <- function(df) {
-  df$sex <- rep("A", n=nrow(df))
-  b1 <- endsWith(df$firstname1, "A")
-  df$sex[b1] <- "F"
-  b2 <- endsWith(df$firstname1, "O")
-  df$sex[b2] <- "M"
-  b3 <- !b1 & !b2
-  b4 <- endsWith(df$firstname2[b3], "A")
-  df$sex[b3][b4] <- "F"
-  b5 <- endsWith(df$firstname2[b3], "O")
-  df$sex[b3][b5] <- "M"
-  df
+assign_sex <- function(commoners) {
+  name_gender_csv <- read_csv("name_gender.csv",
+                              col_types="cc",
+                              col_names=c("name", "sex"))
+  w <- name_gender_csv$sex != "A"
+  name_gender <- name_gender_csv$sex[w]
+  names(name_gender) <- name_gender_csv$name[w] %>%
+    toupper %>%
+    str_replace_all(" +", "_")
+  ambiguous <- name_gender_csv$name[!w] %>%
+    toupper %>%
+    str_replace_all(" +", "_")
+  by_last_letter <- function(name) {
+    if (name %in% ambiguous) NA
+    else if (endsWith(name, "A")) "F"
+    else if (endsWith(name, "O")) "M"
+    else NA
+  }
+  sex0 <- map_chr(commoners$firstname, function(name)
+    name_gender[str_replace_all(name, " +", "_")])
+  sex1 <- map_chr(commoners$firstname1, ~name_gender[.])
+  sex2 <- map_chr(commoners$firstname2, ~name_gender[.])
+  sex3 <- map_chr(commoners$firstname1, by_last_letter)
+  sex4 <- map_chr(commoners$firstname2, by_last_letter)
+  commoners$sex <- coalesce(sex0, sex1, sex2, sex3, sex4)
+  commoners$sex[is.na(commoners$sex)] <- "A"
+  commoners
 }
 
 check_table <- function(df) {
@@ -617,7 +633,10 @@ extract_pdfs <- function(commoners) {
     str_replace("GUILLERMO ENRIQUE DEL_ROSARVICENCIO CORTES",
                 "GUILLERMO ENRIQUE DEL_ROSARIO VICENCIO CORTES") %>%
     str_replace("CASIMIRA DEL_CARMEN CLAUDICORTES",
-                "CASIMIRA DEL_CARMEN CORTES")
+                "CASIMIRA DEL_CARMEN CORTES") %>%
+    str_replace("EMILIOHERNAN",
+                "EMILIO HERNAN") %>%
+    str_replace(" +DEL_(?![A-Z])", "")
   df$surname <- df$surname %>%
     str_replace("HENRIQUE HENRIQUEZ",
                 "HENRIQUEZ HENRIQUEZ")
