@@ -4,6 +4,8 @@ library(Biodem)
 library(ggdendro)
 library(reldist)
 library(ade4)
+library("ggpubr")
+
 
 commoners_csv <- "commoners.csv"
 col_names <- c("community", "right_id",
@@ -175,29 +177,6 @@ surname_dendrogram <- function(commoners, save_as=NULL,
   dendroplot(hc, save_as, group_by_col)
 }
 
-k_histogram <- function(commoners,
-                        k,
-                        save_as=NULL,
-                        hclust_method=hclust_default_method) {
-  tc <- traits(commoners)
-  sur_clust <- surname_clustering(commoners, hclust_method)
-  kgroups <- cutree(sur_clust, k=k)
-  tc <- tibble(community=names(kgroups),
-               branch=as.character(kgroups)) %>%
-    right_join(tc, by="community")
-  if (!is.null(save_as))
-    pdf(save_as, width=5, height=4)
-  p <- ggplot(data=tc) +
-    geom_histogram(aes(x=G, y=..density.., fill=branch),
-                   bins=10, alpha=1/k,
-                   position="identity", boundary=0)
-  if (!is.null(save_as)) {
-    # ggsave(save_as, width=12, height=60, units="cm")
-    print(p)
-    dev.off()
-  } else p
-}
-
 # compare surnames matrix with ,S, A, R, or G matrices
 compare_dist <- function(commoners,
                          trait,
@@ -210,5 +189,58 @@ compare_dist <- function(commoners,
   mantel.randtest(hedkin_dist, # quasieuclid(hedkin_dist),
                   trait_dist,
                   nrepet=nrepet)
+}
+
+k_clusters <- function(commoners,
+                       k,
+                       hclust_method=hclust_default_method) {
+  sur_clust <- surname_clustering(commoners, hclust_method)
+  kgroups <- cutree(sur_clust, k=k)
+  tibble(community=names(kgroups),
+         branch=as.character(kgroups))
+}
+
+k_histogram <- function(commoners,
+                        k,
+                        save_as=NULL,
+                        hclust_method=hclust_default_method) {
+  tc <- traits(commoners) %>%
+    left_join(k_clusters(commoners, k, hclust_method),
+              by="community")
+  if (!is.null(save_as))
+    pdf(save_as, width=5, height=4)
+  p <- ggplot(data=tc) +
+    geom_histogram(aes(x=G, y=..density.., fill=branch),
+                   bins=10, alpha=1/k,
+                   position="identity", boundary=0)
+  if (!is.null(save_as)) {
+    print(p)
+    dev.off()
+  } else p
+}
+
+# anova of a trait by clusters
+clust_pval <- function(commoners,
+                       ks,
+                       trait="G",
+                       # hclust_method=hclust_default_method) {
+                       hclust_method="ward.D2") {
+  tc <- traits(commoners)
+  ks %>% map_dfr(function(k) {
+    tck <- left_join(tc, k_clusters(commoners, k, hclust_method),
+                     by="community")
+    clusters <- tck %>% group_by(branch) %>%
+      summarise(size=n())
+                # TODO: make code parametric on trait
+                # gini_mean=mean(G, na.rm=TRUE),
+                # gini_sd=sd(G, na.rm=TRUE))
+    tibble(
+      num_clusters=k,
+      # plot=ggboxplot(tck, x="branch", y=trait, xlab="Cluster", ylab=trait),
+      # anova=summary(aov(tck[[trait]] ~ tck$branch)),
+      pval=kruskal.test(tck[[trait]] ~ as.factor(tck$branch))$p.value,
+      n=mean(clusters$size),
+      sd=sd(clusters$size))
+  })
 }
 
