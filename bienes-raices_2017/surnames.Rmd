@@ -318,33 +318,20 @@ different distance and clustering methods are.
 source('analysis.R')
 ```
 
-```{r include = FALSE}
-source('download-pdfs.R')
-download_pdfs()
-source('extract-pdfs.R')
-commoners_untidy <- read_pdfs()
-source('analysis.R')
-read.csv(coordenadas.csv)
-```
-
 ## Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Lorem Ipsum
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Maps
 
-```{r cars}
-summary(cars)
-```
+<!-- I've got no idea why maps are not displayed -->
 
-## Including Plots
+This map has been done with default options:
 
-You can also embed plots, for example:
-
-```{r pressure, echo=TRUE}
+```{r mapinterpol, echo=FALSE, include = TRUE}
+read.csv(coordenadas.csv)
 mapinterpol(commoners,coordenadas)
 ```
-
 
 
 

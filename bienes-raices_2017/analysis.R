@@ -4,7 +4,7 @@ library(Biodem)
 library(ggdendro)
 library(reldist)
 library(ade4)
-library("ggpubr")
+library(ggpubr)
 
 ##For maps:
 library(sp) 		# Define Spatial Polygon objects
@@ -320,11 +320,15 @@ clust_pval <- function(commoners,
   plot(Smooth.ppp(datamap_ppp, sigma = sigmet, nh = 1024, warn=FALSE, eps=resol, weights=data2map[["N"]]), col=style, zlim=zlim, main=val, ribsep=0.05, ribargs=rib)
   points(datamap_ppp, pch=20, cex=1)
   #Coords. TODO: Define labels programatically
-  axis(1, pos=min(length_ylim), at= trunc(seq(min(length_xlim), max(length_xlim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("71째W","70째W"))
-  axis(2, pos=min(length_xlim), at= trunc(seq(min(length_ylim), max(length_ylim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("32째S","31째S","30째S","29째S"))
+  axis(1, pos=min(length_ylim), at= trunc(seq(min(length_xlim), max(length_xlim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("71캷","70캷"))
+  axis(2, pos=min(length_xlim), at= trunc(seq(min(length_ylim), max(length_ylim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("32캳","31캳","30캳",""))
   pos_scale <- length_xlim[2]+((length_xlim[2]-length_xlim[1])*0.05) + length(length_xlim)/10
   pos_at <- seq(length_ylim[1], length_ylim[2], length.out = 11)
   
- if(zprop) {
-   axis(4, at=pos_at, lwd=0, lwd.ticks=0, cex.axis=0.9, pos=pos_scale, lab=c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"), las=1)
- } 
+# if(zprop) {
+#   axis(4, at=pos_at, lwd=0, lwd.ticks=0, cex.axis=0.9, pos=pos_scale, lab=c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"), las=1)
+# } 
+  if(zprop) {
+    axis(4, at=pos_at, lwd=0, lwd.ticks=0, cex.axis=0.9, pos=pos_scale, lab= round(seq(min(data2map[[val]]), max(data2map[[val]]), by= (max(data2map[[val]]) - min(data2map[[val]])) / 10), digits =2), las=1)
+  }  
+}
