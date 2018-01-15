@@ -66,6 +66,11 @@ Methodologically, this project will study the relationship between wealth inheri
 
 The rationale behind this approach is based on the fact that property rights, surnames and genes are all vertically transmitted from parents to offspring, and thus tracking the ancestor--descendant relationships using one trait can give clues about the genealogical history of one of the others. Trees and traits obtained from both phases will be compared and combined to evaluate which trees show the highest statistical accordance with all the data. It is expected to obtain as a result an scheme of the cultural evolution of these traits (i.e. their changes through the branches of the tree) using phylogenetic methods. It is also expected to use these results to test specific hypotheses about the origin of the Agricultural Communities, and general theoretical questions about the emergence of communal land systems, contributing with a framework to study comparatively the effects of ecological, demographic and economic conditions on wealth and property.
 
+## Geographic maps of frequencies
+
+Sometimes called "interpolation maps" are maps used to predict the frequencie of a trait over a geographic area, deducing likely values of a trait at every point of the map based on a few geographic points where data were actually collected.
+
+...tbc
 
 ## Acknowledgment
 

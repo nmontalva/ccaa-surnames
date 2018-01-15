@@ -6,6 +6,16 @@ library(reldist)
 library(ade4)
 library("ggpubr")
 
+##For maps:
+library(sp) 		# Define Spatial Polygon objects
+library(raster) 	# We use this to crop a section of the world map
+library(maptools) 	# Various geographic tools
+library(rgeos)		# Manipulate Spatial Polygons
+library(rworldmap)  # This provides basic maps
+library(rworldxtra) # Extension of the previous, provides high resolution for the maps.
+library(spatstat)   # Spatial statistics tools
+library(colorRamps)
+
 
 commoners_csv <- "commoners.csv"
 col_names <- c("community", "right_id",
@@ -244,3 +254,77 @@ clust_pval <- function(commoners,
   })
 }
 
+##Maps
+     #TO-DO add comments
+     
+     mapinterpol <- function(commoners,coordinates,val = "G", sigmet, resol = 0.001, style =c("disc_mono","disc_col", "cont_mono","cont_col"), zlim = c("zrange","zprop")) {
+  interpol_traits <- traits(commoners)
+  data2map <- dplyr::inner_join(coordinates,interpol_traits)
+  length_xlim <- extendrange(range(data2map[["lon"]]))
+  length_ylim <- extendrange(range(data2map[["lat"]]))
+  plane_extent <- extent(c(length_xlim,length_ylim))
+  Framed_plane_SP <- as(plane_extent, "SpatialPolygons")
+  map_SP <- getMap(resolution = "high")
+  proj4string(Framed_plane_SP) <- CRS(proj4string(map_SP))
+  map_sec <- gIntersection(map_SP, Framed_plane_SP, byid=T)
+  map_noborders <- gUnaryUnion(map_sec)
+  map_noborders_owin <- as(map_noborders, "owin")
+  sub_data2map <- data2map[c("lon","lat",val)]
+  datamap_ppp <- ppp(sub_data2map[["lon"]], sub_data2map[["lat"]], window=map_noborders_owin, marks=sub_data2map[[val]])
+  
+  #Options for sigma. It could be any double.
+  if(missing(sigmet)) {
+    sigmet <- bw.smoothppp(datamap_ppp)
+  } else if (sigmet == "smooth") {
+    sigmet <- bw.smoothppp(datamap_ppp)
+  } else if (sigmet == "ppl") {
+    sigmet <- bw.ppl(datamap_ppp)
+  } else if (sigmet == "scott") {
+    sigmet <- bw.scott(datamap_ppp)
+  } else if (sigmet == "diggle") {
+    sigmet <- bw.diggle(datamap_ppp)
+  } else if (sigmet == "itan") {
+    sigmet <- mean(nndist(datamap_ppp))/2
+  } 
+  
+  #Options for scale. Zprop: 0 to 1 scale. Zrange: The actual max-min range.
+  if(missing(zlim)) {
+    zlim <- range(data2map[[val]])
+    rib <- list(axes=TRUE)
+    zprop <- FALSE
+  } else if (zlim == "zprop") {
+    zlim <- c(0,1)
+    rib <- list(axes=FALSE)
+    zprop <- TRUE
+  } else {
+    zlim <- range(data2map[[val]])
+    rib <- list(axes=TRUE)
+    zprop <- FALSE
+  }
+  
+  #Options for style. mono: Monochrome, col: Colour. Discrete and Continuous
+  if(missing(style)) {
+    style <- colorRampPalette(c("blue","lightblue","green","yellow","orange","red"))
+  } else if (style == "disc_mono") {
+    style <- colorRampPalette(c("gray80","gray14"))(10)
+  } else if (style == "disc_col"){
+    style <- colorRampPalette(c("blue","lightblue","green","yellow","orange","red"))(10)
+  } else if (style == "cont_mono") {
+    style <- colorRampPalette(c("gray80","gray14"))
+  } else if (style == "cont_col"){
+    style <- colorRampPalette(c("blue","lightblue","green","yellow","orange","red"))
+  } else { 
+    style <- colorRampPalette(c("blue","lightblue","green","yellow","orange","red"))
+  }
+  
+  plot(Smooth.ppp(datamap_ppp, sigma = sigmet, nh = 1024, warn=FALSE, eps=resol, weights=data2map[["N"]]), col=style, zlim=zlim, main=val, ribsep=0.05, ribargs=rib)
+  points(datamap_ppp, pch=20, cex=1)
+  #Coords. TODO: Define labels programatically
+  axis(1, pos=min(length_ylim), at= trunc(seq(min(length_xlim), max(length_xlim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("71°W","70°W"))
+  axis(2, pos=min(length_xlim), at= trunc(seq(min(length_ylim), max(length_ylim), by =1)), lwd=0, lwd.ticks=1, cex.axis=0.7, lab=c("32°S","31°S","30°S","29°S"))
+  pos_scale <- length_xlim[2]+((length_xlim[2]-length_xlim[1])*0.05) + length(length_xlim)/10
+  pos_at <- seq(length_ylim[1], length_ylim[2], length.out = 11)
+  
+ if(zprop) {
+   axis(4, at=pos_at, lwd=0, lwd.ticks=0, cex.axis=0.9, pos=pos_scale, lab=c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"), las=1)
+ } 
