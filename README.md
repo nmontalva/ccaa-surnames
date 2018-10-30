@@ -24,8 +24,9 @@ $ wget https://github.com/tabulapdf/tabula-java/releases/download/v1.0.1/tabula-
 $ R
 > install.packages("tidyverse")
 > install.packages("rvest")
-> install.packages("ghit")
-> ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"))
+> install.packages("remotes")
+#> ghit::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"))
+remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer")) #Make sure you have Java Development Kit (I tested with openJDK 11) installed and correctly registered in R.
 > install.packages("Biodem")
 > install.packages("ggdendro")
 > install.packages("reldist")
