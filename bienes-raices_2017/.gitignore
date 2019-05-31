@@ -3,3 +3,7 @@
 pdfs/
 info.csv
 tabula-1.0.1-jar-with-dependencies.jar
+surnames.html
+surnames_cache/
+surnames_files/
+*.pdf
