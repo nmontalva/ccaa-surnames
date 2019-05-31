@@ -236,13 +236,15 @@ $\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}$
 
 One then obtains a metric $G_{ij} = 1 - H_{ij}$ on $\mathbb{N}^S$.
 
-1) non-negativity: $G_{ij} \geq 0$ since $H_{ij} \leq 1$
-2) identity of indiscernibles: $G_{ij} = 0$ iff $i = j$
-   because $H_{ij} = 1$ only when
-   $2 \norm{i} \norm{j} = \norm{i}^2 + \norm{j}^2$
-3) symmetry: $G_{ij} = G_{ji}$
-   as the definition of $H_{ij}$ is symmetric
-4) triangle inequality: $G_{ik} \leq G_{ij} + G_{jk}$
+* nonnegativity: $G_{ij} \geq 0$ since $H_{ij} \leq 1$
+* identity of indiscernibles: $G_{ij} = 0$ iff $i = j$
+  because $H_{ij} = 1$ iff
+  $2 \norm{i} \norm{j} = \norm{i}^2 + \norm{j}^2$ iff
+  $i = j$
+* symmetry: $G_{ij} = G_{ji}$
+  as the dot product is commutative
+  <!-- as the definition of $H_{ij}$ is symmetric -->
+* triangle inequality: $G_{ik} \leq G_{ij} + G_{jk}$
 
 TODO: prove triangle inequality.
 
@@ -251,7 +253,7 @@ $G_{ij}$ has the property that if $i$ and $j$ are co-linear
 but not of the same magnitude,
 then $G_{ij}$ is strictly greater than 0.
 In other words, two communities with the same
-relative composition (ie probability distribution) of surnames
+relative composition (i.e. probability distribution) of surnames
 but different number of commoners
 will have $H_{ij} < 1$ and thus $G_{ij} > 0$.
 This scale dependence is unfortunate.
@@ -281,7 +283,7 @@ one can rewrite $H_{ij}$ yet again as
    \frac{\norm{i}}{\norm{j}} } \]
 
 Notice that whenever $i$ and $j$ are normalised
-(ie $\norm{i} = 1 = \norm{j}$) then $H_{ij} = \cos \theta$.
+(i.e. $\norm{i} = 1 = \norm{j}$) then $H_{ij} = \cos \theta$.
 Interestingly, Hedrick's similarity is usually
 computed on the normalised vectors.
 <!-- Still, I have no geometric intution -->
@@ -289,8 +291,8 @@ computed on the normalised vectors.
 
 The distance between two communities may also be computed
 by using any standard metric for probability distributions
-on the normalised vectors,
-eg [Wasserstein](https://en.wikipedia.org/wiki/Wasserstein_metric).
+on the normalised vectors, e.g.
+[Wasserstein](https://en.wikipedia.org/wiki/Wasserstein_metric).
 For the Wasserstein metric see R package
 [transport](https://www.rdocumentation.org/packages/transport/versions/0.9-4).
 
@@ -312,15 +314,17 @@ The method can be summarised as follows:
 It'd be nice to make a heatmap matrix
 indicating how similar two dendrograms computed with
 different distance and clustering methods are.
-
+Similarity could be computed using the silhouette method.
 
 ```{r dendro, cache=TRUE, dependson="extract"}
 source('analysis.R')
 ```
 
+
 ## Introduction
 
 Lorem Ipsum
+
 
 ## Maps
 
@@ -332,6 +336,3 @@ This map has been done with default options:
 read.csv(coordenadas.csv)
 mapinterpol(commoners,coordenadas)
 ```
-
-
-
