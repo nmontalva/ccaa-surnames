@@ -1,3 +1,4 @@
+# setwd("~/research/nico/ccaa-surnames/bienes-raices_2017/")
 library(tidyverse)
 library(reldist)
 
@@ -15,9 +16,8 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccddcccccccc")
 }
 
-traits <- function(commoners, col="community") {
-  args <- as.list(c(NA, col))
-  args[[1]] <- commoners
+traits <- function(commoners, by="community") {
+  args <- c(list(commoners), by)
   do.call(group_by_, args) %>%
     summarise(N=n(),
               S=n_distinct(surname_father)/N,
