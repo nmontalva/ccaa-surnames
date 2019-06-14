@@ -16,9 +16,10 @@ read_commoners_csv <- function(filename=commoners_csv) {
            col_types="ciccddcccccccc")
 }
 
-traits <- function(commoners, by="community") {
-  args <- c(list(commoners), by)
-  do.call(group_by_, args) %>%
+traits <- function(commoners, by_vars=c("community")) {
+  by_vars <- syms(by_vars)
+  commoners %>%
+    group_by(!!!by_vars) %>%
     summarise(N=n(),
               S=n_distinct(surname_father)/N,
               R=mean(rights),
