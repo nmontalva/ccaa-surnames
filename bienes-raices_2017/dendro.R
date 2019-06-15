@@ -16,26 +16,34 @@ base_dendrogram <- function(dd) {
 }
 
 add_leaves <- function(plot,
-                       # colour_by_var=NULL,
                        title="",
                        x_title = 0,
                        y_title = 0,
-                       y_offset = 0.01) {
-  # colour_by_var <- sym(colour_by_var)
+                       y_offset = 0.01,
+                       colour_by_var = NULL,
+                       size = 3) {
+  if (!(is_numeric(size) || is_function(size)))
+    stop("parameter 'size' not numeric nor a function")
   plot +
     annotate("text", x = x_title,
              y = y_title - y_offset,
              label = str_to_title(title),
              fontface = "bold", size = 4) +
     # TODO: try geom_label
-    # TODO: conditionally add colours depending on whether
-    # colour_by_var is null or not
-    geom_text(aes(label = label,
-                  # colour = !!colour_by_var),
-                  size = 3),
-              # x and y are flipped because of coord_flip
-              nudge_y = y_offset) # +
-    # guides(fill=guide_legend(title.position="top"))
+    if (is_null(colour_by_var)) {
+      geom_text(aes(label = label,
+                    size = if (is_numeric(size)) size
+                    else size(label)),
+                # x and y are flipped because of coord_flip
+                nudge_y = y_offset)
+    } else {
+      geom_text(aes(label = label,
+                    colour = sym(colour_by_var),
+                    size = if (is_numeric(size)) size
+                    else size(label)),
+                nudge_y = y_offset) +
+      guides(fill=guide_legend(title.position="top"))
+    }
 }
 
 # adm_division: administrative division
@@ -47,36 +55,19 @@ get_supra_division <- function(adm_division) {
                  "'{adm_division}' not recognised"))
 }
 
-# TODO: colour scale could relate to some sort of geographic ordering
-add_supra_division <- function(plot,
-                               supra_division,
-                               x_title = 0,
-                               y_title = 0,
-                               y_offset = 0) {
-  sd_var <- sym(supra_division)
-  plot +
-    annotate("text", x = x_title,
-             y = y_title - y_offset,
-             label = str_to_title(supra_division),
-             fontface = "bold", size = 4) +
-    geom_text(aes(label = !!sd_var,
-                  colour = !!sd_var,
-                  size = 3),
-              nudge_y = y_offset,
-              show.legend = FALSE)
-}
-
 add_trait <- function(plot,
                       trait_name,
                       x_title = 0,
                       y_title = 0,
                       y_offset = 0,
-                      size_fn = 3) {
-  if (is.numeric(size_fn))
-    size_fn <- function(x) size_fn
-  else if (!is_function(size_fn))
-    stop("parameter 'size_fn' not numeric nor a function")
+                      colour_by_var = NULL,
+                      size = 3) {
+  if (!(is_numeric(size) || is_function(size)))
+    stop("parameter 'size' not numeric nor a function")
   trait_var <- sym(trait_name)
+  # TODO: why doesn't this work?
+  # cvar <- if (is_null(colour_by_var)) "black" else sym(colour_by_var)
+  cvar <- if (is_null(colour_by_var)) NULL else sym(colour_by_var)
   plot +
     # TODO: is there some parameter like TikZ's anchor=...?
     annotate("text", x = x_title,
@@ -84,8 +75,11 @@ add_trait <- function(plot,
              label = str_to_title(trait_name),
              fontface = "bold", size = 4) +
     geom_text(aes(label = prettyNum(!!trait_var, digits=3),
-                  size = size_fn(!!trait_var)),
-              nudge_y = y_offset)
+                  colour = !!cvar,
+                  size = if (is_numeric(size)) size
+                  else size(!!trait_var)),
+              nudge_y = y_offset,
+              show.legend = FALSE)
 }
 
 surname_dendrogram <- function(commoners,
@@ -111,8 +105,7 @@ surname_dendrogram <- function(commoners,
   x0 <- dd$labels$x[[lastrow]]
   y0 <- dd$labels$y[[lastrow]]
   x1 <- x0 + 1 + 0.5 * lastrow / 170
-  y1 <- y0 - 0.215 # 0.30
-  # y_offset <- if (is.null(supra_division)) 0.4 else 0
+  # y_offset <- if (is_null(supra_division)) 0.4 else 0
   # why this function?
   size_of_label <- function(xs) {
     xs * 1.3 / max(xs) + (1.7 + lastrow / 170)
@@ -123,19 +116,21 @@ surname_dendrogram <- function(commoners,
     height = 1 + 40 * lastrow / 170,
     plot_fn = function() {
       base_dendrogram(dd) %>%
-        add_leaves(group_by, x1, y1, 0.01) %>%
-        add_supra_division(
-          supra_division, x1, y0-0.165, 1.1) %>%
+        add_leaves(group_by, x1, y0-0.215, 0.01) %>%
+        # TODO: colour scale could relate to
+        # some sort of geographic ordering
+        add_trait(supra_division, x1, y0-0.165, 1.1,
+                  colour_by_var = supra_division) %>%
         add_trait("N", x1, y0-0.06, 1.6,
-                  size_fn = size_of_label) %>%
+                  size = size_of_label) %>%
         add_trait("S", x1, y0-0.06, 1.8,
-                  size_fn = size_of_label) %>%
+                  size = size_of_label) %>%
         add_trait("R", x1, y0-0.06, 2.0,
-                  size_fn = size_of_label) %>%
+                  size = size_of_label) %>%
         add_trait("G", x1, y0-0.06, 2.2,
-                  size_fn = size_of_label) %>%
+                  size = size_of_label) %>%
         add_trait("A", x1, y0-0.06, 2.4,
-                  size_fn = size_of_label)
+                  size = size_of_label)
     })
 }
 
