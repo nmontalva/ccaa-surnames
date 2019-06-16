@@ -22,24 +22,23 @@ add_leaves <- function(plot,
                        y_offset = 0.01,
                        colour_by_var = NULL,
                        size = 3) {
-  if (!(is_numeric(size) || is_function(size)))
+  if (!(is.numeric(size) || is_function(size)))
     stop("parameter 'size' not numeric nor a function")
   plot +
     annotate("text", x = x_title,
              y = y_title - y_offset,
              label = str_to_title(title),
              fontface = "bold", size = 4) +
-    # TODO: try geom_label
     if (is_null(colour_by_var)) {
       geom_text(aes(label = label,
-                    size = if (is_numeric(size)) size
+                    size = if (is.numeric(size)) size
                     else size(label)),
                 # x and y are flipped because of coord_flip
                 nudge_y = y_offset)
     } else {
       geom_text(aes(label = label,
-                    colour = sym(colour_by_var),
-                    size = if (is_numeric(size)) size
+                    colour = !!sym(colour_by_var),
+                    size = if (is.numeric(size)) size
                     else size(label)),
                 nudge_y = y_offset) +
       guides(fill=guide_legend(title.position="top"))
@@ -62,24 +61,30 @@ add_trait <- function(plot,
                       y_offset = 0,
                       colour_by_var = NULL,
                       size = 3) {
-  if (!(is_numeric(size) || is_function(size)))
+  if (!(is.numeric(size) || is_function(size)))
     stop("parameter 'size' not numeric nor a function")
   trait_var <- sym(trait_name)
-  # TODO: why doesn't this work?
+  # black <- scale_colour_manual(values=c(black="black"))
   # cvar <- if (is_null(colour_by_var)) "black" else sym(colour_by_var)
-  cvar <- if (is_null(colour_by_var)) NULL else sym(colour_by_var)
   plot +
     # TODO: is there some parameter like TikZ's anchor=...?
     annotate("text", x = x_title,
              y = y_title - y_offset,
              label = str_to_title(trait_name),
              fontface = "bold", size = 4) +
-    geom_text(aes(label = prettyNum(!!trait_var, digits=3),
-                  colour = !!cvar,
-                  size = if (is_numeric(size)) size
-                  else size(!!trait_var)),
-              nudge_y = y_offset,
-              show.legend = FALSE)
+    if (is_null(colour_by_var)) {
+      geom_text(aes(label = prettyNum(!!trait_var, digits=3),
+                    size = if (is.numeric(size)) size
+                    else size(!!trait_var)),
+                nudge_y = y_offset)
+    } else {
+      geom_text(aes(label = prettyNum(!!trait_var, digits=3),
+                    colour = !!sym(colour_by_var),
+                    size = if (is.numeric(size)) size
+                    else size(!!trait_var)),
+                nudge_y = y_offset,
+                show.legend = FALSE)
+    }
 }
 
 surname_dendrogram <- function(commoners,
