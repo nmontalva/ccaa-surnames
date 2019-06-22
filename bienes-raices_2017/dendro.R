@@ -1,6 +1,7 @@
 library(ggplot2)
 library(ggdendro)
 library(glue)
+library(reshape2)
 
 base_dendrogram <- function(dd) {
   # hjust = 0.5 for centered text
@@ -10,7 +11,7 @@ base_dendrogram <- function(dd) {
                  aes(xend = xend, yend = yend)) +
     scale_size_identity() +
     coord_flip() +
-    # TODO: what is the expand parameter for and why 0.6?
+    # the expand parameter makes room for the labels
     scale_y_reverse(expand = c(0, 0.6)) +
     theme_dendro() # legend.position="top")
 }
@@ -64,10 +65,8 @@ add_trait <- function(plot,
   if (!(is.numeric(size) || is_function(size)))
     stop("parameter 'size' not numeric nor a function")
   trait_var <- sym(trait_name)
-  # black <- scale_colour_manual(values=c(black="black"))
-  # cvar <- if (is_null(colour_by_var)) "black" else sym(colour_by_var)
   plot +
-    # TODO: is there some parameter like TikZ's anchor=...?
+    # TODO: is there some parameter like TikZ's anchor=...? hjust=0?
     annotate("text", x = x_title,
              y = y_title - y_offset,
              label = str_to_title(trait_name),
@@ -136,6 +135,77 @@ surname_dendrogram <- function(commoners,
                   size = size_of_label) %>%
         add_trait("A", x1, y0-0.06, 2.4,
                   size = size_of_label)
+    })
+}
+
+# the inspiration for this plot comes from
+# https://stackoverflow.com/questions/44646488/
+dendro <- function(commoners,
+                   pvalues,
+                   save_as=NULL,
+                   hclust_method=hclust_default_method,
+                   group_by="community") {
+  hc <- surname_clustering(commoners, hclust_method, group_by)
+  # generate dendrogram from hclust data
+  # type="rectangle" will draw rectangular lines
+  dd <- dendro_data(hc, type="rectangle")
+  lvls <- levels(dd$labels$label)
+  # traits
+  supra_division <- get_supra_division(group_by)
+  ts <- traits(commoners, c(group_by, supra_division))
+  ts[[group_by]] <- factor(ts[[group_by]], levels=lvls)
+  # num_groups <- nrow(ts)
+  # add traits to dd
+  dd$labels <- dd$labels %>%
+    left_join(ts, by=c("label" = group_by)) %>%
+    melt(id.vars=c("label", supra_division, "x", "y"))
+  # plotting
+  saving_plot_as(
+    save_as,
+    width = 22,
+    height = 41,
+    plot_fn = function() {
+      dendr <- ggplot(data = label(dd), aes(x = x, y = y)) +
+        geom_segment(data = segment(dd),
+                     aes(xend = xend,
+                         yend = yend)) +
+        # the expand parameter makes room for the labels
+        scale_y_reverse(expand = c(0, 0.05)) +
+        theme_dendro() +
+        theme(legend.position="left") +
+        geom_tile(aes(y = -0.3,
+                      fill = !!sym(supra_division)),
+                  height = 0.5) +
+        # geom_label(aes(label = label,
+        #                fill = !!sym(supra_division)),
+        #            nudge_y = 0.01,
+        #            size = 3) +
+        guides(fill=guide_legend(title = NULL)) +
+        coord_flip()
+      bars <- ggplot(data = label(dd)) +
+        geom_col(aes(x = label,
+                     y = value,
+                     fill = variable),
+                 show.legend = FALSE) +
+        facet_grid(. ~ variable, scales = "free_x") +
+        scale_x_discrete("") +
+        scale_y_continuous("") +
+        coord_flip() +
+        # theme_transparent()
+        theme(rect = element_rect(fill = "transparent"),
+              text = element_text(face="bold"))
+      colourbar <- colourbar_pvalues(pvalues)
+      # using cowplot as suggested in
+      # https://stackoverflow.com/questions/44646488/
+      cowplot::ggdraw() +
+        cowplot::draw_plot(dendr, 0, 0, 0.6, 1) +
+        cowplot::draw_plot(bars, 0.42, 0.0405, 0.56, 0.921) +
+        cowplot::draw_plot(colourbar, 0.087, 0.01, 0.364, 0.02)
+      # another approach from
+      # https://stackoverflow.com/questions/6673162/
+      # grid.newpage()
+      # print(p1, vp=viewport(0.8, 0.8, x=0.4, y=0.4))
+      # print(p2, vp=viewport(0.52, 0.2, x=0.45, y=0.9))
     })
 }
 
