@@ -194,13 +194,17 @@ dendro <- function(commoners,
         # theme_transparent()
         theme(rect = element_rect(fill = "transparent"),
               text = element_text(face="bold"))
-      colourbar <- colourbar_pvalues(pvalues)
+      # colourbar <- colourbar_pvalues(pvalues)
+      pvals <- pvalue_tiles(commoners, pvalues)
       # using cowplot as suggested in
       # https://stackoverflow.com/questions/44646488/
+      # TODO: it'd be nice if there was a way to align
+      # the x axis of dendr and pvals
       cowplot::ggdraw() +
         cowplot::draw_plot(dendr, 0, 0, 0.6, 1) +
         cowplot::draw_plot(bars, 0.42, 0.0405, 0.56, 0.921) +
-        cowplot::draw_plot(colourbar, 0.087, 0.01, 0.364, 0.02)
+        # cowplot::draw_plot(colourbar, 0.087, 0.01, 0.366, 0.02)
+        cowplot::draw_plot(pvals, 0.0895, 0.01, 0.363, 0.02)
       # another approach from
       # https://stackoverflow.com/questions/6673162/
       # grid.newpage()

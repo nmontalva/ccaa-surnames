@@ -49,7 +49,7 @@ clades_pval <- function(commoners,
     anova <- summary(aov(tks[[trait]] ~ tks$branch))[[1]]
     pval_aov <- if ("Pr(>F)" %in% colnames(anova))
       anova[["Pr(>F)"]][[1]]
-    else 0
+    else stop('p-value not found in anova of k=', k)
     # kw <- kruskal.test(tks[[trait]] ~ as.factor(tks$branch))
     kw <- kruskal.test(tks[[trait]] ~ tks$branch)
     tibble(
@@ -81,6 +81,39 @@ colourbar_pvalues <- function(pvalues) {
     scale_fill_viridis_c(option = "plasma", direction=-1) +
     guides(fill = guide_colourbar(title = "p-value")) +
     coord_flip()
+}
+
+butlast <- function(v) head(v, n=-1)
+
+# pvalues could be computed from commoners using clades_pval
+# but it takes too long so we defer the computation to the user
+pvalue_tiles <- function(commoners,
+                         pvalues,
+                         pvalue_method = "kw",
+                         hclust_method = hclust_default_method) {
+  # fill_var <- if (pvalue_method == "anova") sym("pval_aov")
+  # else if (pvalue_method == "kw") sym("pval_kw")
+  # else stop("parameter 'pvalue_method' isn't recognised")
+  pvalue <- if (pvalue_method == "anova") pvalues$pval_aov
+  else if (pvalue_method == "kw") pvalues$pval_kw
+  else stop("parameter 'pvalue_method' isn't recognised")
+  sur_clust <- surname_clustering(commoners, hclust_method)
+  # compute the position and width of the tiles
+  dx <- sur_clust$height - c(0, butlast(sur_clust$height))
+  xmin <- sur_clust$height - dx/2
+  xmax <- c(butlast(sur_clust$height) + dx[-1]/2, 1)
+  stopifnot(xmax == c(xmin[-1], 1))
+  width <- xmax - xmin
+  # there is nothing between 0 and xmin[1] because
+  # there is no p-value for the case when there is only one clade
+  x <- xmin + width / 2
+  pv <- tibble(pvalue = pvalue, x = x, width = width)
+  ggplot(pv) +
+    geom_tile(aes(x = x, y = 0, width = width, fill = pvalue)) +
+    scale_x_continuous("", breaks = NULL, expand = expand_scale()) +
+    scale_y_continuous("", breaks = NULL, expand = expand_scale()) +
+    scale_fill_viridis_c(option = "plasma", direction = -1) +
+    guides(fill = guide_colourbar(title = "p-value"))
 }
 
 # TODO: write function similar to clust_pval that computes p-value
