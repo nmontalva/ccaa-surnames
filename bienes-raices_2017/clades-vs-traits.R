@@ -99,9 +99,10 @@ pvalue_tiles <- function(commoners,
   else stop("parameter 'pvalue_method' isn't recognised")
   sur_clust <- surname_clustering(commoners, hclust_method)
   # compute the position and width of the tiles
-  dx <- sur_clust$height - c(0, butlast(sur_clust$height))
-  xmin <- sur_clust$height - dx/2
-  xmax <- c(butlast(sur_clust$height) + dx[-1]/2, 1)
+  inv_height <- rev(1 - sur_clust$height)
+  dx <- inv_height - c(0, butlast(inv_height))
+  xmin <- inv_height - dx/2
+  xmax <- c(butlast(inv_height) + dx[-1]/2, 1)
   stopifnot(xmax == c(xmin[-1], 1))
   width <- xmax - xmin
   # there is nothing between 0 and xmin[1] because
