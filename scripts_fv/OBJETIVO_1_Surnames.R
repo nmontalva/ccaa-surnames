@@ -3,14 +3,14 @@
 ##########################################################################################################################################################
 
 #### ESPACIO DE TRABAJO ####
-getwd()
-setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
+#getwd()
+#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 #### OBJETIVO 1 ####
 ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
 
 ## Cargar DATOS ##
-comuneros <- read.csv("Datos/commoners.csv")
+comuneros <- read.csv("scripts_fv/Datos/commoners.csv")
 comuneros$community <- gsub(" ", "_", comuneros$community)
 comuneros$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , comuneros$community)] <- "RINCONADA_DE_PUNITAQUI"
 
@@ -54,7 +54,7 @@ hc_total <- surname_clustering(comuneros)
 plot(hc_total)
 y_total <- as.phylo(hc_total) #Phylo format
 
-#Personalizar árboles
+#Personalizar ?rboles
 
 plot(hc_total) #Dendrograma
 ddata <- dendro_data(hc_total, type = "rectangle")
@@ -67,11 +67,11 @@ p
 
 ##2. COOMUNIDADES MUESTREADAS
 # Seleccionar los datos que se necesitan
-STR <- read.csv("Datos/STR.csv", sep = ",")
+STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 
-# Función de creación de matriz y árbol
+# Funci?n de creaci?n de matriz y ?rbol
 surnames <- comuneros %>% filter(community %in% selected_communities)
 surnames$community <- factor(surnames$community, levels = selected_communities)
 surname_distance_muestra <- function(surnames,
@@ -107,8 +107,8 @@ plotTree(hy)
 
 
 #### Guardar dendrogramas
-write.dendrogram(hc_total,file = "Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy
+write.dendrogram(as.dendrogram(hc_total), file = "Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy
 write.nexus(y_total, file = "Figures/Apellidos.nex", translate = TRUE) #Guardar archivo nexus desde phy
-write.dendrogram(hc,file = "Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
+write.dendrogram(hd,file = "Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
 write.nexus(hy, file = "Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
 

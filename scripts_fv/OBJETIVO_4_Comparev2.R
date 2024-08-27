@@ -7,12 +7,12 @@
 
 ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3##
 e <- dendlist(as.dendrogram(hcrst), as.dendrogram(hc)) %>%
-  untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment quality
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
+  entanglement()                     # Alignment?quality
 e
 
 dendlist(as.dendrogram(hc),as.dendrogram(hcrst))%>%
-untangle(method = "step1side")%>%
+  dendextend::untangle(method = "step1side")%>%
 tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
            main = paste("entanglement =", round(e,2)),
            main_left = "Surnames",
@@ -35,11 +35,11 @@ plotTree(consensus_tree)
 ## Comparacion entre aboles
 #Consenso con Apellidos
 e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
-  untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment quality
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
+  entanglement()                     # Alignment?quality
 e
 dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
-  untangle(method = "step1side") %>% # Find the best alignment layout
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
              main = paste("entanglement =", round(e,2)),
              main_left = "Surnames",
@@ -49,16 +49,16 @@ dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
              intersecting = FALSE,
              k_branches = 4,
              rank_branches = TRUE 
-  )                       # Draw the two dendrograms
+  )                       # Draw the?two?dendrograms
 
 
-#Consenso con STR  # Básicamente el árbol de consenso es el árbol de STR
+#Consenso con STR  # B?sicamente el ?rbol de consenso es el ?rbol de STR
 e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
-  untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment quality
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
+  entanglement()                     # Alignment?quality
 e
 dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
-  untangle(method = "step1side") %>% # Find the best alignment layout
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
              main = paste("entanglement =", round(e,2)),
              main_left = "Surnames",
@@ -68,11 +68,11 @@ dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
              intersecting = FALSE,
              k_branches = 4,
              rank_branches = TRUE 
-  )                       # Draw the two dendrograms
+  )                       # Draw the?two?dendrograms
 
 
 
-## Generar dendroplot con el árbol de consenso y los traits anotados
+## Generar dendroplot con el ?rbol de consenso y los traits anotados
 traits <- function(comuneros, group_by_cols = c("community","commune")) {
   # Asegurarse de que group_by_cols es un vector
   if (!is.vector(group_by_cols)) {
@@ -95,9 +95,9 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
 }
 
 result <-traits(comuneros) 
-consensus_tree <- as.dendrogram(consensus_treeR)
+consensus_tree <- as.dendrogram(consensus_tree)
 plot(consensus_tree)
-comuneros$commune[comuneros$commune == "VICUÃ'A"] <-"VICUÑA"
+comuneros$commune[comuneros$commune == "VICU?'A"] <-"VICU?A"
 select_comuneros <- comuneros %>% filter(comuneros$community %in% selected_communities)
 
 dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
@@ -127,7 +127,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   # Calcular traits
   tc <- traits(select_comuneros, c(group_by_col, container))
   
-  # Función auxiliar para obtener vectores
+  # Funci?n auxiliar para obtener vectores
   vector_of <- function(target_col) {
     if (!target_col %in% colnames(tc)) {
       stop(paste("Column", target_col, "is not found in traits data"))
@@ -148,7 +148,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   A <- vector_of("A")
   M <- vector_of("M")
   
-  # Coordenadas útiles
+  # Coordenadas ?tiles
   lastrow <- nrow(hcd$labels)
   x0 <- hcd$labels$x[[lastrow]]
   y0 <- hcd$labels$y[[lastrow]]
@@ -167,8 +167,8 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   size <- function(xs) {
     xs * 1.3 / max(xs) + (1.7 + lastrow / 170)
   }
-  #Ajustar tamaño de las ramas
-  scale_factor <- 10  # Ajusta este valor para cambiar el tamaño de las ramas
+  #Ajustar tama?o de las ramas
+  scale_factor <- 10  # Ajusta este valor para cambiar el tama?o de las ramas
   hcd$segments$y <- hcd$segments$y * scale_factor
   hcd$segments$yend <- hcd$segments$yend * scale_factor
   
@@ -204,7 +204,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(A[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3) +
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.8 - ydiff, hjust = 0, size = 3)
   
-  # Guardar el gráfico
+  # Guardar el gr?fico
   if (!is.null(save_as)) {
     print(p)
     dev.off()
@@ -213,7 +213,11 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   }
 }
 
-# Llamar a la función consensus_dendrogram
+# Llamar a la funci?n consensus_dendrogram
+library(conflicted)
+conflict_prefer("theme_dendro","ggdendro")
+conflict_prefer("label", "ggdendro")
+
 consensus_dendrogram <- function(select_comuneros, save_as=NULL,
                                hclust_method="complete",
                                group_by_col="community") {

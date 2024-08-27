@@ -3,13 +3,13 @@
 ##########################################################################################################################################################
 
 #### ESPACIO DE TRABAJO ####
-setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
+#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 #### OBJETIVO 3 ####
 ### To build a phylogenetic tree showing relationships between communities based on the distributions of genetic microsatellite markers within and between communities.###
 
 ## Cargar paquetes y librerias
-library(assignPOP)
+#library(assignPOP)
 library(tidyverse)
 library(ade4)
 library(adegenet)
@@ -29,11 +29,15 @@ library(phytools)
 library(polysat)
 library(mmod)
 
+##UPGMA preference
+
+conflict_prefer("upgma", "phangorn")
+
 ## Cargar bases de datos ##
-STR <- read.csv("Datos/STR.csv", sep = ",")
+STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 colnames(STR) <- gsub("\\.1$", " ", colnames(STR))
-write.table(STR, file = "Datos/STR1.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(STR, file = "scripts_fv/Datos/STR1.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
 STR [, 3:ncol(STR)] <- lapply(STR[, 3:ncol(STR)], function(x) sprintf("%02d", x))
 locis <- colnames(STR[,3:32])
 locis_unicos <- unique(trimws(locis))
@@ -41,26 +45,26 @@ locis_unicos <- unique(trimws(locis))
 
 ## Generar archivos e inputs para crear matrices de distancia ##
 
-## Función para generar el contenido Genepop
+## Funci?n para generar el contenido Genepop
 generateGenepopContent <- function(df, filename, title = "Genepop file") {
   # Extraer los nombres de las columnas de los loci
   loci_names <- locis_unicos
-  # Crear el contenido inicial con los nombres de los loci en una sola línea
+  # Crear el contenido inicial con los nombres de los loci en una sola l?nea
   content <- paste0(title,"\n",paste(loci_names, collapse = ", "), "\n")
-  # Iterar sobre cada población
+  # Iterar sobre cada poblaci?n
   unique_pops <- unique(df$pop)
   for (pop in unique_pops) {
-    # Añadir la etiqueta 'Pop' antes de cada población
+    # A?adir la etiqueta 'Pop' antes de cada poblaci?n
     content <- paste0(content, "pop\n")
-    # Filtrar los individuos de la población actual
+    # Filtrar los individuos de la poblaci?n actual
     pop_df <- df[df$pop == pop,]
-    # Crear las líneas correspondientes a cada individuo
+    # Crear las l?neas correspondientes a cada individuo
     for (i in 1:nrow(pop_df)) {
       ind_name <- pop_df$ind[i]
       ind_data <- pop_df[i, 3:ncol(df)]
     #Concatenar los pares de alelos para cada locus sin tabulaciones, solo espacios
       loci_data <- apply(matrix(ind_data, ncol = 2, byrow = TRUE), 1, paste, collapse = "")
-    #Añadir el nombre del individuo y sus datos al contenido
+    #A?adir el nombre del individuo y sus datos al contenido
       content <- paste0(content, ind_name,", ", paste(loci_data, collapse = " "), "\n")
     }
   }
@@ -102,11 +106,11 @@ for (locus_index in 1:length(locis_unicos)) {
   alelo1 <- as.numeric(STR_unique[i, (2 * locus_index - 1)])
   alelo2 <- as.numeric(STR_unique[i, (2 * locus_index)])
     
-    # Añadir los alelos como un par a la lista del locus
+    # A?adir los alelos como un par a la lista del locus
     locus_list[[i]] <- c(alelo1, alelo2)
   }
   
-  # Añadir la lista del locus a la lista principal usando el nombre del locus
+  # A?adir la lista del locus a la lista principal usando el nombre del locus
   genotype_lists[[locus]] <- locus_list
 }
 for (locus in names(genotype_lists)) {
@@ -118,34 +122,34 @@ for (locus in names(genotype_lists)) {
     }
   })
 }
-#Automatizar la asignación de los genotipos a mygen
+#Automatizar la asignaci?n de los genotipos a mygen
 for (locus in locis_unicos) {
   Genotypes(mygen, loci = locus) <- genotype_lists[[locus]]
 }
 summary(mygen)
 Missing(mygen) <- -9
 
-#Correr sólo si se quiere excluir datos con NA #
+#Correr s?lo si se quiere excluir datos con NA #
 samToUse <- Samples(mygen)
 exclude <- c((x<-find.missing.gen(mygen))$Sample)
 mygen2 <- deleteSamples(mygen, exclude)
 summary(mygen2)
 
 #Crear archivo de frecuencuas
-rrr <-deSilvaFreq(mygen,self=0,tol=10)# Porque es necesario hacer esto? tolerancia es un número aleatorio
+rrr <-deSilvaFreq(mygen,self=0,tol=10)# Porque es necesario hacer esto? tolerancia es un n?mero aleatorio
 class(rrr) # Es necesario calcular las frecuencias
 
 simple_STR<-simpleFreq(mygen) # Archivo de frecuencias simple
-class(simple_freq)
+#class(simple_freq)
 
-#Archivo de frecuencias función homemade
+#Archivo de frecuencias funci?n homemade
 allele_counts <- tab(STR_genind, freq=FALSE)
 STR_freq <- matrix(0, nrow=length(levels(STR_genind@pop)), ncol=ncol(allele_counts))
 rownames(STR_freq) <- levels(STR_genind@pop)
 colnames(STR_freq) <- colnames(allele_counts)
 genomes <- numeric(length(levels(STR_genind@pop)))
 names(genomes) <- levels(STR_genind@pop)
-## Calcular frecuencias alélicas para cada población
+## Calcular frecuencias al?licas para cada poblaci?n
 for (i in seq_along(levels(STR_genind@pop))) {
   pop <- levels(STR_genind@pop)[i]
   pop_indices <- which(STR_genind@pop == pop)
@@ -153,7 +157,7 @@ for (i in seq_along(levels(STR_genind@pop))) {
   STR_freq[pop, ] <- pop_counts / sum(pop_counts, na.rm=TRUE)
 }
 STR_freq <- as.data.frame(STR_freq)
-STR_freq$Genomes <- simple_freq$Genomes
+STR_freq$Genomes <- rrr$Genomes
 class(STR_freq)
 
 ##Matrices de distancia ##
@@ -168,6 +172,8 @@ dend.gst <- as.dendrogram(upgma(GST))
 phyGST <- as.phylo.dendrogram(dend.gst)
 plot(dend.gst)
 plot.phylo(phyGST)
+
+##NOTA: GST.txt, Nei.txt, ASD.txt y otos fueron generados en Genepop
 
 #Gst calculado por populations
 GST2 <-read.table("Archives/GST.txt", header = FALSE, sep = "\t", dec = ".")
@@ -190,8 +196,8 @@ hcGST<-hclust(GST)
 plotTree(as.phylo(hcGST))
 
 # Nei Ds
-Nei <- as.matrix(genet.dist(data, diploid=T, method = "Ds"), labels=T)
-colnames(Nei) <- rownames(Nei) <- levels(data$pop)
+Nei <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Ds"), labels=T)
+colnames(Nei) <- rownames(Nei) <- levels(STR_hierfstat$pop)
 Nei <- as.dist(Nei)
 
 Nei2 <-read.table("Archives/Nei.txt", header = FALSE, sep = "\t", dec = ".")
@@ -213,8 +219,8 @@ hcNei<-hclust(Nei)
 plot(hcNei)
 
 # Cavalli Sforza
-cs <- as.matrix(genet.dist(data, diploid=T, method = "Dch"), labels=T)
-colnames(cs) <- rownames(cs) <- levels(data$pop)
+cs <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Dch"), labels=T)
+colnames(cs) <- rownames(cs) <- levels(STR_hierfstat$pop)
 cs <- as.dist(cs)
 dend.dch <- as.dendrogram(upgma(cs))
 phyCS <- as.phylo.dendrogram(dend.dch)
@@ -223,7 +229,7 @@ plot.phylo(phyCS)
 
 njCS<-nj(cs)
 plot.phylo(njCS)
-dend.cs<- as.dendrogram(nj(cs))
+dend.cs<- as.dendrogram(nj(cs)) #Error: Tree is not ultrametric
 
 hccs<-as.phylo(hclust(cs))
 dend.cs<- as.dendrogram(hccs)
@@ -247,7 +253,7 @@ njRST<-nj(RST)
 lambda_value <- 0.5
 rst_u <- force.ultrametric(njRST)
 rst_r <-as.phylo(rst_u)
-dend.rst <-as.dendrogram(njRST)
+dend.rst <-as.dendrogram(njRST) # Error: Tree is not ultrametric
 class(dend.rst)
 plot.phylo(njRST)
 
@@ -255,10 +261,10 @@ hcrst<-hclust(RST)
 plotTree(as.phylo(hcrst))
 
 #FST 
-FST <-as.matrix(genet.dist(data, diploid=T, method = "Fst"), labels=T)
-colnames(FST) <- rownames(FST) <- levels(data$pop)
+FST <-as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Fst"), labels=T)
+colnames(FST) <- rownames(FST) <- levels(STR_hierfstat$pop)
 FST <- as.dist(FST)
-?genet.dist
+#?genet.dist
 phyFST <- upgma(FST)
 plot.phylo(phyFST)
 dend.FST<-as.dendrogram(upgma(FST))
@@ -300,8 +306,8 @@ write.nexus(phyCS, file = "Figures/treeCS.nex", translate = TRUE)
 write.dendrogram(dend.rst, file = "Figures/treeRST.phy", edges = FALSE)
 write.nexus(phyRST, file = "Figures/treeRST.nex", translate = TRUE)
 
-write.dendrogram(dend.smm, file = "Figures/treeSMM.phy", edges = FALSE)
-write.nexus(phySMM, file = "Figures/treeSMM.nex", translate = TRUE)
+#write.dendrogram(dend.smm, file = "Figures/treeSMM.phy", edges = FALSE) #Objeto no encontrado
+#write.nexus(phySMM, file = "Figures/treeSMM.nex", translate = TRUE) #Objeto no encontrado
 
 ###VOY A USAR EL RST POR EL MOMENTO ###
 lambda_transformed_tree <- rescale(phyRST,model="lambda",lambda=0.5)

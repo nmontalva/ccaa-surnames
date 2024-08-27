@@ -8,7 +8,7 @@
 ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 2 y 4 ##
 
 #### ESPACIO DE TRABAJO ####
-setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
+#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 #### CARGAR E INSTALLAR LIBRERIAS ####
 library(tidyverse)
@@ -18,12 +18,16 @@ library(caper)
 library(conflicted)
 library(dplyr)
 library(geiger)
-library(geomorph)
 library(nlme)
 library(phytools)
 library(Publish)
-library(treeio)
+#library(treeio) #No lo puedo instalar
 library(ggplot2)
+
+library(geomorph) #No lo puedo instalar
+#install.packages("geomorph") 
+#library(devtools)
+#install_github("geomorphR/geomorph", ref = "Stable", build_vignettes = TRUE)
 
 # Resolver conflictos de funciones
 conflict_prefer("select", "dplyr")
@@ -34,7 +38,7 @@ conflict_prefer("as.phylo", "phylogram")
 #Ocuparemos (1) ï¿½rbol de apellidos(y_total), (2) todas las tablas del objetivo 2, y (3) consenso STR/Apellido(consensus_3)
 
 ###Explorar los datos
-STR <- read.csv("Datos/STR.csv", sep = ",")
+STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 
@@ -60,7 +64,7 @@ S_trait2 <- select_variable(result, NULL, "S")
 S_trait$community <- NULL
 S_trait2$community <- NULL
 N_trait2 <- select_variable(result, selected_communities, "N")
-mean(R2_trait$R2)
+
 # R
 R_trait <- select_variable(result, selected_communities, "R")
 R_trait2 <- select_variable(result, NULL, "R")
@@ -88,7 +92,7 @@ ft <- result
 row.names(ft) <-result$community
 
 ##Consensus_3##
-consensus_tree <-consensus.edges(mphy_c3, method=c("least.squares"), rooted = TRUE)
+consensus_tree <-consensus.edges(mphy_cR, method=c("least.squares"), rooted = TRUE)
 consensus_tree <- as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
@@ -113,7 +117,7 @@ av2 <- as.matrix(A_trait2)[,1]
 mv1 <- as.matrix(M_trait)[,1]
 mv2 <- as.matrix(M_trait2)[,1]
 
-# Función para estimar estados ancestrales y crear el árbol
+# Funci?n para estimar estados ancestrales y crear el ?rbol
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
   anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
@@ -137,7 +141,7 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   plot(obj, type = "phylogram", legend = 0.5 * max(nodeHeights(tree)), ftype = "off", leg.txt = leg_txt)
   return(list(anc=anc, obj = obj))
 }
-# Estimar estados ancestrales para los árboles de apellidos totales
+# Estimar estados ancestrales para los ?rboles de apellidos totales
 svt <- estimacion_estados_ancestrales(y_total, sv2, "S")
 rvt <- estimacion_estados_ancestrales(y_total, rv2, "R")
 gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
@@ -207,7 +211,8 @@ plot_comparison2 <- function(obj1, obj2, xlabel) {
 }
 
 # Comparaciones
-png("Figures/S_R_total.png",width = 1042, height = 534, res = 300)
+dev.off()
+png("Figures/S_R_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, rvt$obj, c("S", "R"))
 dev.off()
 png("Figures/S_G_total.png",width = 1042, height = 534, res = 300)
@@ -251,11 +256,11 @@ calculate_physignal_plot <- function(trait_vector, file_name) {
 sv1
 # Vectores de datos
 trait_vectors <- list(sv1, rv1, gv1, av1, mv1)
-file_names <- c("Figures/Señal_phy_S_muestra2.png", "Figures/Señal_phy_R_muestra2.png",
-                "Figures/Señal_phy_G_muestra2.png", "Figures/Señal_phy_A_muestra2.png",
-                "Figures/Señal_phy_M_muestra2.png")
+file_names <- c("Figures/Se?al_phy_S_muestra2.png", "Figures/Se?al_phy_R_muestra2.png",
+                "Figures/Se?al_phy_G_muestra2.png", "Figures/Se?al_phy_A_muestra2.png",
+                "Figures/Se?al_phy_M_muestra2.png")
 
-# Calcular la señal física y generar los gráficos en un bucle
+# Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
 for (i in seq_along(trait_vectors)) {
   K_values[[i]] <- calculate_physignal_plot(trait_vectors[[i]], file_names[i])
@@ -273,7 +278,7 @@ row.names(Phy_sig) <- c("S", "R", "G", "A", "M")
 Phy_sig <- round(Phy_sig, digits = 4)
 publish(Phy_sig)
 # Generar la tabla y guardarla como imagen
-png("Figures/Señal_phylo_muestra2.png", width = 300, height = 200)
+png("Figures/Se?al_phylo_muestra2.png", width = 300, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
@@ -288,17 +293,17 @@ calculate_physignal_plot <- function(trait_vector, file_name) {
 }
 # Vectores de datos
 trait_vectors2 <- list(sv2, rv2, gv2, av2, mv2)
-file_names <- c("Figures/Señal_phy_S_total.png", "Figures/Señal_phy_R_total.png",
-                "Figures/Señal_phy_G_total.png", "Figures/Señal_phy_A_total.png",
-                "Figures/Señal_phy_M_total.png")
+file_names <- c("Figures/Se?al_phy_S_total.png", "Figures/Se?al_phy_R_total.png",
+                "Figures/Se?al_phy_G_total.png", "Figures/Se?al_phy_A_total.png",
+                "Figures/Se?al_phy_M_total.png")
 
-# Calcular la señal física y generar los gráficos en un bucle
+# Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
 for (i in seq_along(trait_vectors2)) {
   K_values[[i]] <- calculate_physignal_plot(trait_vectors2[[i]], file_names[i])
 }
 
-# Calcular los valores de señal física y p-value
+# Calcular los valores de se?al f?sica y p-value
 Phylogenetic_signal2 <- sapply(K_values, function(K) K$phy.signal)
 P_value2 <- sapply(K_values, function(K) K$pvalue)
 
@@ -310,12 +315,12 @@ row.names(Phy_sig2) <- c("S", "R", "G", "A", "M")
 Phy_sig2 <- round(Phy_sig2, digits = 4)
 publish(Phy_sig2)
 # Generar la tabla y guardarla como imagen
-png("Figures/Señal_phylo_total.png", width = 300, height = 200)
+png("Figures/Se?al_phylo_total.png", width = 300, height = 200)
 grid.table(Phy_sig2)
 dev.off()
 
 
-###Regresión PGLS
+###Regresi?n PGLS
 ##Phylo-regression for sampled data
 sampled_matched <- treedata(consensus_tree, ft, sort=FALSE, warnings=TRUE)
 spc <- sampled_matched$phy$tip.label
@@ -335,7 +340,7 @@ A <- setNames(obj[,"A"],rownames(obj))
 R <- setNames(obj[,"R"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
-#model with N ( efecto del N en el índice)
+#model with N ( efecto del N en el ?ndice)
 bm_glsN<-gls(N~M+A+S+G,correlation = V, data=data.frame(N, M, A, S, G))
 summary(bm_glsN) 
 anova(bm_glsN)
@@ -373,13 +378,13 @@ A <- setNames(obj[,"A"],rownames(obj))
 R <- setNames(obj[,"R"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
-#model with N ( efecto del N en el índice)
+#model with N ( efecto del N en el ?ndice)
 bm_glsN<-gls(N~M+A+S+G,correlation = V, data=data.frame(N, M, A, S, G, GS1, GS2,R2))
 summary(bm_glsN) 
 anova(bm_glsN)
 
 #model with G 
-bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G, GS1, GS2,R2))
+bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G))
 summary(bm_glsG) 
 anova(bm_glsG)
 
@@ -403,7 +408,7 @@ G_pic1<-pic(x=ft2$G, phy = consensus_tree)
 M_pic1<-pic(x=ft2$M, phy = consensus_tree)
 
 calc_r <- function(x, y) {
-  r <- cor(x, y)  # Calcular el coeficiente de correlación de Pearson
+  r <- cor(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
   return(r)
 }
 data1 <- data.frame(S_pic1,A_pic1,R_pic1,G_pic1,M_pic1)
@@ -416,7 +421,7 @@ G_pic<-pic(x=ft$G, phy = y_total)
 M_pic<-pic(x=ft$M, phy = y_total)
 
 calc_r <- function(x, y) {
-  r <- cor(x, y)  # Calcular el coeficiente de correlación de Pearson
+  r <- cor(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
   return(r)
 }
 data <- data.frame(S_pic,A_pic,R_pic,G_pic,M_pic)

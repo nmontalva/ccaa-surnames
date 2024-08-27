@@ -3,8 +3,8 @@
 ##########################################################################################################################################################
 
 #### ESPACIO DE TRABAJO ####
-getwd()
-setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
+#getwd()
+#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 #### OBJETIVO 1 ####
 ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
@@ -17,15 +17,15 @@ library(geosphere)
 library(vegan)
 
 ## Cargar DATOS ##
-coordenadas <- read.csv("Datos/coordenadas.csv", header = T)
-coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
-coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
+coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
 
-##Administración de datos ##
-rownames(coordenadas) <- coordenadas$ï..community
+##Administraci?n de datos ##
+rownames(coordenadas) <- coordenadas$community
 colnames(coordenadas)
 my_points_t <- select(coordenadas, lon, lat)
-rownames(my_points_t) <- coordenadas$ï..community
+rownames(my_points_t) <- coordenadas$community
 common_communities <- unique(comuneros$community)
 
 ##Test de Mantel##
@@ -40,15 +40,15 @@ colnames(geo_total) <- as.factor(rownames(my_points_t))
 geo_total <- as.matrix(geo_total)
 rownames(geo_total)
 
-#Matriz de distancia con datos de apellidos (si se corrió el script "OBJETIVO_1_Surnames.R" es la matriz surname_matrix)
+#Matriz de distancia con datos de apellidos (si se corri? el script "OBJETIVO_1_Surnames.R" es la matriz surname_matrix)
 surname_matrix <- as.matrix(surname_matrix)
 
-#Intersección entre ambas matrices
-# Encontrar los row.names en común
+#Intersecci?n entre ambas matrices
+# Encontrar los row.names en com?n
 common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 common_rows
 
-# Filtrar las matrices para que solo contengan las filas y columnas con row.names en común
+# Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n
 mat1_filtered <- surname_matrix[common_rows, common_rows]
 mat2_filtered <- geo_total[common_rows, common_rows]
 
@@ -74,9 +74,9 @@ mat1_filtered <- as.dist(mat1_filtered)
 mantel(
     mat2_filtered, # La primera de las dos matrices de disimilitud
     mat1_filtered, # La segunda matriz
-    method = "pearson", # Método, el más común es pearson puede ser ( "pearson", "spearman", o "kendall")
-    permutations = 999, # Número de permutaciones, usar how() para determinarlas
-    strata = NULL, # Valor integrer o factor que identifique estratificación para las permutaciones
+    method = "pearson", # M?todo, el m?s com?n es pearson puede ser ( "pearson", "spearman", o "kendall")
+    permutations = 999, # N?mero de permutaciones, usar how() para determinarlas
+    strata = NULL, # Valor integrer o factor que identifique estratificaci?n para las permutaciones
     na.rm = FALSE, # Remover NS 
     parallel = getOption("mc.cores") # Opciones para procesos paralelos
   )
@@ -96,11 +96,11 @@ geo_muestra
 surname_matrix_muestra
 surname_matrix_muestra <- as.matrix(surname_matrix_muestra)
 
-#Intersección entre ambas matrices
-# Encontrar los row.names en común
+#Intersecci?n entre ambas matrices
+# Encontrar los row.names en com?n
 common_rows <- intersect(row.names(surname_matrix_muestra), row.names(geo_muestra))
 
-# Filtrar las matrices para que solo contengan las filas y columnas con row.names en común
+# Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n
 mat1_filtered <- surname_matrix_muestra[common_rows, common_rows]
 mat2_filtered <- geo_muestra[common_rows, common_rows]
 # Identificar las filas/columnas que quedaron fuera en mat1
@@ -111,7 +111,7 @@ mat1_outside <- surname_matrix_muestra[rows_outside_mat1, rows_outside_mat1]
 rows_outside_mat2 <- setdiff(row.names(geo_muestra), common_rows)
 mat2_outside <- geo_muestra[rows_outside_mat2, rows_outside_mat2]
 
-# Mostrar las filas/columnas que quedaron fuera #Esto debería generar una matriz de extensión 0x0
+# Mostrar las filas/columnas que quedaron fuera #Esto deber?a generar una matriz de extensi?n 0x0
 print("Filas/columnas que quedaron fuera de mat1:")
 print(mat1_outside)
 print("Filas/columnas que quedaron fuera de mat2:")
@@ -125,9 +125,9 @@ mat1_filtered <- as.dist(mat1_filtered)
 mantel(
   mat2_filtered, # La primera de las dos matrices de disimilitud
   mat1_filtered, # La segunda matriz
-  method = "pearson", # Método, el más común es pearson puede ser ( "pearson", "spearman", o "kendall")
-  permutations = 999, # Número de permutaciones, usar how() para determinarlas
-  strata = NULL, # Valor integrer o factor que identifique estratificación para las permutaciones
+  method = "pearson", # M?todo, el m?s com?n es pearson puede ser ( "pearson", "spearman", o "kendall")
+  permutations = 999, # N?mero de permutaciones, usar how() para determinarlas
+  strata = NULL, # Valor integrer o factor que identifique estratificaci?n para las permutaciones
   na.rm = FALSE, # Remover NS 
   parallel = getOption("mc.cores") # Opciones para procesos paralelos
 )

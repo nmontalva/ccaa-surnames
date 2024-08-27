@@ -3,8 +3,8 @@
 ##########################################################################################################################################################
 
 #### ESPACIO DE TRABAJO ####
-getwd()
-setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
+#getwd()
+#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 
 #### OBJETIVO 2 ####
@@ -58,9 +58,9 @@ result[is.na(result)] <- 0
 result <- as.data.frame(result)
 result
 
-#Descripciones estadísticas de traits
+#Descripciones estad?sticas de traits
 Hmisc::describe(result) #Descripciones generales
 summary(result) #Mediana, rango
 var(result$N) #Varianza
-skewness(result$N) #Asimetría
+skewness(result$N) #Asimetr?a
 
