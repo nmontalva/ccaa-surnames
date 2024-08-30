@@ -23,7 +23,7 @@ library(phytools)
 library(Publish)
 #library(treeio) #No lo puedo instalar
 library(ggplot2)
-
+library(gridExtra)
 library(geomorph) #No lo puedo instalar
 #install.packages("geomorph") 
 #library(devtools)
@@ -89,9 +89,11 @@ M_trait2$community <- NULL
 
 #Final_table
 ft <- result
-row.names(ft) <-result$community
+ft <- ft %>% column_to_rownames(var = "community")
+ft2 <- result %>% filter(community %in% selected_communities)
+ft2 <- ft2 %>% column_to_rownames(var = "community")
 
-##Consensus_3##
+##Consensus##
 consensus_tree <-consensus.edges(mphy_cR, method=c("least.squares"), rooted = TRUE)
 consensus_tree <- as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
@@ -133,6 +135,12 @@ gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
 avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
 
+#Escribir estados ancestrales en el árbol de consenso
+writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.nex", digits=6, format=c("nexus"))
+writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.nex", digits=6, format=c("nexus"))
+writeAncestors(consensus_tree, Anc=gvc$anc, file="Figures/G_nodos_muestra.nex", digits=6, format=c("nexus"))
+writeAncestors(consensus_tree, Anc=avc$anc, file="Figures/A_nodos_muestra.nex", digits=6, format=c("nexus"))
+writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.nex", digits=6, format=c("nexus"))
 
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
@@ -148,20 +156,16 @@ gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
 avt <- estimacion_estados_ancestrales(y_total, av2, "A")
 mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
 
-#Escribir estados ancestrales en el árbol
-writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.nex", digits=6, format=c("nexus"))
-S_nodos<-readNexus(file="Figures/S_nodos_muestra.nex", format=c("standard"))
 
 ###Comparaciones
 ##Comunidades muestreadas
 plot_comparison <- function(obj1, obj2, xlabel) {
-  par(mfrow = c(1, 2))  # Set up a 1x2 layout
-  
+  par(mfrow = c(1, 2), mar = c(5, 4, 4, 4) + 1, oma = c(1, 1, 1, 1))
   # First plot
-  plot(obj1, lwd = 5, ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), outline = TRUE, fsize = c(0.5), leg.txt = xlabel[1])
+  plot(obj1, lwd = 5, ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), outline = TRUE, fsize = c(0.3), leg.txt = xlabel[1])
   
   # Second plot
-  plot(obj2, lwd = 5, outline = TRUE, direction = "leftwards", ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), fsize = c(0.5), leg.txt = xlabel[2])
+  plot(obj2, lwd = 5, outline = TRUE, direction = "leftwards", ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), fsize = c(0.3), leg.txt = xlabel[2])
 }
 
 # Comparaciones
@@ -199,47 +203,46 @@ dev.off()
 
 ##Comunidades totales
 plot_comparison2 <- function(obj1, obj2, xlabel) {
-  par(pin=c(25, 10))
-  par(mai = c(1, 0.1, 1, 0.1))
-  layout(matrix(1:3, 1, 3), widths=c(0.49, 0.02, 0.49)) 
-  plot(obj1, lwd=6, ftype="off", legend=0.7*max(nodeHeights(y_total)),outline=TRUE,fsize=c(0,1.2),leg.txt=xlabel[1])
-  
+  par(pin=c(10, 10))
+  par(mai = c(1.5, 4, 1.5, 4))
+  layout(matrix(1:3, 1, 3), widths=c(0.48, 0.04, 0.48)) 
+  plot(obj1, lwd=6, ftype="off", outline=TRUE,legend=0.4*max(nodeHeights(y_total)),fsize=c(0.3,1.2),leg.txt=xlabel[1])
   plot.new()
-  plot.window(xlim=c(-0.05,0.05), ylim=get("last_plot.phylo", envir=.PlotPhyloEnv)$y.lim)
-  par(cex=0.6)
-  plot(obj2, lwd=6,outline=TRUE, direction="leftwards", ftype="off", legend=0.7*max(nodeHeights(y_total)),fsize=c(0,1.2),leg.txt=xlabel[2])
+  plot.window(xlim=c(1,2), ylim=get("last_plot.phylo", envir=.PlotPhyloEnv)$y.lim)
+  plot(obj2, lwd=6,outline=TRUE, direction="leftwards", legend=0.4*max(nodeHeights(y_total)),ftype="off",fsize=c(0.3,1.2),leg.txt=xlabel[2])
 }
+
 
 # Comparaciones
 dev.off()
 png("Figures/S_R_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, rvt$obj, c("S", "R"))
 dev.off()
-png("Figures/S_G_total.png",width = 1042, height = 534, res = 300)
+png("Figures/S_G_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, gvt$obj, c("S", "G"))
 dev.off()
-png("Figures/S_A_total.png",width = 1042, height = 534, res = 300)
+png("Figures/S_A_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, avt$obj, c("S", "A"))
 dev.off()
-png("Figures/S_M_total.png",width = 1042, height = 534, res = 300)
+png("Figures/S_M_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, mvt$obj, c("S", "M"))
 dev.off()
-png("Figures/R_G_total.png",width = 1042, height = 534, res = 300)
+png("Figures/R_G_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(rvt$obj, gvt$obj, c("R", "G"))
 dev.off()
-png("Figures/R_A_total.png",width = 1042, height = 534, res = 300)
+png("Figures/R_A_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(rvt$obj, avt$obj, c("R", "A"))
 dev.off()
-png("Figures/R_M_total.png",width = 1042, height = 534, res = 300)
+png("Figures/R_M_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(rvt$obj, mvt$obj, c("R", "M"))
 dev.off()
-png("Figures/G_A_total.png",width = 1042, height = 534, res = 300)
+png("Figures/G_A_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(gvt$obj, avt$obj, c("G", "A"))
 dev.off()
-png("Figures/G_M_total.png",width = 1042, height = 534, res = 300)
+png("Figures/G_M_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(gvt$obj, mvt$obj, c("G", "M"))
 dev.off()
-png("Figures/A_M_total.png",width = 1042, height = 534, res = 300)
+png("Figures/A_M_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(avt$obj, mvt$obj, c("A", "M"))
 dev.off()
 
@@ -256,9 +259,9 @@ calculate_physignal_plot <- function(trait_vector, file_name) {
 sv1
 # Vectores de datos
 trait_vectors <- list(sv1, rv1, gv1, av1, mv1)
-file_names <- c("Figures/Se?al_phy_S_muestra2.png", "Figures/Se?al_phy_R_muestra2.png",
-                "Figures/Se?al_phy_G_muestra2.png", "Figures/Se?al_phy_A_muestra2.png",
-                "Figures/Se?al_phy_M_muestra2.png")
+file_names <- c("Figures/Phylosignal_S_muestra2.png", "Figures/Phylosignal_R_muestra2.png",
+                "Figures/Phylosignal_G_muestra2.png", "Figures/Phylosignal_A_muestra2.png",
+                "Figures/Phylosignal_M_muestra2.png")
 
 # Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
@@ -278,7 +281,7 @@ row.names(Phy_sig) <- c("S", "R", "G", "A", "M")
 Phy_sig <- round(Phy_sig, digits = 4)
 publish(Phy_sig)
 # Generar la tabla y guardarla como imagen
-png("Figures/Se?al_phylo_muestra2.png", width = 300, height = 200)
+png("Figures/Phylosignal_muestra2.png", width = 300, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
@@ -293,9 +296,9 @@ calculate_physignal_plot <- function(trait_vector, file_name) {
 }
 # Vectores de datos
 trait_vectors2 <- list(sv2, rv2, gv2, av2, mv2)
-file_names <- c("Figures/Se?al_phy_S_total.png", "Figures/Se?al_phy_R_total.png",
-                "Figures/Se?al_phy_G_total.png", "Figures/Se?al_phy_A_total.png",
-                "Figures/Se?al_phy_M_total.png")
+file_names <- c("Figures/Phylosignal_S_total.png", "Figures/Phylosignal_R_total.png",
+                "Figures/Phylosignal_G_total.png", "Figures/Phylosignal_A_total.png",
+                "Figures/Phylosignal_M_total.png")
 
 # Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
@@ -315,23 +318,67 @@ row.names(Phy_sig2) <- c("S", "R", "G", "A", "M")
 Phy_sig2 <- round(Phy_sig2, digits = 4)
 publish(Phy_sig2)
 # Generar la tabla y guardarla como imagen
-png("Figures/Se?al_phylo_total.png", width = 300, height = 200)
+png("Figures/Phylosignal_total.png", width = 300, height = 200)
 grid.table(Phy_sig2)
 dev.off()
 
 
 ###Regresi?n PGLS
 ##Phylo-regression for sampled data
-sampled_matched <- treedata(consensus_tree, ft, sort=FALSE, warnings=TRUE)
+sampled_matched <- treedata(consensus_tree, ft2, sort=F, warnings=TRUE)
+spc <- sampled_matched$phy$tip.label
+V<-corBrownian(phy=sampled_matched$phy,form = ~spc)
+C <- vcv.phylo(phy = sampled_matched$phy)
+#Assign traits
+obj <- ft2
+x <- write.tree(consensus_tree)
+tree_consensus.tree <- read.tree(text=x)
+G <- setNames(obj[,"G"],rownames(obj))
+M <- setNames(obj[,"M"],rownames(obj))
+S <- setNames(obj[,"S"],rownames(obj))
+A <- setNames(obj[,"A"],rownames(obj))
+R <- setNames(obj[,"R"],rownames(obj))
+N <- setNames(obj[,"N"],rownames(obj))
+
+# Verifica que N, M, A, S, y G sean vectores numéricos
+N <- as.vector(N)
+M <- as.vector(M)
+A <- as.vector(A)
+S <- as.vector(S)
+G <- as.vector(G)
+
+# Crea un dataframe con estos vectores
+vector.data <- data.frame(N = N, M = M, A = A, S = S, G = G)
+
+#model with N ( efecto del N en el indice)
+bm_glsN<-gls(N~M+A+S+G,correlation = V, data= vector.data)
+summary(bm_glsN) 
+anova(bm_glsN)
+
+#model with G 
+bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G))
+summary(bm_glsG) 
+anova(bm_glsG)
+
+#model with M 
+bm_glsM<-gls(M~G+A+S,correlation = V, data=data.frame(N, M, A, S, G))
+summary(bm_glsM) 
+anova(bm_glsM)
+
+publish(bm_glsN)
+publish(bm_glsG)
+publish(bm_glsM)
+
+##Phylo-regression for all communities
+sampled_matched <- treedata(y_total, ft, sort=FALSE, warnings=TRUE)
 spc <- sampled_matched$phy$tip.label
 V<-corBrownian(phy=sampled_matched$phy,form = ~spc)
 C <- vcv.phylo(phy = sampled_matched$phy)
 
+#Now we run the analysis:
 #Assign traits
-ft2 <- ft %>% filter(community %in% selected_communities)
-obj <- ft2
-obj$community <- NULL
-x <- write.tree(consensus_tree)
+obj <- ft
+x <- write.tree(y_total)
 tree_consensus.tree <- read.tree(text=x)
 G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
@@ -359,48 +406,9 @@ publish(bm_glsN)
 publish(bm_glsG)
 publish(bm_glsM)
 
-##Phylo-regression for all communities
-sampled_matched <- treedata(y_total, ft, sort=FALSE, warnings=TRUE)
-spc <- sampled_matched$phy$tip.label
-V<-corBrownian(phy=sampled_matched$phy,form = ~spc)
-C <- vcv.phylo(phy = sampled_matched$phy)
-
-#Now we run the analysis:
-#Assign traits
-obj <- ft
-obj$community <- NULL
-x <- write.tree(y_total)
-tree_consensus.tree <- read.tree(text=x)
-G <- setNames(obj[,"G"],rownames(obj))
-M <- setNames(obj[,"M"],rownames(obj))
-S <- setNames(obj[,"S"],rownames(obj))
-A <- setNames(obj[,"A"],rownames(obj))
-R <- setNames(obj[,"R"],rownames(obj))
-N <- setNames(obj[,"N"],rownames(obj))
-
-#model with N ( efecto del N en el ?ndice)
-bm_glsN<-gls(N~M+A+S+G,correlation = V, data=data.frame(N, M, A, S, G, GS1, GS2,R2))
-summary(bm_glsN) 
-anova(bm_glsN)
-
-#model with G 
-bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsG) 
-anova(bm_glsG)
-
-#model with M 
-bm_glsM<-gls(M~G+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsM) 
-anova(bm_glsM)
-
-publish(bm_glsN)
-publish(bm_glsG)
-publish(bm_glsM)
-
 
 ##Generate PICs and test while conditioning on phylogeny
 #Sampled communities
-ft2 <- ft %>% filter(community %in% selected_communities)
 S_pic1<-pic(x = ft2$S, phy = consensus_tree)
 R_pic1<-pic(x= ft2$R, phy = consensus_tree)
 A_pic1<-pic(x = ft2$A, phy = consensus_tree)
