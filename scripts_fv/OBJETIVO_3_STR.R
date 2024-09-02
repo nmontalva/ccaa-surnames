@@ -31,8 +31,8 @@ library(polysat)
 library(mmod)
 
 ##UPGMA preference
-
 conflict_prefer("upgma", "phangorn")
+conflict_prefer("as.phylo","ape")
 
 ## Cargar bases de datos ##
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
@@ -237,10 +237,9 @@ dend.cs<- as.dendrogram(hccs)
 plot(hccs)
 
 #RST 1
-RST <- calcPopDiff(simple_STR,metric = "Fst", object = mygen)
+RST <- calcPopDiff(simple_STR,metric = "Rst", object = mygen)
 diag(RST) <- NA
 RST <- as.matrix (RST)
-RST
 RST<-ifelse (RST < 0, 0,RST) 
 RST <- as.dist(RST)
 
@@ -261,20 +260,19 @@ plot.phylo(njRST)
 hcrst<-hclust(RST)
 plotTree(as.phylo(hcrst))
 
-#FST 
-FST <-as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Fst"), labels=T)
-colnames(FST) <- rownames(FST) <- levels(STR_hierfstat$pop)
-FST <- as.dist(FST)
-#?genet.dist
-phyFST <- upgma(FST)
-plot.phylo(phyFST)
-dend.FST<-as.dendrogram(upgma(FST))
+#RST2 con Arlequin
+RST2 <- read.table("Archives/Arlequin_RST.txt", header = T, fill = T, dec = ".")
+RST2 <-as.matrix(RST2)
+RST2<-RST2[,-1]
+RST2<-RST2[-16,]
+rownames(RST2) <- as.factor(selected_communities)
+colnames(RST2) <- as.factor(selected_communities)
+RST2<-ifelse (RST2 < 0, 0,RST2) 
+RST2 <- as.dist(RST2)
 
-njFST<-nj(FST)
-plot.phylo(njFST)
-
-hcFST<-hclust(FST)
-plot(hcFST)
+phyRST2 <- upgma(RST2)
+plotTree(phyRST2)
+dend.asd<-as.dendrogram(upgma(RST2))
 
 #(Rst con otro nombre) con populations
 ASD <-read.table("Archives/ASD.txt", header = FALSE, sep = "\t", dec = ".")

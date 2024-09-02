@@ -22,6 +22,7 @@ library(ape)
 library(ggdendro)
 library(ggpubr)
 library(phylogram)
+library(phytools)
 
 ##Metodo por cluster jerarquico de una matriz pairwise. Hedrick's standarized kinship coef.##
 
@@ -102,7 +103,6 @@ hc <- surname_clustering(surnames)
 plot(hc)
 hd <- as.dendrogram(hc)
 hy <- as.phylo(hc) #Phylo format
-library(phytools)
 plotTree(hy)
 
 
