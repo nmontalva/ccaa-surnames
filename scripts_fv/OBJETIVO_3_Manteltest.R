@@ -90,6 +90,8 @@ mantel_Nei <- mantel_function(Nei, geo_muestra)
 mantel_CS <- mantel_function(cs, geo_muestra)
 mantel_RST <- mantel_function(RST,geo_muestra)
 mantel_ASD <- mantel_function(ASD, geo_muestra)
+mantel_DSW <- mantel_function(DSW, geo_muestra)
+mantel_Dmu2 <- mantel_function(Dmu2, geo_muestra)
 
 ##Resultados de mantel tests con apellidos
 mantel_GST_Ap <- mantel_function(GST,surname_matrix_muestra)
@@ -97,6 +99,8 @@ mantel_Nei_Ap <- mantel_function(Nei, surname_matrix_muestra)
 mantel_CS_Ap <- mantel_function(cs, surname_matrix_muestra)
 mantel_RST_Ap <- mantel_function(RST,surname_matrix_muestra)
 mantel_ASD_Ap <- mantel_function(ASD, surname_matrix_muestra)
+mantel_DSW_Ap <- mantel_function(DSW, surname_matrix_muestra)
+mantel_Dmu2_Ap <- mantel_function(Dmu2, surname_matrix_muestra)
 
 #Revisando matrices
 Nei_Nei<-mantel_function(Nei,Nei2)

@@ -292,6 +292,44 @@ plot.phylo(njASD)
 hcASD<-hclust(ASD)
 plot(hcASD)
 
+#Dsw con populations
+DSW <-read.table("Archives/Dsw.txt", header = FALSE, sep = "\t", dec = ".")
+DSW <-as.data.frame(DSW)
+rownames(DSW) <- as.factor(selected_communities)
+DSW<-DSW[,-1]
+colnames(DSW) <- as.factor(selected_communities)
+DSW <- as.dist(DSW)
+
+phyDSW <- upgma(DSW)
+plot.phylo(phyDSW)
+dend.DSW<-as.dendrogram(upgma(DSW))
+
+njDSW<-nj(DSW)
+plotTree(njDSW)
+
+hcDSW<-hclust(DSW)
+plot(hcDSW)
+
+#Delta-mu al cuadrado con Populations
+Dmu2 <-read.table("Archives/dm2.txt", header = FALSE, sep = "\t", dec = ".")
+Dmu2 <-as.data.frame(Dmu2)
+rownames(Dmu2) <- as.factor(selected_communities)
+Dmu2<-Dmu2[,-1]
+colnames(Dmu2) <- as.factor(selected_communities)
+Dmu2 <- as.matrix (Dmu2)
+Dmu2<-ifelse (Dmu2 < 0, 0,Dmu2) 
+Dmu2 <- as.dist(Dmu2)
+phyDmu2 <- upgma(Dmu2)
+plot.phylo(phyDmu2)
+dend.Dmu2<-as.dendrogram(upgma(Dmu2))
+
+njDmu2<-nj(Dmu2)
+njDmu2$edge.length<-ifelse (njDmu2$edge.length < 0, 0,njDmu2$edge.length) # Cambiar esto una vez tenga la cuestión que hizo Montalva ayer
+plotTree(njDmu2)
+
+hcDmu2<-hclust(Dmu2)
+plot(hcDmu2)
+
 ### Escribir �rboles
 write.dendrogram(dend.gst, file = "Figures/treeGST.phy", edges = FALSE)
 write.nexus(phyGST, file = "Figures/treeGST.nex", translate = TRUE)
