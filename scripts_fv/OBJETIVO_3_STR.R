@@ -208,11 +208,12 @@ conflicts_prefer(ape::as.phylo)
 hcGST<-hclust(GST)
 plotTree(as.phylo(hcGST))
 
-# Nei Ds
+## Nei Ds
 Nei <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Ds"), labels=T)
 colnames(Nei) <- rownames(Nei) <- levels(STR_hierfstat$pop)
 Nei <- as.dist(Nei)
 
+#Nei con Populations
 Nei2 <-read.table("Archives/Nei.txt", header = FALSE, sep = "\t", dec = ".")
 Nei2 <-as.data.frame(Nei2)
 rownames(Nei2) <- as.factor(selected_communities)
@@ -220,14 +221,17 @@ Nei2<-Nei2[,-1]
 colnames(Nei2) <- as.factor(selected_communities)
 Nei2 <- as.dist(Nei2)
 
+#Arbol con UPGMA
 dend.ds <- as.dendrogram(upgma(Nei))
 phyNei <- as.phylo.dendrogram(dend.ds)
 plot(dend.ds)
-plot.phylo(phyNei)
 
+#Arbol con Neighbor-Joining
 njNei <- nj(Nei)
-plotTree(njNei)
+njNei$edge.length[njNei$edge.length<0]<-0
+plot.phylo(njNei, use.edge.length = F)
 
+#Arbol con hclust
 hcNei<-hclust(Nei)
 plot(hcNei)
 
@@ -235,15 +239,16 @@ plot(hcNei)
 cs <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Dch"), labels=T)
 colnames(cs) <- rownames(cs) <- levels(STR_hierfstat$pop)
 cs <- as.dist(cs)
+#Arbol con UPGMA
 dend.dch <- as.dendrogram(upgma(cs))
 phyCS <- as.phylo.dendrogram(dend.dch)
 plot(dend.dch)
 plot.phylo(phyCS)
-
+#Arbol con Neighbor joining
 njCS<-nj(cs)
-plot.phylo(njCS)
-dend.cs<- as.dendrogram(nj(cs)) #Error: Tree is not ultrametric
-
+njCS$edge.length[njCS$edge.length<0]<-0
+plot.phylo(njCS, use.edge.length = F)
+#Arbol con hclust
 hccs<-as.phylo(hclust(cs))
 dend.cs<- as.dendrogram(hccs)
 plot(hccs)
@@ -254,21 +259,17 @@ diag(RST) <- 0
 RST <- as.matrix (RST)
 RST<-ifelse (RST < 0, 0,RST) 
 RST <- as.dist(RST)
-
+#Arbol con Upgma
 phyRST <- upgma(RST)
 dend.rst <- as.dendrogram(phyRST)
 plotTree(phyRST)
 phyRST$tip.label<-gsub(" ","_",phyRST$tip.label)
 is.rooted(phyRST)
-
+#Arbol con Neighbor joining
 njRST<-nj(RST)
-lambda_value <- 0.5
-rst_u <- force.ultrametric(njRST)
-rst_r <-as.phylo(rst_u)
-dend.rst <-as.dendrogram(njRST) # Error: Tree is not ultrametric
-class(dend.rst)
-plot.phylo(njRST)
-
+njRST$edge.length[njRST$edge.length<0]<-0
+plot.phylo(njRST, use.edge.length = F)
+#Arbol con hclust
 hcrst<-hclust(RST)
 plotTree(as.phylo(hcrst))
 
@@ -281,26 +282,33 @@ rownames(RST2) <- as.factor(selected_communities)
 colnames(RST2) <- as.factor(selected_communities)
 RST2<-ifelse (RST2 < 0, 0,RST2) 
 RST2 <- as.dist(RST2)
-
+#Arbol upgma
 phyRST2 <- upgma(RST2)
 plotTree(phyRST2)
-dend.asd<-as.dendrogram(upgma(RST2))
+#Arbol con Neighbor joining
+njRST2<-nj(RST2)
+njRST2$edge.length[njRST2$edge.length<0]<-0
+plot.phylo(njRST2, use.edge.length = F)
+#Arbol con hclust
+hcrst2<-hclust(RST2)
+plotTree(as.phylo(hcrst2))
 
 #(Rst con otro nombre) con populations
 ASD <-read.table("Archives/ASD.txt", header = FALSE, sep = "\t", dec = ".")
 ASD <-as.data.frame(ASD)
 rownames(ASD) <- as.factor(selected_communities)
 ASD<-ASD[,-1]
-ASD
 colnames(ASD) <- as.factor(selected_communities)
 ASD <- as.dist(ASD)
+#Arbol con UPGMA
 phyASD <- upgma(ASD)
 plot.phylo(phyASD)
 dend.asd<-as.dendrogram(upgma(ASD))
-
+#Arbol con Neighbor joining
 njASD<-nj(ASD)
-plot.phylo(njASD)
-
+njASD$edge.length[njASD$edge.length<0]<-0
+plot.phylo(njASD, use.edge.length = F)
+#Arbol con hclust
 hcASD<-hclust(ASD)
 plot(hcASD)
 
@@ -311,14 +319,15 @@ rownames(DSW) <- as.factor(selected_communities)
 DSW<-DSW[,-1]
 colnames(DSW) <- as.factor(selected_communities)
 DSW <- as.dist(DSW)
-
+#Arbol con UPGMA
 phyDSW <- upgma(DSW)
 plot.phylo(phyDSW)
 dend.DSW<-as.dendrogram(upgma(DSW))
-
+#Arbol con Neighbor Joining
 njDSW<-nj(DSW)
-plotTree(njDSW)
-
+njDSW$edge.length[njDSW$edge.length<0]<-0
+plot.phylo(njDSW, use.edge.length = F)
+#Arbol con hclust
 hcDSW<-hclust(DSW)
 plot(hcDSW)
 
@@ -331,14 +340,15 @@ colnames(Dmu2) <- as.factor(selected_communities)
 Dmu2 <- as.matrix (Dmu2)
 Dmu2<-ifelse (Dmu2 < 0, 0,Dmu2) 
 Dmu2 <- as.dist(Dmu2)
+#Arbol con UPGMA
 phyDmu2 <- upgma(Dmu2)
 plot.phylo(phyDmu2)
 dend.Dmu2<-as.dendrogram(upgma(Dmu2))
-
+#Arbol con Neighbor Joining
 njDmu2<-nj(Dmu2)
-njDmu2$edge.length<-ifelse (njDmu2$edge.length < 0, 0,njDmu2$edge.length) # Cambiar esto una vez tenga la cuestión que hizo Montalva ayer
-plotTree(njDmu2)
-
+njDmu2$edge.length[njDmu2$edge.length<0]<-0
+plot.phylo(njDmu2, use.edge.length = F)
+#Arbol con hclust
 hcDmu2<-hclust(Dmu2)
 plot(hcDmu2)
 
