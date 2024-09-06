@@ -39,7 +39,7 @@ STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 colnames(STR) <- gsub("\\.1$", " ", colnames(STR))
 write.table(STR, file = "scripts_fv/Datos/STR1.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
-STR [, 3:ncol(STR)] <- lapply(STR[, 3:ncol(STR)], function(x) sprintf("%02d", x))
+STR [, 3:ncol(STR)] <- lapply(STR[, 3:ncol(STR)], function(x) sprintf("%02d", x)) #Creo que ese "%02d" es también un error de codificación de caracteres
 locis <- colnames(STR[,3:32])
 locis_unicos <- unique(trimws(locis))
 
@@ -164,7 +164,7 @@ class(STR_freq)
 ##Matrices de distancia ##
 ##Goldstein et al. (1995) Gst
 #Gst por pairwise Gst-Hedrick
-GST <- pairwise_Gst_Hedrick(STR_genind, linearized = T)
+GST <- pairwise_Gst_Hedrick(STR_genind, linearized = F)
 is.dist(GST)
 GST <- as.matrix(GST)
 GST<-ifelse (GST < 0, 0,GST)
@@ -189,10 +189,22 @@ GST3<-calcPopDiff(simple_STR,metric = "Gst") #Da un resultado similar a GST
 GST4<-calcPopDiff(STR_freq,metric = "Gst") #Da un resultado demasiado dispar con los otros
 
 #Arbol con Neighbor-Joining
-njGST<-nj(GST)
-plot.phylo(njGST)
+GSTsolo <- read.table("Archives/GST.txt", header = FALSE, sep = "\t", dec = ".")
+GSTsolo <-as.data.frame(GSTsolo)
+rownames(GSTsolo) <- as.factor(selected_communities)
+GSTsolo<-GSTsolo[,-1]
+colnames(GSTsolo) <- as.factor(selected_communities)
+GSTsolo <- as.dist(GSTsolo)
 
-#Arbol con hclust
+njGST<-bionj(GST)
+
+njGST$edge.length[njGST$edge.length<0]<-0
+plot.phylo(njGST, use.edge.length = F)
+
+
+
+#ArbodesignTree()#Arbol con hclust
+conflicts_prefer(ape::as.phylo)
 hcGST<-hclust(GST)
 plotTree(as.phylo(hcGST))
 
@@ -237,8 +249,8 @@ dend.cs<- as.dendrogram(hccs)
 plot(hccs)
 
 #RST 1
-RST <- calcPopDiff(simple_STR,metric = "Fst", object = mygen)
-diag(RST) <- NA
+RST <- calcPopDiff(STR_freq,metric = "Rst", object = mygen)
+diag(RST) <- 0
 RST <- as.matrix (RST)
 RST
 RST<-ifelse (RST < 0, 0,RST) 
