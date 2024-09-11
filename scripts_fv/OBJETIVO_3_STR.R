@@ -254,7 +254,7 @@ dend.cs<- as.dendrogram(hccs)
 plot(hccs)
 
 #RST 1
-RST <- calcPopDiff(STR_freq,metric = "Rst", object = mygen)
+RST <- calcPopDiff(simple_STR,metric = "Rst", object = mygen)
 diag(RST) <- 0
 RST <- as.matrix (RST)
 RST<-ifelse (RST < 0, 0,RST) 
