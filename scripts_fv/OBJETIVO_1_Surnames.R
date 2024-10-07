@@ -2,10 +2,6 @@
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
 
-#### ESPACIO DE TRABAJO ####
-#getwd()
-#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
-
 #### OBJETIVO 1 ####
 ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
 
@@ -51,6 +47,7 @@ surname_clustering <- function(comuneros,
     # hierarchical clustering of the distance matrix
     hclust(method=hclust_method)
 }
+
 hc_total <- surname_clustering(comuneros)
 plot(hc_total)
 y_total <- as.phylo(hc_total) #Phylo format
@@ -72,8 +69,14 @@ STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 
-# Funci?n de creaci?n de matriz y ?rbol
-surnames <- comuneros %>% filter(community %in% selected_communities)
+STR2 <- STR
+STR2$pop[STR2$pop %in% c("GUALLIGUAICA", "LA_POLVADA")] <- "PUCLARO"
+selected_communities2<- unique(STR2$pop)
+comuneros2 <- comuneros
+comuneros2$community[comuneros2$community %in% c("GUALLIGUAICA", "LA_POLVADA")] <- "PUCLARO"
+
+# Funcion de creacion de matriz y arbol (SIN PUCLARO)
+surnames <- comuneros %>% dplyr::filter(community %in% selected_communities)
 surnames$community <- factor(surnames$community, levels = selected_communities)
 surname_distance_muestra <- function(surnames,
                                     group_by_col="community") {
@@ -89,22 +92,35 @@ surname_distance_muestra <- function(surnames,
   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
 }
 surname_matrix_muestra <- surname_distance_muestra(surnames)
-
-hclust_default_method <- "average"
-surname_clustering <- function(surnames,
-                               hclust_method=hclust_default_method,
-                               group_by_col="community") {
-  surnames %>%
-    surname_distance_muestra(group_by_col) %>%
-    # hierarchical clustering of the distance matrix
-    hclust(method=hclust_method)
-}
-hc <- surname_clustering(surnames)
-plot(hc)
+hc <-hclust(surname_matrix_muestra,method = "average")
 hd <- as.dendrogram(hc)
 hy <- as.phylo(hc) #Phylo format
+is.rooted(hy)
 plotTree(hy)
 
+# Funcion de creacion de matriz y arbol (CON PUCLARO)
+surnames2 <- comuneros2 %>% dplyr::filter(community %in% selected_communities2)
+surnames2$community <- factor(surnames2$community, levels = selected_communities2)
+surname_distance_muestra2 <- function(surnames2,
+                                     group_by_col="community") {
+  # cross tabulate
+  surnames_freq2 <- table(surnames2$surname_father,
+                         surnames2[[group_by_col]])
+  # generates Hedrick (1971) kinship matrix
+  # there are other methods (i.e. lasker, uri)
+  hedkin2 <- hedrick(surnames_freq2)
+  # hedrick returns values of similarity
+  # transform them into values of dissimilarity (distance)
+  as.dist(1-hedkin2) #IMPORTANT: This is likely wrong. We figured out a better way.
+  #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
+}
+surname_matrix_muestra2 <- surname_distance_muestra2(surnames2)
+hc2 <-hclust(surname_matrix_muestra2,method = "average")
+hd2 <- as.dendrogram(hc2)
+hy2 <- as.phylo(hc) #Phylo format
+#root(hy, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(hy2)
+plotTree(hy2)
 
 #### Guardar dendrogramas
 write.dendrogram(as.dendrogram(hc_total), file = "Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy

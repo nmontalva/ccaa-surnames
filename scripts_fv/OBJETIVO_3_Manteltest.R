@@ -2,9 +2,6 @@
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
 
-#### ESPACIO DE TRABAJO ####
-#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
-
 #### OBJETIVO 3 ####
 ### To build a phylogenetic tree showing relationships between communities based on the distributions of genetic microsatellite markers within and between communities.###
 
@@ -15,28 +12,29 @@ library(geosphere)
 library(vegan)
 
 ### Cargar DATOS geogr?ficos ###
-coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
-coordenadas$community <- gsub(" ", "_", coordenadas$community)
-coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
-
-###Administraci?n de datos geogr?ficos ###
-rownames(coordenadas) <- coordenadas$community
-colnames(coordenadas)<- c("community","lon","lat","org_name")
-my_points_t <- dplyr::select(coordenadas, lon, lat)
-rownames(my_points_t) <- coordenadas$community
-common_communities <- unique(comuneros$community)
+shape.data <- sf::st_read("scripts_fv/Datos/comunidades_reprojected.shx")
+shape.data$Name <-  gsub("\\s*\\(\\d+\\)", "", shape.data$Name)
+shape.data$Name <- toupper(shape.data$Name)
+shape.data$Name <- gsub(" ", "_", shape.data$Name)
+shape.data$Name[grepl("LA_RINCONADA_DE_PUNITAQUI" , shape.data$Name)] <- "RINCONADA_DE_PUNITAQUI"
+#shape.data$Name[shape.data$Name %in% c("GUALLIGUAICA")] <- "PUCLARO"
+rownames(shape.data) <- shape.data$Name
+my_points_v<- dplyr::select(shape.data,Name,geometry)
+rownames(my_points_v)<-shape.data$Name
 
 ###Test de Mantel###
 ###3. Comunidades muestreadas: STRs ###
 ##Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
-selected_communities <- unique(STR$pop)
-my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% selected_communities)
-geo_muestra <- distm (my_points_t, fun = distGeo )
-rownames(geo_muestra) <- as.factor(rownames(my_points_t))
-colnames(geo_muestra) <- as.factor(rownames(my_points_t))
+my_points_v <- my_points_v %>% filter(row.names(shape.data) %in% selected_communities)
+coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
+geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
+rownames(geo_muestra) <- as.factor(rownames(my_points_v))
+colnames(geo_muestra)<- as.factor(rownames(my_points_v))
+geo_muestra
 
 ##Matriz de distancia con datos de apellidos
-surname_distance_muestra
+surname_matrix_muestra
+surname_matrix_muestra2
 
 ###Intersecci?n entre distintas matrices
 ##Mantel function
@@ -58,12 +56,12 @@ mantel_function <- function(t1,t2) {
   # Mostrar las filas/columnas que quedaron fuera
   if(length(rows_outside_mat1) > 0){
     print("Filas/columnas que quedaron fuera de la matriz gen?tica:")
-    print(genetic_matrix[rows_outside_mat1, rows_outside_mat1])
+    print(t1[rows_outside_mat1, rows_outside_mat1])
   }
   
   if(length(rows_outside_mat2) > 0){
     print("Filas/columnas que quedaron fuera de la matriz geogr?fica:")
-    print(geo_matrix[rows_outside_mat2, rows_outside_mat2])
+    print(t2[rows_outside_mat2, rows_outside_mat2])
   }
   #Distancias
   mat2_filtered<-as.dist(mat2_filtered)
@@ -93,6 +91,7 @@ mantel_RST2 <- mantel_function(RST2,geo_muestra)
 mantel_ASD <- mantel_function(ASD, geo_muestra)
 mantel_DSW <- mantel_function(DSW, geo_muestra)
 mantel_Dmu2 <- mantel_function(Dmu2, geo_muestra)
+mantel_FST <- mantel_function(FST, geo_muestra)
 
 ##Resultados de mantel tests con apellidos
 mantel_GST_Ap <- mantel_function(GST,surname_matrix_muestra)
@@ -103,9 +102,10 @@ mantel_RST2_Ap <- mantel_function(RST2,surname_matrix_muestra)
 mantel_ASD_Ap <- mantel_function(ASD, surname_matrix_muestra)
 mantel_DSW_Ap <- mantel_function(DSW, surname_matrix_muestra)
 mantel_Dmu2_Ap <- mantel_function(Dmu2, surname_matrix_muestra)
+mantel_FST_Ap <- mantel_function(FST, surname_matrix_muestra)
 
 #Revisando matrices
-Nei_Nei<-mantel_function(Nei,Nei2)
+Nei_cs<-mantel_function(Nei,cs)
 RST_ASD<-mantel_function(RST,ASD)
 RST_RST2<-mantel_function(RST,RST2) #Son muy parecidas pero no idénticas
-GST_GST<-mantel_function(GST,GST3)
+GST_GST<-mantel_function(GST,GST2)

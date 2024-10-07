@@ -6,17 +6,17 @@
 ### To compare trees builds with different data and their deviations from the consensus tree ###
 
 ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3##
-e <- dendlist(as.dendrogram(hcrst), as.dendrogram(hc)) %>%
+e <- dendlist(as.dendrogram(hy), as.dendrogram(phyDSW)) %>%
   dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   entanglement()                     # Alignment?quality
 e
 
-dendlist(as.dendrogram(hc),as.dendrogram(hcrst))%>%
+dendlist(as.dendrogram(hy),as.dendrogram(phyDSW))%>%
   dendextend::untangle(method = "step1side")%>%
 tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
-           main = paste("entanglement =", round(e,2)),
+           main = paste("entanglement =", round(e,4)),
            main_left = "Surnames",
-           main_right = "STR",
+           main_right = "Dsw",
            sort = T,
            edge.lwd = T,
            color_lines = T,
@@ -26,19 +26,62 @@ tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
            common_subtrees_color_branches = TRUE
 ) 
 
-hcrst<-as.phylo(hcrst)
-mphy_cR <- as.multiPhylo(hcrst, hy)
-consensus_tree <- consensus.edges(mphy_cR, method=c("least.squares"), rooted = TRUE)
-plotTree(consensus_tree)
+# Asegúrate de que las etiquetas están en el mismo orden
+hy <- reorder(hy, "postorder")
+plotTree(hy)
+phyDSW <- reorder(phyDSW, "postorder")
+plotTree(phyDSW)
+hy <- reorder(hy2, "postorder")
+plotTree(hy2)
+phyDSW <- reorder(phyDSW2, "postorder")
+plotTree(phyDSW2)
+# Binariza los árboles para que tengan nodos resueltos de manera comparable
+hy <- multi2di(hy)
+phyDSW <- multi2di(phyDSW)
+hy2 <- multi2di(hy2)
+phyDSW2 <- multi2di(phyDSW2)
+# Escalonar las ramas en el mismo sentido (izquierda o derecha)
+hy <- ape::ladderize(hy)
+phyDSW <- ape::ladderize(phyDSW)
+hy2 <- ape::ladderize(hy2)
+phyDSW2 <- ape::ladderize(phyDSW2)
+plot(hy)
+# Combina los árboles en una lista de clase "multiPhylo"
+combined_trees1 <- as.multiPhylo(hy,phyDSW)
+combined_trees2 <- as.multiPhylo(phyDSW,hy)
+combined_trees3 <- as.multiPhylo(hy2,phyDSW2)
+combined_trees4 <- as.multiPhylo(phyDSW2,hy2)
+# Genera el árbol de consenso
+consensus_tree1 <- consensus(combined_trees1, p=0.5,rooted = F)
+consensus_tree1 <- reorder(consensus_tree1, "postorder")
+consensus_tree2 <- consensus(combined_trees2, p=0.5,rooted = F)
+consensus_tree2 <- reorder(consensus_tree2, "postorder")
+consensus_tree3 <- consensus(combined_trees3, p=0.5,rooted = F)
+consensus_tree3 <- reorder(consensus_tree3, "postorder")
+consensus_tree4 <- consensus(combined_trees4, p=0.5,rooted = F)
+consensus_tree4 <- reorder(consensus_tree4, "postorder")
+plotTree(consensus_tree1)
+plotTree(consensus_tree2)
+plotTree(consensus_tree3)
+plotTree(consensus_tree4)
 
-
+par(mfrow=c(1,2))
+plot(consensus_tree1, main="Apellidos primero, s/PUCLARO")
+plot(consensus_tree2, main="DSW primero, s/PUCLARO")
+par(mfrow=c(1,1))
+dev.off()
+par(mfrow=c(1,2))
+plot(consensus_tree3, main="Apellidos primero, c/PUCLARO")
+plot(consensus_tree4, main="DSW primero, c/PUCLARO")
+par(mfrow=c(1,1))
+dev.off()
 ## Comparacion entre aboles
-#Consenso con Apellidos
-e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
+#Comparación Consenso con Apellidos
+e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(phyDSW)) %>%
   dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   entanglement()                     # Alignment?quality
 e
-dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
+dendlist(as.dendrogram(phyDSW), as.dendrogram(consensus_tree_least)) %>%
   dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
              main = paste("entanglement =", round(e,2)),
@@ -52,7 +95,7 @@ dendlist(as.dendrogram(consensus_tree), as.dendrogram(hc)) %>%
   )                       # Draw the?two?dendrograms
 
 
-#Consenso con STR  # B?sicamente el ?rbol de consenso es el ?rbol de STR
+#Comparación consenso con STR
 e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
   dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
   entanglement()                     # Alignment?quality
