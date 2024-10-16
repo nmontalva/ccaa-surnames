@@ -2,7 +2,7 @@
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
 
-#### HIP?TESIS 1 ####
+#### HIPOTESIS 1 ####
 ### Part 4 ####
 ###There was a change in wealth inheritance cultural norms, transiting from agnatic primogeniture
 ###(Spanish majorat) to non partible multigeniture originating the common tenure norm of property of right.
@@ -11,7 +11,6 @@
 ###non-partible multigeniture, R and S should be both low at the following internal nodes of the tree.
 
 #### ESPACIO DE TRABAJO ####
-#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 ### Estados basales sampled communities###
 
@@ -63,7 +62,7 @@ crear_grafico2 <- function(vc, tree, label,filename) {
   dev.off()
 }
 
-# Llamar a la funci?n para cada comunidad muestreada
+# Llamar a la funcion para el total de comunidades
 crear_grafico2(svt, y_total, "S", "Figures/S_ancestral_tree_total.pdf")
 crear_grafico2(gvt, y_total, "G", "Figures/G_ancestral_tree_total.pdf")
 crear_grafico2(avt, y_total, "A", "Figures/A_ancestral_tree_total.pdf")
@@ -72,18 +71,10 @@ crear_grafico2(mvt, y_total, "M", "Figures/M_ancestral_tree_total.pdf")
 
 ### CREACI?N DE POBLACI?N EN LA BASE (FOSIL) ###
 ## Hombre,una sola persona, con un s?lo derecho, un apellido.
-#Datos de la poblaci?n f?sil
-df <- data.frame(S=c(0), 
-A=c(1),
-R=c(1),
-G=c(1),
-M=c(0),
-community=c("F?sil"))
-print(df)
 
 ##COMUNIDADES MUESTREADAS (consensus_tree)
 
-incorporaci?n_fosil <- function(fosil,valor,tree,label,filename, valor_raiz = 0)
+incorporacion_fosil <- function(fosil,valor,tree,label,filename, valor_raiz = 0)
   {
   #incorporar fosil
   pm<-setNames(c(1000,rep(fosil,tree$Nnode)),
@@ -122,15 +113,15 @@ incorporaci?n_fosil <- function(fosil,valor,tree,label,filename, valor_raiz = 0)
   dev.off()
 }
 
-incorporaci?n_fosil(0,sv1,consensus_tree,"S","Figures/S_f?sil_muestra.png", valor_raiz = 0) #S
-incorporaci?n_fosil(1,rv1,consensus_tree,"R", "Figures/R_f?sil_muestra.png",valor_raiz = 1) #R
-incorporaci?n_fosil(1,av1,consensus_tree,"A", "Figures/A_f?sil_muestra.png",valor_raiz = 1) #A
-incorporaci?n_fosil(0,gv1,consensus_tree, "G", "Figures/G_f?sil_muestra.png",valor_raiz = 0) #G
-incorporaci?n_fosil(0,mv1,consensus_tree, "M", "Figures/M_f?sil_muestra.png",valor_raiz = 0) #M
+incorporacion_fosil(0,sv1,consensus_tree,"S","Figures/S_fosil_muestra.png", valor_raiz = 0) #S
+incorporacion_fosil(1,rv1,consensus_tree,"R", "Figures/R_fosil_muestra.png",valor_raiz = 1) #R
+incorporacion_fosil(1,av1,consensus_tree,"A", "Figures/A_fosil_muestra.png",valor_raiz = 1) #A
+incorporacion_fosil(0,gv1,consensus_tree, "G", "Figures/G_fosil_muestra.png",valor_raiz = 0) #G
+incorporacion_fosil(0,mv1,consensus_tree, "M", "Figures/M_fosil_muestra.png",valor_raiz = 0) #M
 
 
 ##COMUNIDADES TOTALES (y_total)
-incorporaci?n_fosil2 <- function(fosil,valor,tree, label, filename)
+incorporacion_fosil2 <- function(fosil,valor,tree, label, filename)
 {
   # Verificar longitudes de ramas
   branch_lengths <- tree$edge.length
@@ -176,8 +167,8 @@ incorporaci?n_fosil2 <- function(fosil,valor,tree, label, filename)
   dev.off()
 }
 
-incorporaci?n_fosil2(0,sv2,y_total,"S", "Figures/S_f?sil_total.pdf") #S
-incorporaci?n_fosil2(1,rv2,y_total,"R", "Figures/R_f?sil_total.pdf") #R
-incorporaci?n_fosil2(1,av2,y_total,"A", "Figures/A_f?sil_total.pdf") #A
-incorporaci?n_fosil2(1,gv2,y_total,"G", "Figures/G_f?sil_total.pdf") #G
-incorporaci?n_fosil2(0,mv2,y_total,"M", "Figures/M_f?sil_total.pdf") #M
+incorporacion_fosil2(0,sv2,y_total,"S", "Figures/S_f?sil_total.pdf") #S
+incorporacion_fosil2(1,rv2,y_total,"R", "Figures/R_f?sil_total.pdf") #R
+incorporacion_fosil2(1,av2,y_total,"A", "Figures/A_f?sil_total.pdf") #A
+incorporacion_fosil2(1,gv2,y_total,"G", "Figures/G_f?sil_total.pdf") #G
+incorporacion_fosil2(0,mv2,y_total,"M", "Figures/M_f?sil_total.pdf") #M

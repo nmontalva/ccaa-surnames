@@ -230,7 +230,7 @@ GST2<-as.dist(GST2)
 dend.gst <- as.dendrogram(upgma(GST2))
 phyGST2 <- as.phylo.dendrogram(dend.gst)
 #phyGST<-root(phyGST, outgroup = "PUCLARO", resolve.root = TRUE)
-plot.phylo(phyGST)
+plot.phylo(phyGST2)
 ##NOTA: ASD.txt, dm2.txt y Dsw.txt fueron generados en Populations
 
 #Gst por calcPopDiff con archivos de frecuencia distintos
@@ -244,10 +244,17 @@ is.rooted(njGST)
 njGST$edge.length[njGST$edge.length<0]<-0
 plot.phylo(njGST, use.edge.length = F)
 
+njGST2<-bionj(GST2)
+#njGST<-root(njGST, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njGST2)
+njGST2$edge.length[njGST2$edge.length<0]<-0
+plot.phylo(njGST2, use.edge.length = F)
+
 #Arbol con hclust
-conflicts_prefer(ape::as.phylo)
 hcGST<-hclust(GST)
 plotTree(as.phylo(hcGST))
+hcGST2<-hclust(GST2)
+plot.phylo(as.phylo(hcGST2))
 
 ## Nei Ds
 Nei <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Ds"), labels=T)
@@ -258,7 +265,17 @@ dend.ds <- as.dendrogram(upgma(Nei))
 phyNei <- as.phylo.dendrogram(dend.ds)
 #phyNei<-root(phyNei, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyNei)
-plotTree(phyNei)
+plot.phylo(phyNei)
+
+Nei2 <- as.matrix(genet.dist(STR2_hierfstat, diploid=T, method = "Ds"), labels=T)
+colnames(Nei2) <- rownames(Nei2) <- levels(STR2_hierfstat$pop)
+Nei2 <- as.dist(Nei2)
+#Arbol con UPGMA
+dend.ds2 <- as.dendrogram(upgma(Nei2))
+phyNei2 <- as.phylo.dendrogram(dend.ds2)
+#phyNei<-root(phyNei, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(phyNei2)
+plot.phylo(phyNei2)
 
 #Arbol con Neighbor-Joining
 njNei <- nj(Nei)
@@ -266,80 +283,132 @@ njNei<-root(njNei, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njNei)
 njNei$edge.length[njNei$edge.length<0]<-0
 plot.phylo(njNei, use.edge.length = F)
-
+njNei2 <- nj(Nei2)
+#njNei2<-root(njNei2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njNei2)
+njNei2$edge.length[njNei2$edge.length<0]<-0
+plot.phylo(njNei2, use.edge.length = F)
 #Arbol con hclust
 hcNei<-hclust(Nei)
 plot(hcNei)
+hcNei2<-hclust(Nei2)
+plot(hcNei2)
 
 # Cavalli Sforza
 cs <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Dch"), labels=T)
 colnames(cs) <- rownames(cs) <- levels(STR_hierfstat$pop)
 cs <- as.dist(cs)
+cs2 <- as.matrix(genet.dist(STR2_hierfstat, diploid=T, method = "Dch"), labels=T)
+colnames(cs2) <- rownames(cs2) <- levels(STR2_hierfstat$pop)
+cs2 <- as.dist(cs2)
 #Arbol con UPGMA
 dend.dch <- as.dendrogram(upgma(cs))
 phyCS <- as.phylo.dendrogram(dend.dch)
 plot(dend.dch)
+dend.dch2 <- as.dendrogram(upgma(cs2))
+phyCS2 <- as.phylo.dendrogram(dend.dch2)
+plot(dend.dch2)
 #phyCS<-root(phyCS, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyCS)
-plotTree(phyCS)
+plot.phylo(phyCS)
+is.rooted(phyCS2)
+plot.phylo(phyCS2)
 #Arbol con Neighbor joining
 njCS<-nj(cs)
-njCS<-root(njCS, outgroup = "PUCLARO", resolve.root = TRUE)
+#njCS<-root(njCS, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njCS)
 njCS$edge.length[njCS$edge.length<0]<-0
 plot.phylo(njCS, use.edge.length = F)
+njCS2<-nj(cs2)
+#njCS2<-root(njCS2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njCS2)
+njCS2$edge.length[njCS2$edge.length<0]<-0
+plot.phylo(njCS2, use.edge.length = F)
 #Arbol con hclust
 hccs<-as.phylo(hclust(cs))
 dend.cs<- as.dendrogram(hccs)
 plot(hccs)
+hccs2<-as.phylo(hclust(cs2))
+dend.cs2<- as.dendrogram(hccs2)
+plot(hccs2)
 
-#RST 1
+#RST
 RST <- calcPopDiff(simple_STR,metric = "Rst", object = mygen)
 diag(RST) <- 0
 RST <- as.matrix (RST)
 RST<-ifelse (RST < 0, 0,RST) 
 RST <- as.dist(RST)
+RST2 <- calcPopDiff(simple_STR2,metric = "Rst", object = mygen2)
+diag(RST2) <- 0
+RST2 <- as.matrix (RST2)
+RST2<-ifelse (RST2 < 0, 0,RST2) 
+RST2 <- as.dist(RST2)
 #Arbol con Upgma
 phyRST <- upgma(RST)
 dend.rst <- as.dendrogram(phyRST)
-#phyRST<-root(phyRST, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyRST)
-plotTree(phyRST)
-phyRST$tip.label<-gsub(" ","_",phyRST$tip.label)
+plot.phylo(phyRST)
+phyRST2$tip.label<-gsub(" ","_",phyRST2$tip.label)
+
+phyRST2 <- upgma(RST2)
+dend.rst <- as.dendrogram(phyRST2)
+#phyRST<-root(phyRST, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(phyRST2)
+plot.phylo(phyRST2)
+phyRST2$tip.label<-gsub(" ","_",phyRST2$tip.label)
+
 #Arbol con Neighbor joining
 njRST<-nj(RST)
-njRST<-root(njRST, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njRST)
 njRST$edge.length[njRST$edge.length<0]<-0
 plot.phylo(njRST, use.edge.length = F)
-#Arbol con hclust
-hcrst<-hclust(RST)
-plotTree(as.phylo(hcrst))
 
-#RST2 con Arlequin
-RST2 <- read.table("Archives/Arlequin_RST.txt", header = T, fill = T, dec = ".")
-RST2 <-as.matrix(RST2)
-RST2<-RST2[,-1]
-RST2<-RST2[-16,]
-rownames(RST2) <- as.factor(selected_communities)
-colnames(RST2) <- as.factor(selected_communities)
-RST2<-ifelse (RST2 < 0, 0,RST2) 
-RST2 <- as.dist(RST2)
-#Arbol upgma
-phyRST2 <- upgma(RST2)
-#phyRST2<-root(phyRST2, outgroup = "PUCLARO", resolve.root = TRUE)
-is.rooted(phyRST2)
-dend.rst2<-as.dendrogram(phyRST2)
-plotTree(phyRST2)
-#Arbol con Neighbor joining
 njRST2<-nj(RST2)
-njRST2<-root(njRST2, outgroup = "PUCLARO", resolve.root = TRUE)
+#njRST2<-root(njRST2, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njRST2)
 njRST2$edge.length[njRST2$edge.length<0]<-0
 plot.phylo(njRST2, use.edge.length = F)
 #Arbol con hclust
+hcrst<-hclust(RST)
+plotTree(as.phylo(hcrst))
 hcrst2<-hclust(RST2)
 plotTree(as.phylo(hcrst2))
+
+#RST_arl con Arlequin
+RST_arl <- read.table("Archives/Arlequin_RST.txt", header = T, fill = T, dec = ".")
+RST_arl <-as.matrix(RST_arl)
+rownames(RST_arl) <- as.factor(selected_communities)
+colnames(RST_arl) <- as.factor(selected_communities)
+RST_arl <- as.dist(RST_arl)
+RST_arl2 <- read.table("Archives/Arlequin_RST2.txt", header = T, fill = T, dec = ".")
+RST_arl2 <-as.matrix(RST_arl2)
+rownames(RST_arl2) <- as.factor(selected_communities2)
+colnames(RST_arl2) <- as.factor(selected_communities2)
+RST_arl2 <- as.dist(RST_arl2)
+#Arbol upgma
+phyRST_arl <- upgma(RST_arl)
+phyRST_arl2 <- upgma(RST_arl2)
+#phyRST_arl2<-root(phyRST_arl2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(phyRST_arl)
+dend.rst.arl<-as.dendrogram(phyRST_arl)
+plot.phylo(phyRST_arl)
+is.rooted(phyRST_arl2)
+dend.rst.arl2<-as.dendrogram(phyRST_arl2)
+plot.phylo(phyRST_arl2)
+#Arbol con Neighbor joining
+njRST_arl<-nj(RST_arl)
+njRST_arl2<-nj(RST_arl2)
+#njRST_arl2<-root(njRST_arl2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njRST_arl)
+njRST_arl$edge.length[njRST_arl$edge.length<0]<-0
+plot.phylo(njRST_arl, use.edge.length = F)
+njRST_arl2$edge.length[njRST_arl2$edge.length<0]<-0
+plot.phylo(njRST_arl2, use.edge.length = F)
+#Arbol con hclust
+hcrst_arl<-hclust(RST_arl)
+plot.phylo(as.phylo(hcrst_arl))
+hcrst_arl2<-hclust(RST_arl2)
+plot.phylo(as.phylo(hcrst_arl2))
 
 #(Rst con otro nombre) con populations
 ASD <-read.table("Archives/ASD.txt", header = FALSE, sep = "\t", dec = ".")
@@ -348,21 +417,37 @@ rownames(ASD) <- as.factor(selected_communities)
 ASD<-ASD[,-1]
 colnames(ASD) <- as.factor(selected_communities)
 ASD <- as.dist(ASD)
+ASD2 <-read.table("Archives/ASD2.txt", header = FALSE, sep = "\t", dec = ".")
+ASD2 <-as.data.frame(ASD2)
+rownames(ASD2) <- as.factor(selected_communities2)
+ASD2<-ASD2[,-1]
+colnames(ASD2) <- as.factor(selected_communities2)
+ASD2 <- as.dist(ASD2)
 #Arbol con UPGMA
 phyASD <- upgma(ASD)
-#phyASD<-root(phyASD, outgroup = "PUCLARO", resolve.root = TRUE)
+phyASD2 <-upgma(ASD2)
+#phyASD2<-root(phyASD2, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyASD)
 plot.phylo(phyASD)
 dend.asd<-as.dendrogram(upgma(ASD))
+is.rooted(phyASD2)
+plot.phylo(phyASD2)
+dend.asd<-as.dendrogram(upgma(ASD2))
 #Arbol con Neighbor joining
 njASD<-nj(ASD)
-njASD<-root(njASD, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njASD)
 njASD$edge.length[njASD$edge.length<0]<-0
 plot.phylo(njASD, use.edge.length = F)
+njASD2<-nj(ASD2)
+#njASD2<-root(njASD2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njASD2)
+njASD2$edge.length[njASD2$edge.length<0]<-0
+plot.phylo(njASD2, use.edge.length = F)
 #Arbol con hclust
 hcASD<-hclust(ASD)
 plot(hcASD)
+hcASD<-hclust(ASD2)
+plot(hcASD2)
 
 #Dsw con populations
 DSW <-read.table("Archives/Dsw.txt", header = FALSE, sep = "\t", dec = ".")
@@ -385,18 +470,25 @@ phyDSW <- upgma(DSW)
 phyDSW2 <- upgma(DSW2)
 #phyDSW<-root(phyDSW, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyDSW)
-plotTree(phyDSW)
-plotTree(phyDSW2)
+plot.phylo(phyDSW)
+plot.phylo(phyDSW2)
 dend.DSW<-as.dendrogram(upgma(DSW))
+dend.DSW2<-as.dendrogram(upgma(DSW2))
 #Arbol con Neighbor Joining
 njDSW<-nj(DSW)
-#njDSW<-root(njDSW, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njDSW)
 njDSW$edge.length[njDSW$edge.length<0]<-0
 plot.phylo(njDSW, use.edge.length = F)
+njDSW2<-nj(DSW2)
+#njDSW2<-root(njDSW2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njDSW2)
+njDSW2$edge.length[njDSW2$edge.length<0]<-0
+plot.phylo(njDSW2, use.edge.length = F)
 #Arbol con hclust
 hcDSW<-hclust(DSW)
 plot(hcDSW)
+hcDSW2<-hclust(DSW2)
+plot(hcDSW2)
 
 #Delta-mu al cuadrado con Populations
 Dmu2 <-read.table("Archives/dm2.txt", header = FALSE, sep = "\t", dec = ".")
@@ -423,46 +515,84 @@ plot.phylo(njDmu2, use.edge.length = F)
 hcDmu2<-hclust(Dmu2)
 plot(hcDmu2)
 
+# Dmu2 con Arlequin 
+Dmu2_arl <- read.table("Archives/Arlequin_dm2.txt", header = T, fill = T, dec = ".")
+Dmu2_arl <-as.matrix(Dmu2_arl)
+rownames(Dmu2_arl) <- as.factor(selected_communities)
+colnames(Dmu2_arl) <- as.factor(selected_communities)
+Dmu2_arl <- as.dist(Dmu2_arl)
+Dmu2_arl2 <- read.table("Archives/Arlequin_dm22.txt", header = T, fill = T, dec = ".")
+Dmu2_arl2 <-as.matrix(Dmu2_arl2)
+rownames(Dmu2_arl2) <- as.factor(selected_communities2)
+colnames(Dmu2_arl2) <- as.factor(selected_communities2)
+Dmu2_arl2 <- as.dist(Dmu2_arl2)
+#Arbol upgma
+phyDmu2_arl <- upgma(Dmu2_arl)
+phyDmu2_arl2 <- upgma(Dmu2_arl2)
+#phyDmu2_arl2<-root(phyDmu2_arl2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(phyDmu2_arl)
+dend.Dmu2.arl<-as.dendrogram(phyDmu2_arl)
+plot.phylo(phyDmu2_arl)
+is.rooted(phyDmu2_arl2)
+dend.Dmu2.arl2<-as.dendrogram(phyDmu2_arl2)
+plot.phylo(phyDmu2_arl2)
+#Arbol con Neighbor joining
+njDmu2_arl<-nj(Dmu2_arl)
+njDmu2_arl2<-nj(Dmu2_arl2)
+#njDmu2_arl2<-root(njDmu2_arl2, outgroup = "PUCLARO", resolve.root = TRUE)
+is.rooted(njDmu2_arl)
+njDmu2_arl$edge.length[njDmu2_arl$edge.length<0]<-0
+plot.phylo(njDmu2_arl, use.edge.length = F)
+njDmu2_arl2$edge.length[njDmu2_arl2$edge.length<0]<-0
+plot.phylo(njDmu2_arl2, use.edge.length = F)
+#Arbol con hclust
+hcDmu2_arl<-hclust(Dmu2_arl)
+plot.phylo(as.phylo(hcDmu2_arl))
+hcDmu2_arl2<-hclust(Dmu2_arl2)
+plot.phylo(as.phylo(hcDmu2_arl2))
+
 #FST
 FST <- as.matrix(genet.dist(STR_hierfstat, diploid=T, method = "Fst"), labels=T)
 colnames(FST) <- rownames(FST) <- levels(STR_hierfstat$pop)
 FST <- as.dist(FST)
+FST2 <- as.matrix(genet.dist(STR2_hierfstat, diploid=T, method = "Fst"), labels=T)
+colnames(FST2) <- rownames(FST)2 <- levels(STR2_hierfstat$pop)
+FST2 <- as.dist(FST2)
 #Arbol con UPGMA
 dend.Fst <- as.dendrogram(upgma(FST))
 phyFST <- as.phylo.dendrogram(dend.Fst)
-#phyFST<-root(phyFST, outgroup = "PUCLARO", resolve.root = TRUE)
+dend.Fst2 <- as.dendrogram(upgma(FST2))
+phyFST2 <- as.phylo.dendrogram(dend.Fst2)
+#phyFST2<-root(phyFST2, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(phyFST)
 plot(dend.Fst)
 plot.phylo(phyFST)
+is.rooted(phyFST2)
+plot(dend.Fst2)
+plot.phylo(phyFST2)
 #Arbol con Neighbor joining
 njFST<-nj(FST)
-#njFST<-root(njFST, outgroup = "PUCLARO", resolve.root = TRUE)
+njFST2<-nj(FST2)
+#njFST2<-root(njFST2, outgroup = "PUCLARO", resolve.root = TRUE)
 is.rooted(njFST)
 njFST$edge.length[njFST$edge.length<0]<-0
 plot.phylo(njFST, use.edge.length = F)
+is.rooted(njFST2)
+njFST2$edge.length[njFST2$edge.length<0]<-0
+plot.phylo(njFST2, use.edge.length = F)
 #Arbol con hclust
 hcFST<-as.phylo(hclust(FST))
 dend.FST<- as.dendrogram(hcFST)
 plot(hcFST)
+hcFST2<-as.phylo(hclust(FST2))
+dend.FST2<- as.dendrogram(hcFST2)
+plot(hcFST2)
 
+### SE UTILIZARÁ DSW POR EL MOMENTO ###
+png("Figures/DSWtree.png")
+plot.phylo(phyDSW)
+dev.off()
 
-### Escribir �rboles
-write.dendrogram(dend.gst, file = "Figures/treeGST.phy", edges = FALSE)
-write.nexus(phyGST, file = "Figures/treeGST.nex", translate = TRUE)
-
-write.dendrogram(dend.ds, file = "Figures/treeNei.phy", edges = FALSE)
-write.nexus(phyNei, file = "Figures/treeNei.nex", translate = TRUE)
-
-write.dendrogram(dend.dch, file = "Figures/treeCS.phy", edges = FALSE)
-write.nexus(phyCS, file = "Figures/treeCS.nex", translate = TRUE)
-
-write.dendrogram(dend.rst, file = "Figures/treeRST.phy", edges = FALSE)
-write.nexus(phyRST, file = "Figures/treeRST.nex", translate = TRUE)
-
-#write.dendrogram(dend.smm, file = "Figures/treeSMM.phy", edges = FALSE) #Objeto no encontrado
-#write.nexus(phySMM, file = "Figures/treeSMM.nex", translate = TRUE) #Objeto no encontrado
-
-###VOY A USAR EL RST POR EL MOMENTO ###
-lambda_transformed_tree <- rescale(phyRST,model="lambda",lambda=0.5)
-plotTree(lambda_transformed_tree)
+write.dendrogram(dend.DSW, file = "Figures/treeDSW.phy", edges = FALSE)
+write.nexus(phyDSW, file = "Figures/treeDSW.nex", translate = TRUE)
 

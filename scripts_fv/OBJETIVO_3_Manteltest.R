@@ -25,14 +25,18 @@ rownames(my_points_v)<-shape.data$Name
 ###Test de Mantel###
 ###3. Comunidades muestreadas: STRs ###
 ##Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
-my_points_v <- my_points_v %>% filter(row.names(shape.data) %in% selected_communities)
+my_points_v <- my_points_v %>% dplyr::filter(row.names(shape.data) %in% selected_communities)
 coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
 geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
 rownames(geo_muestra) <- as.factor(rownames(my_points_v))
 colnames(geo_muestra)<- as.factor(rownames(my_points_v))
 geo_muestra
 
-##Matriz de distancia con datos de apellidos
+# como arbol
+Geo_tree <- upgma(as.dist(geo_muestra),method="average")
+plot.phylo(Geo_tree)
+
+##Matriz deGeo_tree##Matriz de distancia con datos de apellidos
 surname_matrix_muestra
 surname_matrix_muestra2
 
@@ -109,3 +113,4 @@ Nei_cs<-mantel_function(Nei,cs)
 RST_ASD<-mantel_function(RST,ASD)
 RST_RST2<-mantel_function(RST,RST2) #Son muy parecidas pero no idénticas
 GST_GST<-mantel_function(GST,GST2)
+Dmu2_Dmu2 <-mantel_function(Dmu2,Dmu2_arl2) # son identicos

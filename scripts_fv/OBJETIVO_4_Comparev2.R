@@ -1,120 +1,112 @@
-##########################################################################################################################################################
-#########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
-##########################################################################################################################################################
+################################################################################
+################################################################################
+#########Project 111160402: Cultural phylogenetics and coevolution of wealth#### ##########inheritance and land tenure norms in agropastoralist communities######
+################################################################################
+################################################################################
 
-#### OBJETIVO 4 ####
-### To compare trees builds with different data and their deviations from the consensus tree ###
+#### OBJETIVO 4 ################################################################
+### To compare trees builds with different data and their deviations from the consensus tree #################################################################
 
-##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3##
-e <- dendlist(as.dendrogram(hy), as.dendrogram(phyDSW)) %>%
-  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment?quality
-e
+##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3#################
 
-dendlist(as.dendrogram(hy),as.dendrogram(phyDSW))%>%
-  dendextend::untangle(method = "step1side")%>%
-tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
-           main = paste("entanglement =", round(e,4)),
-           main_left = "Surnames",
-           main_right = "Dsw",
-           sort = T,
-           edge.lwd = T,
-           color_lines = T,
-           intersecting = F,
-           k_branches = 4,
-           rank_branches = F,
-           common_subtrees_color_branches = TRUE
-) 
+###LIBRERIAS
+library(ape)
+library(dendextend)
+library(geiger)
+library(phytools)
 
-# Asegúrate de que las etiquetas están en el mismo orden
+################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
+# Etiquetas están en el mismo orden
 hy <- reorder(hy, "postorder")
 plotTree(hy)
-phyDSW <- reorder(phyDSW, "postorder")
+phyDSW <- reorder(phyDSW,"postorder")
 plotTree(phyDSW)
-hy <- reorder(hy2, "postorder")
-plotTree(hy2)
-phyDSW <- reorder(phyDSW2, "postorder")
-plotTree(phyDSW2)
-# Binariza los árboles para que tengan nodos resueltos de manera comparable
-hy <- multi2di(hy)
-phyDSW <- multi2di(phyDSW)
-hy2 <- multi2di(hy2)
-phyDSW2 <- multi2di(phyDSW2)
 # Escalonar las ramas en el mismo sentido (izquierda o derecha)
 hy <- ape::ladderize(hy)
 phyDSW <- ape::ladderize(phyDSW)
-hy2 <- ape::ladderize(hy2)
-phyDSW2 <- ape::ladderize(phyDSW2)
-plot(hy)
+
+## Tanglegrama
+# Hacer dos árboles en dónde las poblaciones sean números
+hy_num <- hy
+hy_num$tip.label <- seq_along(hy$tip.label)
+phyDSW_num <- phyDSW
+phyDSW_num$tip.label <- seq_along(phyDSW$tip.label)
+# Crear correspondencia entre número y comunidad
+comunidades <- hy$tip.label 
+# Crear leyenda como un vector de caracteres
+leyenda <- paste(seq_along(comunidades), "  ", comunidades)
+#Entanglement
+e <- dendlist(as.dendrogram(hy_num), as.dendrogram(phyDSW_num)) %>%
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
+  entanglement()                     # Alignment?quality
+#PNG
+png("Figures/Tanglegram.png",width = 800, height = 400, units = "px", pointsize = 12,bg = "white")
+dendlist(as.dendrogram(hy_num),as.dendrogram(phyDSW_num))%>%
+  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
+  tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
+             main = paste("entanglement =", round(e,4)),
+             main_left = "Surnames",
+             main_right = "STR",
+             sort = F,
+             edge.lwd = T,
+             color_lines = T,
+             intersecting = T,
+             rank_branches = T,
+             common_subtrees_color_branches = T
+  ) 
+# Agregar leyenda en el gráfico
+legend(x = 5.8, y = 7.5,legend = leyenda, cex = 0.3, pt.cex = 0.5,inset=c(0.05,0.05),text.width = 0.8,box.lty = 2)
+
+dev.off() 
+
+###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
-combined_trees1 <- as.multiPhylo(hy,phyDSW)
+#combined_trees1 <- as.multiPhylo(hy,phyDSW)
 combined_trees2 <- as.multiPhylo(phyDSW,hy)
-combined_trees3 <- as.multiPhylo(hy2,phyDSW2)
-combined_trees4 <- as.multiPhylo(phyDSW2,hy2)
+#combined_trees3 <- as.multiPhylo(hy2,phyDSW2)
+#combined_trees4 <- as.multiPhylo(phyDSW2,hy2)
+
 # Genera el árbol de consenso
-consensus_tree1 <- consensus(combined_trees1, p=0.5,rooted = F)
-consensus_tree1 <- reorder(consensus_tree1, "postorder")
-consensus_tree2 <- consensus(combined_trees2, p=0.5,rooted = F)
+#consensus_tree1 <- consensus(combined_trees1,p=0.5,check.labels = TRUE, rooted =F)
+#consensus_tree1 <- reorder(consensus_tree1, "postorder")
+consensus_tree2 <- consensus(combined_trees2,p=0.5,check.labels = TRUE, rooted =F)
 consensus_tree2 <- reorder(consensus_tree2, "postorder")
-consensus_tree3 <- consensus(combined_trees3, p=0.5,rooted = F)
-consensus_tree3 <- reorder(consensus_tree3, "postorder")
-consensus_tree4 <- consensus(combined_trees4, p=0.5,rooted = F)
-consensus_tree4 <- reorder(consensus_tree4, "postorder")
-plotTree(consensus_tree1)
+#consensus_tree3 <- consensus(combined_trees3,p=0.5,check.labels = TRUE, rooted =F)
+#consensus_tree3 <- reorder(consensus_tree3, "postorder")
+#consensus_tree4 <- consensus(combined_trees4,p=0.5,check.labels = TRUE, rooted =F)
+#consensus_tree4 <- reorder(consensus_tree4, "postorder")
+#plotTree(consensus_tree1)
 plotTree(consensus_tree2)
-plotTree(consensus_tree3)
-plotTree(consensus_tree4)
+#plotTree(consensus_tree3)
+#plotTree(consensus_tree4)
 
-par(mfrow=c(1,2))
-plot(consensus_tree1, main="Apellidos primero, s/PUCLARO")
-plot(consensus_tree2, main="DSW primero, s/PUCLARO")
-par(mfrow=c(1,1))
+#par(mfrow=c(1,2))
+#plot(consensus_tree1, main="Apellidos primero, s/PUCLARO")
+#plot(consensus_tree2, main="DSW primero, s/PUCLARO")
+#par(mfrow=c(1,1))
+#dev.off()
+#par(mfrow=c(1,2))
+#plot(consensus_tree3, main="Apellidos primero, c/PUCLARO")
+#plot(consensus_tree4, main="DSW primero, c/PUCLARO")
+#par(mfrow=c(1,1))
+#dev.off()
+
+
+png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
+plot.phylo(consensus_tree2)
 dev.off()
-par(mfrow=c(1,2))
-plot(consensus_tree3, main="Apellidos primero, c/PUCLARO")
-plot(consensus_tree4, main="DSW primero, c/PUCLARO")
-par(mfrow=c(1,1))
-dev.off()
-## Comparacion entre aboles
-#Comparación Consenso con Apellidos
-e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(phyDSW)) %>%
-  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment?quality
-e
-dendlist(as.dendrogram(phyDSW), as.dendrogram(consensus_tree_least)) %>%
-  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
-  tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
-             main = paste("entanglement =", round(e,2)),
-             main_left = "Surnames",
-             main_right = "Consenso",
-             sort = TRUE,
-             color_lines = TRUE,
-             intersecting = FALSE,
-             k_branches = 4,
-             rank_branches = TRUE 
-  )                       # Draw the?two?dendrograms
 
+#Preparacion de árbol con largo de ramas (Todavía está por verse)
+largo.ramas <- ((hy$edge.length) + (phyDSW$edge.length))/2
+consensus_tree2$edge.length <- largo.ramas
+micalibracion <- makeChronosCalib(consensus_tree2)
+mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
+                      calibration = micalibracion, 
+                      control = chronos.control(nb.rate.cat = 1))
+plot.phylo(mytimetree)
+consensus_tree<-as.phylo(mytimetree)
 
-#Comparación consenso con STR
-e <- dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
-  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
-  entanglement()                     # Alignment?quality
-e
-dendlist(as.dendrogram(consensus_tree), as.dendrogram(hcrst)) %>%
-  dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
-  tanglegram(highlight_distinct_edges = FALSE, # Turn-off dashed lines,
-             main = paste("entanglement =", round(e,2)),
-             main_left = "Surnames",
-             main_right = "Consenso",
-             sort = TRUE,
-             color_lines = TRUE,
-             intersecting = FALSE,
-             k_branches = 4,
-             rank_branches = TRUE 
-  )                       # Draw the?two?dendrograms
-
-
-
+###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
 traits <- function(comuneros, group_by_cols = c("community","commune")) {
   # Asegurarse de que group_by_cols es un vector
@@ -140,8 +132,8 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
 result <-traits(comuneros) 
 consensus_tree <- as.dendrogram(consensus_tree)
 plot(consensus_tree)
-comuneros$commune[comuneros$commune == "VICU?'A"] <-"VICU?A"
-select_comuneros <- comuneros %>% filter(comuneros$community %in% selected_communities)
+comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
+select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
 
 dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
   library(ggdendro)
@@ -211,14 +203,14 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     xs * 1.3 / max(xs) + (1.7 + lastrow / 170)
   }
   #Ajustar tama?o de las ramas
-  scale_factor <- 10  # Ajusta este valor para cambiar el tama?o de las ramas
+  scale_factor <- 0.2  # Ajusta este valor para cambiar el tama?o de las ramas
   hcd$segments$y <- hcd$segments$y * scale_factor
   hcd$segments$yend <- hcd$segments$yend * scale_factor
   
   # Graficar
   p <- ggplot() +
     geom_segment(data = segment(hcd), aes(x = x, y = y, xend = xend, yend = yend)) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = label, hjust = 0), nudge_y = 0.01, size = 3) +
+    geom_text(data = label(hcd), aes(x = x, y = y, label = label, hjust = 0), nudge_y = 0.01, nudge_x = 0.05, size = 2) +
     annotate("text", x = x1, y = y0 - 0.215, label = str_to_title(group_by_col), fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 1.84 + ydiff, label = "#", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.06 + ydiff, label = "S", fontface = "bold", size = 4) +

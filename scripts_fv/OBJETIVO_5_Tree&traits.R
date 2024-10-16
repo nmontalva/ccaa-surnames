@@ -1,14 +1,15 @@
-##########################################################################################################################################################
-#########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
-##########################################################################################################################################################
+################################################################################
+################################################################################
+#########Project 111160402: Cultural phylogenetics and coevolution of wealth####
+######inheritance and land tenure norms in agropastoralist communities##########
+################################################################################
+################################################################################
 
 #### OBJETIVO 5 ####
 ### Part 1 ###
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 2 y 4 ##
 
-#### ESPACIO DE TRABAJO ####
-#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
 
 #### CARGAR E INSTALLAR LIBRERIAS ####
 library(tidyverse)
@@ -94,7 +95,6 @@ ft2 <- result %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
-consensus_tree <-consensus.edges(mphy_cR, method=c("least.squares"), rooted = TRUE)
 consensus_tree <- as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
@@ -408,12 +408,16 @@ publish(bm_glsM)
 
 
 ##Generate PICs and test while conditioning on phylogeny
+#Prepare the tree
+consensus_tree_rooted <- midpoint.root(consensus_tree)
+# Resuelve las politomías
+consensus_tree_dicotomous <- multi2di(consensus_tree_rooted)
 #Sampled communities
-S_pic1<-pic(x = ft2$S, phy = consensus_tree)
-R_pic1<-pic(x= ft2$R, phy = consensus_tree)
-A_pic1<-pic(x = ft2$A, phy = consensus_tree)
-G_pic1<-pic(x=ft2$G, phy = consensus_tree)
-M_pic1<-pic(x=ft2$M, phy = consensus_tree)
+S_pic1<-pic(x = ft2$S, phy = consensus_tree_dicotomous)
+R_pic1<-pic(x= ft2$R, phy = consensus_tree_dicotomous)
+A_pic1<-pic(x = ft2$A, phy = consensus_tree_dicotomous)
+G_pic1<-pic(x=ft2$G, phy = consensus_tree_dicotomous)
+M_pic1<-pic(x=ft2$M, phy = consensus_tree_dicotomous)
 
 calc_r <- function(x, y) {
   r <- cor(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
