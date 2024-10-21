@@ -2,11 +2,6 @@
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
 
-#### ESPACIO DE TRABAJO ####
-#getwd()
-#setwd("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto")
-
-
 #### OBJETIVO 2 ####
 ### To estimate the traits of surnames' diversity, concentration of commoners' rights and inheritance's agnatic bias for each community based on the distributions of surnames within communities ###
 
@@ -56,7 +51,7 @@ result <-traits(comuneros)
 #Editar tabla
 result[is.na(result)] <- 0
 result <- as.data.frame(result)
-result
+head(result)
 
 #Descripciones estad?sticas de traits
 Hmisc::describe(result) #Descripciones generales

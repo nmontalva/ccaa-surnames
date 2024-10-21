@@ -17,28 +17,25 @@ library(geosphere)
 library(vegan)
 
 ## Cargar DATOS ##
-coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
-coordenadas$community <- gsub(" ", "_", coordenadas$community)
-coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+shape.data <- sf::st_read("scripts_fv/Datos/comunidades_reprojected.shx")
+shape.data$Name <-  gsub("\\s*\\(\\d+\\)", "", shape.data$Name)
+shape.data$Name <- toupper(shape.data$Name)
+shape.data$Name <- gsub(" ", "_", shape.data$Name)
+shape.data$Name[grepl("LA_RINCONADA_DE_PUNITAQUI" , shape.data$Name)] <- "RINCONADA_DE_PUNITAQUI"
+
 
 ##Administraci?n de datos ##
-rownames(coordenadas) <- coordenadas$community
-colnames(coordenadas)
-my_points_t <- select(coordenadas, lon, lat)
-rownames(my_points_t) <- coordenadas$community
-common_communities <- unique(comuneros$community)
+rownames(shape.data) <- shape.data$Name
+my_points_v<- dplyr::select(shape.data,Name,geometry)
+rownames(my_points_v)<-shape.data$Name
 
 ##Test de Mantel##
-
 #1. Todas las comunidades # #Revisar la matriz de distancia de apellidos
-
 # Crear una matriz de distancia con datos de coordenadas 
-my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% common_communities)
-geo_total <- distm (my_points_t, fun = distGeo )
-rownames(geo_total) <- as.factor(rownames(my_points_t))
-colnames(geo_total) <- as.factor(rownames(my_points_t))
-geo_total <- as.matrix(geo_total)
-rownames(geo_total)
+coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
+geo_total <- sf::st_distance(my_points_v)# Calcular matriz de distancias
+rownames(geo_total) <- as.factor(rownames(my_points_v))
+colnames(geo_total)<- as.factor(rownames(my_points_v))
 
 #Matriz de distancia con datos de apellidos (si se corri? el script "OBJETIVO_1_Surnames.R" es la matriz surname_matrix)
 surname_matrix <- as.matrix(surname_matrix)
@@ -63,7 +60,7 @@ mat2_outside <- geo_total[rows_outside_mat2, rows_outside_mat2]
 # Mostrar las filas/columnas que quedaron fuera
 print("Filas/columnas que quedaron fuera de la matriz de apellidos:")
 print(mat1_outside) ## Quedan fuera Huascoaltinos y totoral
-print("Filas/columnas que quedaron fuera de la matriz de :")
+print("Filas/columnas que quedaron fuera de la matriz geográfica:")
 print(mat2_outside)
 
 #Matrices de Distancias
@@ -82,16 +79,21 @@ mantel(
   )
 
 #2. Comunidades muestreadas #
+#Administración de datos
+shape.data$Name[shape.data$Name %in% c("GUALLIGUAICA")] <- "PUCLARO"
+rownames(shape.data) <- shape.data$Name
+my_points_v<- dplyr::select(shape.data,Name,geometry)
+rownames(my_points_v)<-shape.data$Name
 
 #Crear una matriz de distancia con datos de coordenadas de comunidades muestreadas
 selected_communities <- unique(STR$pop)
-my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% selected_communities)
-geo_muestra <- distm (my_points_t, fun = distGeo )
-rownames(geo_muestra) <- as.factor(rownames(my_points_t))
-colnames(geo_muestra) <- as.factor(rownames(my_points_t))
-geo_muestra <- as.matrix(geo_muestra)
-geo_muestra
-
+selected_communities
+my_points_v <- my_points_v %>% filter(row.names(shape.data) %in% selected_communities)
+coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
+geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
+rownames(geo_muestra) <- as.factor(rownames(my_points_v))
+colnames(geo_muestra)<- as.factor(rownames(my_points_v))
+View(geo_muestra)
 #Crear una matriz de distancia con datos de apellidos de las comunidades muestreadas 
 surname_matrix_muestra
 surname_matrix_muestra <- as.matrix(surname_matrix_muestra)
