@@ -26,10 +26,10 @@ crear_grafico <- function(vc, tree, label,filename) {
   par(mar = c(1, 1, 4, 1) + 0.1)
   
   # Ajustar la separaci?n entre nodos y otros par?metros
-  plot(tree, show.tip.label = TRUE, cex = 0.6, edge.width = 1, label.offset = 0.01, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
+  plot(tree, show.tip.label = TRUE, cex = 0.6, edge.width = 2, label.offset = 0.15, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
   title(main = paste(label, "ancestral tree"), line = 2)
   nodelabels(text = round(vc$anc$ace, 4), cex = 0.5, bg = "lightblue")
-  tiplabels(text = round(name, 4), cex = 0.8, bg = "lightpink", offset = 0.005)
+  tiplabels(text = round(name, 4), cex = 0.6, bg = "lightpink", offset = 0.005)
   dev.off()
 }
 # Llamar a la funci?n para cada comunidad muestreada
@@ -106,10 +106,10 @@ incorporacion_fosil <- function(fosil,valor,tree,label,filename, valor_raiz = 0)
   png(filename,width = 1400, height = 1000, res = 200)
   # Ajustar la separaci?n entre nodos y otros par?metros
   par(mar = c(1, 1, 4, 1) + 0.1)
-  plot(mcmc_tree, show.tip.label = TRUE, cex = 0.6, edge.width = 1, label.offset = 0.01, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
+  plot(mcmc_tree, show.tip.label = TRUE, cex = 0.6, edge.width = 2, label.offset = 0.15, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
   title(main = paste(label, "fossil ancestral tree"), line = 2)
-  nodelabels(text = round(w, 4), cex = 0.6, bg = "lightblue")
-  tiplabels(text = round(name, 4), cex = 0.8, bg = "lightpink", offset = 0.005)
+  nodelabels(text = round(w, 4), cex = 0.5, bg = "lightblue")
+  tiplabels(text = round(name, 4), cex = 0.6, bg = "lightpink", offset = 0.005)
   dev.off()
 }
 

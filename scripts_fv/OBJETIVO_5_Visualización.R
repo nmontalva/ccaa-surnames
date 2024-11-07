@@ -6,14 +6,14 @@
 ### Part 3 ###
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 
-## CARGAR LIBRERÍAS ##
+## CARGAR LIBRER?AS ##
 library(cowplot)
 library(GGally)
 library(png)
 library(grid)
 
 
-## Matriz de gráficos ##
+## Matriz de gr?ficos ##
 ## Comunidades muestreadas
 # Grafico 1
 annotate_r_squared <- function(data1, mapping, ...) {
@@ -33,7 +33,7 @@ image_paths1 <- c(
   "Figures/R_A_muestra.png",
   "Figures/S_G_muestra.png",
   "Figures/R_G_muestra.png",
-  "Figures/G_A_muestra.png",
+  "Figures/A_G_muestra.png",
   "Figures/S_M_muestra.png",
   "Figures/R_M_muestra.png",
   "Figures/A_M_muestra.png",
@@ -45,7 +45,7 @@ plot_with_image <- function(image_path) {
 }
 image_index <- 1
 
-# Definir la función personalizada para ggally que utilice la imagen correspondiente
+# Definir la funci?n personalizada para ggally que utilice la imagen correspondiente
 custom_image_plot <- function(data1, mapping) {
   image_path <- image_paths1[image_index]
   p <- plot_with_image(image_path)
@@ -55,7 +55,7 @@ custom_image_plot <- function(data1, mapping) {
 
 
 png("Figures/Scatterplot_muestra_1.png",width = 3000, height = 3000, res = 300)
-# Ajustar margen y tamaño de texto para evitar colapso
+# Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
         columnLabels = c("S", "R", "A","G","M"), 
@@ -79,7 +79,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
 
 
 png("Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
-# Ajustar margen y tamaño de texto para evitar colapso
+# Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
         columnLabels = c("S", "R", "A","G","M"), 
@@ -113,7 +113,7 @@ image_paths <- c(
   "Figures/R_A_total.png",
   "Figures/S_G_total.png",
   "Figures/R_G_total.png",
-  "Figures/G_A_total.png",
+  "Figures/A_G_total.png",
   "Figures/S_M_total.png",
   "Figures/R_M_total.png",
   "Figures/A_M_total.png",
@@ -127,7 +127,7 @@ plot_with_image <- function(image_path) {
 }
 image_index <- 1
 
-# Definir la función personalizada para ggally que utilice la imagen correspondiente
+# Definir la funci?n personalizada para ggally que utilice la imagen correspondiente
 custom_image_plot <- function(data, mapping) {
   image_path <- image_paths[image_index]
   p <- plot_with_image(image_path)
@@ -137,7 +137,7 @@ custom_image_plot <- function(data, mapping) {
 
 
 png("Figures/Scatterplot_total_1.png",width = 3000, height = 3000, res = 300)
-# Ajustar margen y tamaño de texto para evitar colapso
+# Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 
 ggpairs(data,
@@ -148,7 +148,7 @@ ggpairs(data,
 dev.off()
 
 
-# Gráfico 2 Correlaciones
+# Gr?fico 2 Correlaciones
 annotate_r_squared <- function(data, mapping, ...) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
@@ -161,7 +161,7 @@ annotate_r_squared <- function(data, mapping, ...) {
 }
 
 png("Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)
-# Ajustar margen y tamaño de texto para evitar colapso
+# Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data,
         columnLabels = c("S", "R", "A","G","M"), 
