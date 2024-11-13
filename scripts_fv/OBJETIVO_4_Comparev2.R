@@ -104,7 +104,7 @@ mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete",
                       calibration = micalibracion, 
                       control = chronos.control(nb.rate.cat = 1))
 plot.phylo(mytimetree)
-consensus_tree<-as.phylo(mytimetree)
+consensus_tree<-mytimetree
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados

@@ -95,7 +95,6 @@ ft2 <- result %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
-consensus_tree <- as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
 ###Estimar estados ancestrales
