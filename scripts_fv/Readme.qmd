@@ -1,0 +1,61 @@
+---
+title: "ReadMe"
+format: html
+editor: visual
+---
+
+# Read Me
+
+### Descripción
+
+Este Readme contiene una descripción básica de cada carpeta dentro del Directorio y su contenido. Se detalla la carpeta de scripts_fv que contiene la gran mayoría de los análisis contenidos en el Directorio.
+
+## Archives
+
+Guiones, scripts o resultados que no se necesitan en el directorio final.
+
+## Datos
+
+Contiene los datos utilizados para los análisis.
+
+## Figures
+
+Figuras resultantes de los análisis.
+
+## Scripts
+
+Se encuentran aquí todos los scripts en R utilizados para crear los análisis del proyecto. Se detalla su contenido y su orden.
+
+**1.1.SurAdmin_de_datos.R** Contiene la administración de datos para unificar las bases de datos "all_tabulated.csv" y “Muestras Fondecyt 11160402 Alelos - RACK 1.csv”
+
+**1.2.Formatos.R** Contiene cambios de Formatos necesarios de los datos para usarlos como input en análisis posteriores.
+
+**OBJETIVO_1.1.Surnames.R** Crea árboles en base a apellidos.
+
+**OBJETIVO_1.2.Manteltest.R** Calcula un test de Mantel entre los datos geográficos y de apellidos.
+
+**OBJETIVO_2.1.Traitsv2.R** Crea tabla con los traits para cada comunidad y calcula las medidas de resumen para estos. Además de un árbol con todas las comunidades y los traits anotados al final de él.
+
+**OBJETIVO_2.2.Dendroplot.R** Crea un tablas de resumen de los traits para todas las comunidades. Genera además una visualización del árbol de apellidos con los traits anotados.
+
+**OBJETIVO_3.1.STR.R** Crea un tablas de resumen de los traits para todas las comunidades. Genera además una visualización del árbol de apellidos con los traits anotados.
+
+**OBJETIVO_3.2.Manteltest.R** Calcula un test de Mantel entre los datos geográficos, STR y apellidos.
+
+**OBJETIVO_4.1.Comparev2.R** Crea el árbol de consenso entre los árboles creados con Apellidos y STR para las comunidades muestreadas.
+
+**OBJETIVO_4.2.Manteltest.R** Calcula un test de Mantel entre los datos geográficos y el árbol de consenso.
+
+**OBJETIVO_5.1.Tree&traits.R** Este script contiene diferentes análisis de filogenia comparada: Estima los estados ancestrales para cada trait en el árbol de consenso para las comunidades muestreadas y en el de apellidos para todas las comunidades. Calcula señal filogenética de los traits en los árboles. Calcula un modelo de regresión PGLS para evaluar los traits N, G y M. Genera PICs (Phylogenetically Independent contrasts).
+
+**OBJETIVO_5.2.Visualización.R** Crea visualizaciones de "matrices de gráficos" con la información de cada traits, sus árboles con valores ancestrales estimados y los PICs calculados.
+
+**OBJETIVO_5.3.Kmeans.R** Análisis de cluster para el árbol de consenso y el árbol de apellidos para todas las comunidades.
+
+**OBJETIVO_5.4.Gráfico kmeans-tree traits.R** Crea visualizaciones con el gráfico de cluster y el árbol para cada trait.
+
+**OBJETIVO_5.5.GráficoG_M.R** Crea plots de los traits G y M con a través de los clados del árbol.
+
+**OBJETIVO_5.6.Clades_vs_Ancv2.R** Crea gráficos de los valores de cada trait a través del árbol y sus tendencias.
+
+**OBJETIVO_5.7.HIP_1.R** Crea árboles con los valores de los traits anotados en cada nodo. Así también calcula y crea árboles con valores hipotetizados en el nodo raiz.
