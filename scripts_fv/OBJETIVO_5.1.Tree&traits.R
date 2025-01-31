@@ -66,11 +66,6 @@ S_trait$community <- NULL
 S_trait2$community <- NULL
 N_trait2 <- select_variable(result, selected_communities, "N")
 
-# R
-R_trait <- select_variable(result, selected_communities, "R")
-R_trait2 <- select_variable(result, NULL, "R")
-R_trait$community <- NULL
-R_trait2$community <- NULL
 # G
 G_trait <- select_variable(result, selected_communities, "G")
 G_trait2 <- select_variable(result, NULL, "G")
@@ -87,11 +82,16 @@ M_trait2 <- select_variable(result, NULL, "M")
 M_trait$community <- NULL
 M_trait2$community <- NULL
 
+#Cluster
+C_trait <- select_variable(result_traits, selected_communities, "cluster")
+C_trait2 <- select_variable(result_traits, NULL, "cluster")
+C_trait$community <- NULL
+C_trait2$community <- NULL
 
 #Final_table
-ft <- result
+ft <- result_traits
 ft <- ft %>% column_to_rownames(var = "community")
-ft2 <- result %>% filter(community %in% selected_communities)
+ft2 <- result_traits %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
@@ -101,10 +101,6 @@ plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 # S
 sv1 <- as.matrix(S_trait)[,1]
 sv2 <- as.matrix(S_trait2)[,1]
-
-# R
-rv1 <- as.matrix(R_trait)[,1]
-rv2 <- as.matrix(R_trait2)[,1]
 
 # G
 gv1 <- as.matrix(G_trait)[,1]
@@ -117,6 +113,10 @@ av2 <- as.matrix(A_trait2)[,1]
 # M
 mv1 <- as.matrix(M_trait)[,1]
 mv2 <- as.matrix(M_trait2)[,1]
+
+# C
+cv1 <- as.matrix(C_trait)[,1]
+cv2 <- as.matrix(C_trait2)[,1]
 
 # Funci?n para estimar estados ancestrales y crear el ?rbol
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
@@ -143,12 +143,25 @@ dev.off()
 png("Figures/M_muestra.png")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
 dev.off()
+png("Figures/C_muestra.png")
+cvc<- estimacion_estados_ancestrales(consensus_tree,cv1,"C")
+dev.off()
 
 writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=gvc$anc, file="Figures/G_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=avc$anc, file="Figures/A_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.phy", digits=6, format=c("phylip"))
+
+#Cluster discrete visualization
+trees<-make.simmap(consensus_tree,cv1,nsim=100)
+obj<-summary(trees,plot=FALSE)
+cols<-setNames(palette()[1:400],mapped.states(trees))
+cols<-cols[1:4]
+plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
+add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
+                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
+
 
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
@@ -173,6 +186,18 @@ dev.off()
 png("Figures/M_total.png")
 mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
 dev.off()
+png("Figures/C_total.png")
+cvt <- estimacion_estados_ancestrales(y_total, cv2, "C")
+dev.off()
+
+#Cluster discrete visualization
+trees<-make.simmap(y_total,cv2,nsim=100)
+obj<-summary(trees,plot=FALSE)
+cols<-setNames(palette()[1:400],mapped.states(trees))
+cols<-cols[1:4]
+plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
+add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
+                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
 
 
 ###Comparaciones
@@ -265,35 +290,33 @@ plot_comparison2(gvt$obj, mvt$obj, c("G", "M"))
 dev.off()
 
 ###Phylogenetic signal
+### Cambiar por physignal.z? Revisar si ese contempla Pagel lamda
+z<-phylosig(consensus_tree,cv1,method = "lambda",test=T)
+plot(z)
+
 ##Muestra
-calculate_physignal_plot <- function(trait_vector, file_name) {
+calculate_physignal <- function(trait_vector) {
   class(trait_vector) <- "numeric"
-  K <- physignal(A = trait_vector, phy = consensus_tree, iter = 1000, print.progress = FALSE)
-  png(file_name, width = 800, height = 600)
-  plot(K)
-  dev.off()
+  K <- phylosig(consensus_tree,trait_vector,method = "lambda",test=T)
   return(K)
 }
-sv1
+
 # Vectores de datos
-trait_vectors <- list(sv1, rv1, gv1, av1, mv1)
-file_names <- c("Figures/Phylosignal_S_muestra.png", "Figures/Phylosignal_R_muestra.png",
-                "Figures/Phylosignal_G_muestra.png", "Figures/Phylosignal_A_muestra.png",
-                "Figures/Phylosignal_M_muestra.png")
+trait_vectors <- list(sv1, gv1, av1, mv1,cv1)
 
 # Calcular la senal fisica y generar los gr?ficos en un bucle
 K_values <- list()
 for (i in seq_along(trait_vectors)) {
-  K_values[[i]] <- calculate_physignal_plot(trait_vectors[[i]], file_names[i])
+  K_values[[i]] <- calculate_physignal(trait_vectors[[i]])
 }
 
-# Calcular los valores de se?al f?sica y p-value
-Phylogenetic_signal <- sapply(K_values, function(K) K$phy.signal)
-P_value <- sapply(K_values, function(K) K$pvalue)
+# Calcular los valores de senal fisica y p-value
+Phylogenetic_signal <- sapply(K_values, function(K) K$lambda)
+P_value <- sapply(K_values, function(K) K$P)
 
 # Combinar resultados en un marco de datos
 Phy_sig <- data.frame(Phylogenetic_signal, P_value)
-row.names(Phy_sig) <- c("S", "R", "G", "A", "M")
+row.names(Phy_sig) <- c("S", "G", "A", "M","Cluster")
 
 # Redondear los resultados
 Phy_sig <- round(Phy_sig, digits = 4)
@@ -303,42 +326,109 @@ png("Figures/Phylosignal_muestra2.png", width = 300, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
+tree_tips <- consensus_tree$tip.label
+data_tips <- rownames(GM_df)
+setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
+GM_df_cluster <- GM_df[rownames(GM_df) %in% tree_tips, ]
+GM_df_cluster$cluster<-as.numeric(GM_df_cluster$cluster)
+GM_df_cluster <- GM_df_cluster %>%
+  select(cluster)
+# Example with your tree and cluster assignments
+#fit_lambda <- fitDiscrete(
+#  phy = consensus_tree,
+#  dat = GM_df_cluster,
+#  model = "ER",  # Equal rates model
+#  transform = "lambda"
+#)
+fit_lambda <- fitContinuous(
+  phy = consensus_tree,
+  dat = GM_df_cluster,
+  model = "lambda",  # Equal rates model
+)
+# View results
+print(fit_lambda)
+fit_lambda$opt$lambda ## la evolución del rasgo está ligada al árbol filogenético
+fit_lambda$opt$lnL 
+
+#fit null model
+#fit_null <- fitDiscrete(
+#  phy = consensus_tree,
+#  dat = GM_df_cluster,
+#  model = "ER", 
+#  transform = "none"  # No λ transformation
+#)
+fit_null <- fitContinuous(
+  phy = consensus_tree,
+  dat = GM_df_cluster,
+  model = "lambda"
+)
+fit_null$opt$lambda
+fit_null$opt$lnL
+
+# LRT between models
+LRT_stat <- 2 * (fit_lambda$opt$lnL - fit_null$opt$lnL)
+p_value <- pchisq(LRT_stat, df = 1, lower.tail = FALSE)
+print(LRT_stat)
+print(p_value)
+
 ##Total
-calculate_physignal_plot <- function(trait_vector, file_name) {
+calculate_physignal <- function(trait_vector, file_name) {
   class(trait_vector) <- "numeric"
-  K <- physignal(A = trait_vector, phy = y_total, iter = 1000, print.progress = FALSE)
-  png(file_name, width = 800, height = 600)
-  plot(K)
-  dev.off()
+  K <- phylosig(y_total,trait_vector,method = "lambda",test=T)
   return(K)
 }
 # Vectores de datos
-trait_vectors2 <- list(sv2, rv2, gv2, av2, mv2)
-file_names <- c("Figures/Phylosignal_S_total.png", "Figures/Phylosignal_R_total.png",
-                "Figures/Phylosignal_G_total.png", "Figures/Phylosignal_A_total.png",
-                "Figures/Phylosignal_M_total.png")
+trait_vectors2 <- list(sv2, gv2, av2, mv2,cv2)
 
 # Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
-for (i in seq_along(trait_vectors2)) {
-  K_values[[i]] <- calculate_physignal_plot(trait_vectors2[[i]], file_names[i])
+for (i in seq_along(trait_vectors)) {
+  K_values[[i]] <- calculate_physignal(trait_vectors[[i]])
 }
 
-# Calcular los valores de se?al f?sica y p-value
-Phylogenetic_signal2 <- sapply(K_values, function(K) K$phy.signal)
-P_value2 <- sapply(K_values, function(K) K$pvalue)
+# Calcular los valores de senal fisica y p-value
+Phylogenetic_signal <- sapply(K_values, function(K) K$lambda)
+P_value <- sapply(K_values, function(K) K$P)
 
 # Combinar resultados en un marco de datos
-Phy_sig2 <- data.frame(Phylogenetic_signal2, P_value2)
-row.names(Phy_sig2) <- c("S", "R", "G", "A", "M")
+Phy_sig2 <- data.frame(Phylogenetic_signal, P_value)
+row.names(Phy_sig2) <- c("S", "G", "A", "M","Cluster")
 
 # Redondear los resultados
 Phy_sig2 <- round(Phy_sig2, digits = 4)
 publish(Phy_sig2)
+
 # Generar la tabla y guardarla como imagen
 png("Figures/Phylosignal_total.png", width = 300, height = 200)
 grid.table(Phy_sig2)
 dev.off()
+
+# Example with your tree and cluster assignments
+fit_lambda_total <- fitDiscrete(
+  phy = y_total,
+  dat = kmeans_result$cluster,
+  model = "ER",  # Equal rates model
+  transform = "lambda"
+)
+# View results
+print(fit_lambda_total)
+fit_lambda_total$opt$lambda
+fit_lambda_total$opt$lnL
+
+#fit null model
+fit_null_total <- fitDiscrete(
+  phy = y_total,
+  dat = kmeans_result$cluster,
+  model = "ER", 
+  transform = "none"  # No λ transformation
+)
+
+# LRT between models
+LRT_stat_total <- 2 * (fit_lambda_total$opt$lnL - fit_null_total$opt$lnL)
+p_value_t <- pchisq(LRT_stat_total, df = 1, lower.tail = FALSE)
+print(LRT_stat_total)
+print(p_value_t)
+
 
 
 ###Regresion PGLS
@@ -432,26 +522,28 @@ consensus_tree_rooted <- midpoint.root(consensus_tree)
 consensus_tree_dicotomous <- multi2di(consensus_tree_rooted)
 #Sampled communities
 S_pic1<-pic(x = ft2$S, phy = consensus_tree_dicotomous)
-R_pic1<-pic(x= ft2$R, phy = consensus_tree_dicotomous)
 A_pic1<-pic(x = ft2$A, phy = consensus_tree_dicotomous)
 G_pic1<-pic(x=ft2$G, phy = consensus_tree_dicotomous)
 M_pic1<-pic(x=ft2$M, phy = consensus_tree_dicotomous)
 
 calc_r <- function(x, y) {
-  r <- cor(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
-  return(r)
+  r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
+  r_squared <- r$estimate
+  p_value<-r$p.value
+  return(list(r_squared = r_squared, p_value = p_value))
 }
-data1 <- data.frame(S_pic1,A_pic1,R_pic1,G_pic1,M_pic1)
+data1 <- data.frame(S_pic1,A_pic1,G_pic1,M_pic1)
 
 #Total communities
 S_pic<-pic(x = ft$S, phy = y_total)
-R_pic<-pic(x= ft$R, phy = y_total)
 A_pic<-pic(x = ft$A, phy = y_total)
 G_pic<-pic(x=ft$G, phy = y_total)
 M_pic<-pic(x=ft$M, phy = y_total)
 
 calc_r <- function(x, y) {
-  r <- cor(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
-  return(r)
+  r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
+  r_squared <- r$estimate
+  p_value<-r$p.value
+  return(list(r_squared = r_squared, p_value = p_value))
 }
-data <- data.frame(S_pic,A_pic,R_pic,G_pic,M_pic)
+data <- data.frame(S_pic,A_pic,G_pic,M_pic)

@@ -167,8 +167,8 @@ calc_means<-function(nodos,df) {
   G_values <- df$G_value[df$Node %in% nodos]
   M_values <- df$M_value[df$Node %in% nodos]
   #Calcular promedio- NA == 0
-  G_mean<-mean(G_values)
-  M_mean<-mean(M_values)
+  G_mean<-median(G_values)
+  M_mean<-median(M_values)
   G_mean<-ifelse(is.na(G_values),0,G_values)
   M_mean<-ifelse(is.na(M_values),0,M_values)
   return(data.frame(G_mean=G_mean,M_mean=M_mean))
@@ -184,7 +184,7 @@ level_means_df<- do.call(rbind,levels_means)
 print(level_means_df)
 averages <- level_means_df %>%
   group_by(Level) %>%
-  summarise(across(everything(),mean))
+  summarise(across(everything(),median))
 averages
 
 hist_data<-ggplot_build(ggplot(averages, aes(x = Level)) + 
@@ -266,11 +266,11 @@ calc_means <- function(nodos, df) {
   # Calcular promedios por cluster
   G_means <- df_filtered %>%
     group_by(Cluster) %>%
-    summarise(G_mean = mean(G_value, na.rm = TRUE), .groups = 'drop')
+    summarise(G_mean = median(G_value, na.rm = TRUE), .groups = 'drop')
   
   M_means <- df_filtered %>%
     group_by(Cluster) %>%
-    summarise(M_mean = mean(M_value, na.rm = TRUE), .groups = 'drop')
+    summarise(M_mean = median(M_value, na.rm = TRUE), .groups = 'drop')
   
   # Combinar promedios de G y M para cada cluster
   cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
@@ -301,15 +301,15 @@ level_means_df <- do.call(rbind, levels_means)
 print(level_means_df)
 
 # Calcular promedio general por nivel
-averages <- level_means_df %>%
+averages_cluster <- level_means_df %>%
   group_by(Level, Cluster) %>%
-  summarise(across(starts_with("G_mean"), mean, na.rm = TRUE),
-            across(starts_with("M_mean"), mean, na.rm = TRUE),
+  summarise(across(starts_with("G_mean"), median, na.rm = TRUE),
+            across(starts_with("M_mean"), median, na.rm = TRUE),
             .groups = 'drop')
-averages
+averages_cluster
 
 # Crear el gráfico con ggplot2
-ggplot(averages) +
+ggplot(averages_cluster) +
   # Línea continua para G_mean
   geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
             size = 1) +
@@ -507,8 +507,8 @@ calc_means<-function(nodos,df) {
   G_values <- df$G_value[df$Node %in% nodos]
   M_values <- df$M_value[df$Node %in% nodos]
   #Calcular promedio- NA == 0
-  G_mean<-mean(G_values)
-  M_mean<-mean(M_values)
+  G_mean<-median(G_values)
+  M_mean<-median(M_values)
   G_mean<-ifelse(is.na(G_values),0,G_values)
   M_mean<-ifelse(is.na(M_values),0,M_values)
   return(data.frame(G_mean=G_mean,M_mean=M_mean))
@@ -523,13 +523,14 @@ for(level in 1:max_path_length){
 }
 level_means_df<- do.call(rbind,levels_means)
 print(level_means_df)
-averages <- level_means_df %>%
+
+averages_total <- level_means_df %>%
   group_by(Level) %>%
-  summarise(across(everything(),mean))
-averages
+  summarise(across(everything(),median))
+averages_total
 
 # Crear el gráfico
-ggplot(averages, aes(x = Level)) + 
+ggplot(averages_total, aes(x = Level)) + 
   geom_point(aes(y=G_mean), color="blue") + # Puntos para G
   geom_line(aes(y=G_mean), color="blue",linetype="dashed")+ #Línea para G
   geom_point(aes(y=M_mean), color="red") + # Puntos para M
@@ -538,8 +539,8 @@ ggplot(averages, aes(x = Level)) +
     name = "G",
     sec.axis = sec_axis(~.*2,name = "M")
   ) +
-  annotate("text",x=mean(averages$Level),y=mean(averages$G_mean),label="G trait",hjust=0.7,vjust=-0.6,size=4,color="blue")+
-  annotate("text",x=mean(averages$Level),y=mean(averages$M_mean),label="M trait",hjust=0.25,vjust=-0.6,size=4,color="red")+
+  annotate("text",x=mean(averages_total$Level),y=mean(averages_total$G_mean),label="G trait",hjust=0.7,vjust=-0.6,size=4,color="blue")+
+  annotate("text",x=mean(averages_total$Level),y=mean(averages_total$M_mean),label="M trait",hjust=0.25,vjust=-0.6,size=4,color="red")+
   labs(
     x="Number of clades",
     title = "The G and M traits for the tree of total communities",
@@ -599,11 +600,11 @@ calc_means <- function(nodos, df) {
   # Calcular promedios por cluster
   G_means <- df_filtered %>%
     group_by(Cluster) %>%
-    summarise(G_mean = mean(G_value, na.rm = TRUE), .groups = 'drop')
+    summarise(G_mean = median(G_value, na.rm = TRUE), .groups = 'drop')
   
   M_means <- df_filtered %>%
     group_by(Cluster) %>%
-    summarise(M_mean = mean(M_value, na.rm = TRUE), .groups = 'drop')
+    summarise(M_mean = median(M_value, na.rm = TRUE), .groups = 'drop')
   
   # Combinar promedios de G y M para cada cluster
   cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
@@ -634,15 +635,15 @@ level_means_df <- do.call(rbind, levels_means)
 print(level_means_df)
 
 # Calcular promedio general por nivel
-averages <- level_means_df %>%
+averages_t_cluster <- level_means_df %>%
   group_by(Level, Cluster) %>%
-  summarise(across(starts_with("G_mean"), mean, na.rm = TRUE),
-            across(starts_with("M_mean"), mean, na.rm = TRUE),
+  summarise(across(starts_with("G_mean"), median, na.rm = TRUE),
+            across(starts_with("M_mean"), median, na.rm = TRUE),
             .groups = 'drop')
-averages
+averages_t_cluster
 
 # Crear el gráfico con ggplot2
-ggplot(averages) +
+ggplot(averages_t_cluster) +
   # Línea continua para G_mean
   geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
             size = 1) +

@@ -20,24 +20,33 @@ annotate_r_squared <- function(data1, mapping, ...) {
   x <- eval_data_col(data1, mapping$x)
   y <- eval_data_col(data1, mapping$y)
   
-  r_squared <- calc_r(x, y)
-  label <- paste("Corr = ", round(r_squared, 4))
+  result <- calc_r(x, y)
+  r_squared <- result$r_squared
+  p_value <- result$p_value
+  
+  if (p_value < 0.001) {
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
 }
 
 image_paths1 <- c(
-  "Figures/S_R_muestra.png",
   "Figures/S_A_muestra.png",
-  "Figures/R_A_muestra.png",
   "Figures/S_G_muestra.png",
-  "Figures/R_G_muestra.png",
   "Figures/A_G_muestra.png",
   "Figures/S_M_muestra.png",
-  "Figures/R_M_muestra.png",
   "Figures/A_M_muestra.png",
   "Figures/G_M_muestra.png")
+
 plot_with_image <- function(image_path) {
   # Cargar la imagen usando cowplot
   image <- cowplot::ggdraw() + cowplot::draw_image(image_path, scale = 1)
@@ -58,7 +67,7 @@ png("Figures/Scatterplot_muestra_1.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
-        columnLabels = c("S", "R", "A","G","M"), 
+        columnLabels = c("S","A","G","M"), 
         lower= list(continuous = custom_image_plot, image_path = image_paths1),
         upper = list(continuous =wrap(annotate_r_squared))
 )
@@ -70,8 +79,20 @@ annotate_r_squared <- function(data1, mapping, ...) {
   x <- eval_data_col(data1, mapping$x)
   y <- eval_data_col(data1, mapping$y)
   
-  r_squared <- calc_r(x, y)
-  label <- paste("Corr = ", round(r_squared, 4))
+  result <- calc_r(x, y)
+  r_squared <- result$r_squared
+  p_value <- result$p_value
+  
+  if (p_value < 0.001) {
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
@@ -82,7 +103,7 @@ png("Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
-        columnLabels = c("S", "R", "A","G","M"), 
+        columnLabels = c("S", "A","G","M"), 
         lower= list(continuous =function(data1, mapping, ...) {
           ggplot(data = data1, mapping = mapping) +
             geom_point() +
@@ -100,22 +121,30 @@ annotate_r_squared <- function(data, mapping, ...) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
   
-  r_squared <- calc_r(x, y)
-  label <- paste("Corr = ", round(r_squared, 4))
+  result <- calc_r(x, y)
+  r_squared <- result$r_squared
+  p_value <- result$p_value
+  
+  if (p_value < 0.001) {
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
 }
 
 image_paths <- c(
-  "Figures/S_R_total.png",
   "Figures/S_A_total.png",
-  "Figures/R_A_total.png",
   "Figures/S_G_total.png",
-  "Figures/R_G_total.png",
   "Figures/A_G_total.png",
   "Figures/S_M_total.png",
-  "Figures/R_M_total.png",
   "Figures/A_M_total.png",
   "Figures/G_M_total.png"
 )
@@ -141,7 +170,7 @@ png("Figures/Scatterplot_total_1.png",width = 3000, height = 3000, res = 300)
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 
 ggpairs(data,
-        columnLabels = c("S", "R", "A","G","M"), 
+        columnLabels = c("S", "A","G","M"), 
         lower= list(continuous = custom_image_plot, image_path = image_paths),
         upper = list(continuous =wrap(annotate_r_squared)))
 
@@ -153,8 +182,20 @@ annotate_r_squared <- function(data, mapping, ...) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
   
-  r_squared <- calc_r(x, y)
-  label <- paste("Corr = ", round(r_squared, 4))
+  result <- calc_r(x, y)
+  r_squared <- result$r_squared
+  p_value <- result$p_value
+  
+  if (p_value < 0.001) {
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
@@ -164,7 +205,7 @@ png("Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data,
-        columnLabels = c("S", "R", "A","G","M"), 
+        columnLabels = c("S", "A","G","M"), 
         lower= list(continuous =function(data, mapping, ...) {
           ggplot(data = data, mapping = mapping) +
             geom_point() +

@@ -11,20 +11,19 @@ library(ggplot2)
 library(gridExtra)
 library(stringr)
 
-
 ##Conflict preference
 conflict_prefer("label","ggdendro")
 conflict_prefer("theme_dendro","ggdendro")
 ## ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5 ##
 
 # Mostrar y escribir la tabla final 
-result_dendro<-result
+result_dendro<-result_traits
 row.names(result_dendro) <-result_dendro$community
 result_dendro <- result_dendro%>%select(-community)
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Escribir la tabla de las comunidades muestreadas
-STR <- read.csv("Datos/STR.csv", sep = ",")
+STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% selected_communities)
@@ -41,7 +40,7 @@ grid.table(result_dendro)
 dev.off()
 
 
-## Traits y comunidades pdf anotados en un ?rbol
+## Traits y comunidades pdf anotados en un arbol
 dendroplot <- function(hc, save_as=NULL,
                        group_by_col="community") {
   # generate dendrogram from hclust data
@@ -56,9 +55,9 @@ dendroplot <- function(hc, save_as=NULL,
   if (is.null(container)) {
     stop("Container is NULL")
   }
-  tc <- traits(comuneros, c(group_by_col, container))
-  
-  # vectors to obtain commune, S, R, G, A of communities
+  #tc <- traits(comuneros, c(group_by_col, container))
+  tc <- result_traits
+  # vectors to obtain commune, S, R, G, A, cluster of communities
   vector_of <- function(target_col) {
     if (!target_col %in% colnames(tc)) {
       stop(paste("Column", target_col, "is not found in traits data"))
@@ -76,10 +75,10 @@ dendroplot <- function(hc, save_as=NULL,
   else NULL
   N <- vector_of("N")
   S <- vector_of("S")
-  R <- vector_of("R")
-  G <- vector_of("G")
   A <- vector_of("A")
+  G <- vector_of("G")
   M <- vector_of("M")
+  cluster <- vector_of("cluster")
   # useful coordinates
   lastrow <- nrow(hcd$labels)
   x0 <- hcd$labels$x[[lastrow]]
@@ -116,13 +115,13 @@ dendroplot <- function(hc, save_as=NULL,
     annotate("text", x=x1, y=y0-1.86+ydiff,
              label="S", fontface="bold", size=4) +
     annotate("text", x=x1, y=y0-2.06+ydiff,
-             label="R", fontface="bold", size=4) +
+             label="A", fontface="bold", size=4) +
     annotate("text", x=x1, y=y0-2.26+ydiff,
              label="G", fontface="bold", size=4) +
     annotate("text", x=x1, y=y0-2.46+ydiff,
-             label="A", fontface="bold", size=4) +
-    annotate("text", x=x1, y=y0-2.66+ydiff,
              label="M", fontface="bold", size=4) +
+    annotate("text", x=x1, y=y0-2.66+ydiff,
+             label="Cluster", fontface="bold", size=4) +
     (if (!is.null(container))
       geom_text(data=ggdendro::label(hcd),
                 aes(x=x, y=y, hjust=0,
@@ -145,8 +144,8 @@ dendroplot <- function(hc, save_as=NULL,
               hjust=0) +
     geom_text(data=label(hcd),
               aes(x=x, y=y,
-                  label=prettyNum(R[label], digits=3),
-                  size=size(R[label])),
+                  label=prettyNum(A[label], digits=3),
+                  size=size(A[label])),
               nudge_y=2.0-ydiff,
               hjust=0) +
     geom_text(data=ggdendro::label(hcd),
@@ -157,11 +156,16 @@ dendroplot <- function(hc, save_as=NULL,
               hjust=0) +
     geom_text(data=label(hcd),
               aes(x=x, y=y,
-                  label=prettyNum(A[label], digits=3),
-                  size=size(A[label])),
+                  label=prettyNum(M[label], digits=3),
+                  size=size(M[label])),
               nudge_y=2.4-ydiff,
-              hjust=0) +
-    geom_text(data = ggdendro::label(hcd), aes(x = x, y = y, label = prettyNum(M[label], digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3) +
+              hjust=0)  +
+    geom_text(data=label(hcd),
+              aes(x=x, y=y,
+                  label=prettyNum(cluster[label], digits=1),
+                  size=size(cluster[label])),
+              nudge_y=2.6-ydiff,
+              hjust=0)  +
     scale_size_identity() +
     coord_flip() +
     scale_y_reverse(expand=c(0, 0.6)) +

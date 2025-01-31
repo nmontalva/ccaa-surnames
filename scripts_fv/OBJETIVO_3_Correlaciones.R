@@ -11,7 +11,7 @@
 library(Hmisc)
 
 ## Correlación entre matrices 
-matrices <- list(RST = c(RST), RST2 = c(RST2), ASD = c(ASD), GST = c(GST), Nei = c(Nei), cs = c(cs), DSW = c(DSW), Dmu2 = c(Dmu2), FST=c(FST))
+matrices <- list(RST = c(RST), ASD = c(ASD), GST = c(GST), Nei = c(Nei), cs = c(cs), DSW = c(DSW), Dmu2 = c(Dmu2), FST=c(FST),DPS=c(DPS))
 combined_data <- do.call(cbind, matrices)
 rcorr_results <- rcorr(combined_data)
 

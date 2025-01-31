@@ -31,10 +31,7 @@ surname_distance_matrix <- function(comuneros,
   # generates Hedrick (1971) kinship matrix
   # there are other methods (i.e. lasker, uri)
   hedkin <- hedrick(surnames_freq)
-  # hedrick returns values of similarity
-  # transform them into values of dissimilarity (distance)
-  as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
-  #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
+  as.dist(1-hedkin)
 }
 surname_matrix <- surname_distance_matrix(comuneros)
 
