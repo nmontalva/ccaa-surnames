@@ -7,7 +7,7 @@
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 
 ################################## K MEANS #####################################
-
+### SE ELIMINA POR COMPLETO ESTE SCRIPT DEL PROYECTO FINAL
 ################ LIBERIAS #################
 library(cluster)
 library(dplyr)

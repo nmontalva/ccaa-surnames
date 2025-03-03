@@ -14,14 +14,17 @@ library(dplyr)
 library(geiger)
 library(phytools)
 library(surface)
+library(ape)
+library(phangorn)
 
-# Trait data (asegúrate de que los nombres coincidan con las etiquetas del árbol)
+# Trait data
 G_values <- GM_df %>%
   dplyr::select(community, G)
 M_values <- GM_df %>%
   dplyr::select(community, M)
 
-########################## SAMPLED COMMUNITIES ###############################
+########################## SAMPLED COMMUNITIES
+###############################
 ########################## G #################################
 # Filtrar los datos para que coincidan con las etiquetas del árbol
 tree_tips <- consensus_tree$tip.label
@@ -29,6 +32,8 @@ data_tips <- G_values$community
 setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
 G_df_filtered_s <- G_values[rownames(G_values) %in% tree_tips, ]
 G_df_filtered_s <- dplyr::select(G_df_filtered_s,G)
+G_df_filtered_s
+
 # Fit BM model for G
 fit_bm_G_s <- fitContinuous(consensus_tree, G_df_filtered_s, model = "BM")
 print(fit_bm_G_s)
@@ -105,18 +110,41 @@ surfaceTraitPlot(dataframe_to_plot, backward_model_M_s[[1]])
 
 library(picante)
 library(phytools)
+library(ape)
 
 #11. Randomise tips (with their respective traits, G and M) keeping the underlying tree topology.
 # Configuración de los datos
 trait_data_G <- setNames(G_values$G, G_values$community)
 trait_data_M <- setNames(M_values$M, G_values$community)
-
+tree_tips <- consensus_tree$tip.label
+total_tips <- y_total$tip.label
 # Randomize tip labels
-random.trees<-pbtree(n=length(y_total$tip.label),nsim=100)
-random.trees<-lapply(random.trees,
-                     function(x,sp){ x$tip.label<-sample(sp); x },
-                     sp=sample(y_total$tip.label))
-class(random.trees)<-"multiPhylo"
+## Randomize trees
+howmanytrees(length(tree_tips)) #número de árboles filogenéticos posibles
+
+# Topología y ramas aleatorias
+#random.trees <- rmtree(1000, n = length(tree$tip.label))
+
+# Topología aleatoria
+#random.trees <- lapply(1:1000, function(x) rtree(n = length(tree$tip.label)))
+#class(random.trees) <- "multiPhylo"
+
+# Etiquetas aleatorizadas
+#consenso
+random.trees <- lapply(1:1000, function(x) {
+  tree_random <- consensus_tree  # Copia el árbol original
+  tree_random$tip.label <- sample(tree_tips)  # Reordena las etiquetas
+  tree_random
+})
+class(random.trees) <- "multiPhylo"
+#total
+random.total <- lapply(1:1000, function(x) {
+  tree_random <- y_total  # Copia el árbol original
+  tree_random$tip.label <- sample(total_tips)  # Reordena las etiquetas
+  tree_random
+})
+class(random.total) <- "multiPhylo"
+
 
 # Calcular la métrica observada (puede cambiarse por otra, aquí usamos la varianza)
 observed_metric_G <- var(trait_data_G)
@@ -139,56 +167,51 @@ p_value_M <- mean(null_metrics_M >= observed_metric_M)
 cat("P-valor para G (usando random trees):", p_value_G, "\n")
 cat("P-valor para M (usando random trees):", p_value_M, "\n")
 
+
 #12. Compare phylogenetic signal of real tree vs randomised tree.
 # Asegurar correspondencia entre rasgos y puntas
 trait_data_G <- setNames(G_values$G, G_values$community)
 trait_data_M <- setNames(M_values$M, M_values$community)
-phy_tree_s <- consensus_tree2
+phy_tree_s <- consensus_tree
 phy_tree <- y_total
 
 # Señal filogenética observada
-G_physignal <- phylosig(phy_tree, trait_data_G, method = "lambda")$lambda
-M_physignal <- phylosig(phy_tree, trait_data_M, method = "lambda")$lambda
-G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda")$lambda
-M_physignal_s <- phylosig(phy_tree_s, trait_data_M, method = "lambda")$lambda
+G_physignal <- phylosig(phy_tree, trait_data_G, method = "lambda",test = T)
+M_physignal <- phylosig(phy_tree, trait_data_M, method = "lambda",test = T)
+G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda",test = T)
+M_physignal_s <- phylosig(phy_tree_s, trait_data_M, method = "lambda",test = T)
 
 ##Random.trees
 #Todas las comunidades
-random.trees<-pbtree(n=length(y_total$tip.label),nsim=100)
-random.trees<-lapply(random.trees,
-                     function(x,sp){ x$tip.label<-sample(sp); x },
-                     sp=sample(y_total$tip.label))
-class(random.trees)<-"multiPhylo"
+#random.total <- lapply(1:1000, function(x) rtopology(length(total_tips), tip.label = total_tips))
+#class(random.total)<-"multiPhylo"
 #Árbol de consenso
-random.trees.s<-pbtree(n=length(consensus_tree$tip.label),nsim=100)
-random.trees.s<-lapply(random.trees.s,
-                     function(x,sp){ x$tip.label<-sample(sp); x },
-                     sp=sample(consensus_tree$tip.label))
-class(random.trees.s)<-"multiPhylo"
+#random.trees <- lapply(1:1000, function(x) rtopology(length(tree_tips), tip.label = tree_tips))
+#class(random.trees)<-"multiPhylo"
 
 ###Señal filogenética
 ##Todas las comunidades
 #G
-random_signals_G <- sapply(random.trees, function(tree) {
+random_signals_G <- sapply(random.total, function(tree) {
   phylosig(tree, trait_data_G, method = "lambda")$lambda
 })
-p_value_random_trees_G <- mean(random_signals_G >= G_physignal)
+p_value_random_trees_G <- mean(random_signals_G >= G_physignal$lambda)
 cat("P-valor G usando random trees:", p_value_random_trees_G, "\n")
 
 null_signals_G_bm <- apply(simulated_traits_G, 2, function(trait) {
   phylosig(phy_tree, trait, method = "lambda")$lambda
 })
-p_value_G_bm <- mean(null_signals_G_bm >= G_physignal)
+p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
 cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
 
 hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
 abline(v = G_physignal, col = "red", lwd = 2)
 
 #M
-random_signals_M <- sapply(random.trees, function(tree) {
+random_signals_M <- sapply(random.total, function(tree) {
   phylosig(tree, trait_data_M, method = "lambda")$lambda
 })
-p_value_random_trees_M <- mean(random_signals_M >= M_physignal)
+p_value_random_trees_M <- mean(random_signals_M >= M_physignal$lambda)
 cat("P-valor M usando random trees:", p_value_random_trees_M, "\n")
 
 null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
@@ -202,32 +225,32 @@ abline(v = M_physignal, col = "red", lwd = 2)
 
 ##Árbol de consenso
 #G
-random_signals_G_sample <- sapply(random.trees.s, function(tree) {
+random_signals_G_sample <- sapply(random.trees, function(tree) {
   phylosig(tree, trait_data_G, method = "lambda")$lambda
 })
-p_value_random.trees_G_sample  <- mean(random_signals_G >= G_physignal)
-cat("P-valor G usando random.trees.s:", p_value_random.trees.s_G, "\n")
+p_value_random.trees_G_sample  <- mean(random_signals_G >= G_physignal$lambda)
+cat("P-valor G usando random.trees.s:", p_value_random.trees_G_sample, "\n")
 
 null_signals_G_bm_sample <- apply(simulated_traits_G, 2, function(trait) {
   phylosig(phy_tree_s, trait, method = "lambda")$lambda
 })
-p_value_G_bm_sample  <- mean(null_signals_G_bm_sample  >= G_physignal)
+p_value_G_bm_sample  <- mean(null_signals_G_bm_sample  >= G_physignal$lambda)
 cat("P-valor G (Brownian motion):", p_value_G_bm_sample , "\n")
 
 hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
 abline(v = G_physignal, col = "red", lwd = 2)
 
 #M
-random_signals_M <- sapply(random.trees.s, function(tree) {
+random_signals_M <- sapply(random.trees, function(tree) {
   phylosig(tree, trait_data_M, method = "lambda")$lambda
 })
-p_value_random.trees.s_M <- mean(random_signals_M >= M_physignal)
+p_value_random.trees.s_M <- mean(random_signals_M >= M_physignal$lambda)
 cat("P-valor M usando random.trees.s:", p_value_random.trees.s_M, "\n")
 
 null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
   phylosig(phy_tree_s, trait, method = "lambda")$lambda
 })
-p_value_M_bm <- mean(null_signals_M_bm >= M_physignal)
+p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
 cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
 
 hist(random_M, main = "Distribución nula para M", xlab = "Lambda")

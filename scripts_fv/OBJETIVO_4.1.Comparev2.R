@@ -15,24 +15,7 @@ library(dendextend)
 library(geiger)
 library(phytools)
 library(stringr)
-#################### Clusters en datos de apellidos ############################
-C_trait <- select_variable(result_traits, selected_communities, "cluster")
-C_trait2 <- select_variable(result_traits, NULL, "cluster")
-C_trait$community <- NULL
-C_trait2$community <- NULL
-cv1 <- as.matrix(C_trait)[,1]
-cv2 <- as.matrix(C_trait2)[,1]
 
-estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
-  sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
-  anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
-  obj <- contMap(tree, sorted_trait_vector, plot = TRUE)
-  plot(obj, type = "phylogram", legend = 0.7 * max(nodeHeights(tree)), ftype = "i", leg.txt = leg_txt)
-  return(list(anc=anc, obj = obj))
-}
-png("Figures/C_AP_muestra.png")
-cvsur<- estimacion_estados_ancestrales(hy,cv1,"C")
-dev.off()
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
 hy <- reorder(hy, "postorder")
@@ -150,7 +133,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   }
   
   # Calcular traits
-  tc <- result_traits
+  tc <- result
   
   # Funci?n auxiliar para obtener vectores
   vector_of <- function(target_col) {
@@ -171,7 +154,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   A <- vector_of("A")
   G <- vector_of("G")
   M <- vector_of("M")
-  cluster <- vector_of("cluster")
+#  cluster <- vector_of("cluster")
   
   # Coordenadas ?tiles
   lastrow <- nrow(hcd$labels)
@@ -207,7 +190,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     annotate("text", x = x1, y = y0 - 2.26 + ydiff, label = "A", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.46 + ydiff, label = "G", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.66 + ydiff, label = "M", fontface = "bold", size = 4) +
-    annotate("text", x = x1, y = y0 - 2.90 + ydiff, label = "Cluster", fontface = "bold", size = 4) +
+ #   annotate("text", x = x1, y = y0 - 2.90 + ydiff, label = "Cluster", fontface = "bold", size = 4) +
     scale_size_identity() +
     coord_flip() +
     scale_y_reverse(expand = c(0.2, 0)) +
@@ -226,8 +209,8 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(S[label], format = "f", digits = 3)), nudge_y = 2.0 - ydiff, hjust = 0, size = 3) +
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(A[label], format = "f", digits = 3)), nudge_y = 2.2 - ydiff, hjust = 0, size = 3) +
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(G[label], format = "f", digits = 3)), nudge_y = 2.4 - ydiff, hjust = 0, size = 3) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(cluster[label], format = "f", digits = 0)), nudge_y = 2.85 - ydiff, hjust = 0, size = 3)
+    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3)
+  #  geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(cluster[label], format = "f", digits = 0)), nudge_y = 2.85 - ydiff, hjust = 0, size = 3)
   
   # Guardar el gr?fico
   if (!is.null(save_as)) {

@@ -17,7 +17,7 @@ coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
 coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
 rownames(coordenadas) <- coordenadas$ï..community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
-coordenadas<-select(coordenadas,lon,lat)
+coordenadas<-select(coordenadas,community,lon,lat)
 
 #Data community
 View(GM_df)
@@ -27,6 +27,7 @@ G.reg.M <- predict(modelo)
 
 #Crear df
 # Combinar tablas por una clave común (por ejemplo, "community")
+GM_df$community <- row.names(GM_df)
 community_data <- GM_df %>%
   left_join(coordenadas, by = "community" ) %>%
   mutate(

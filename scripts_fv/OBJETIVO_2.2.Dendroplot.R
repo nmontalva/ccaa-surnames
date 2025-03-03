@@ -17,7 +17,7 @@ conflict_prefer("theme_dendro","ggdendro")
 ## ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5 ##
 
 # Mostrar y escribir la tabla final 
-result_dendro<-result_traits
+result_dendro<-result
 row.names(result_dendro) <-result_dendro$community
 result_dendro <- result_dendro%>%select(-community)
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
@@ -26,7 +26,7 @@ write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.nam
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
-result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% selected_communities)
+result_dendro2 <- result_dendro %>% dplyr::filter(row.names(result_dendro) %in% selected_communities)
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Imprimir im?gen en png y en pdf
@@ -56,7 +56,7 @@ dendroplot <- function(hc, save_as=NULL,
     stop("Container is NULL")
   }
   #tc <- traits(comuneros, c(group_by_col, container))
-  tc <- result_traits
+  tc <- result_dendro
   # vectors to obtain commune, S, R, G, A, cluster of communities
   vector_of <- function(target_col) {
     if (!target_col %in% colnames(tc)) {
@@ -78,7 +78,7 @@ dendroplot <- function(hc, save_as=NULL,
   A <- vector_of("A")
   G <- vector_of("G")
   M <- vector_of("M")
-  cluster <- vector_of("cluster")
+  #cluster <- vector_of("cluster")
   # useful coordinates
   lastrow <- nrow(hcd$labels)
   x0 <- hcd$labels$x[[lastrow]]
@@ -120,8 +120,8 @@ dendroplot <- function(hc, save_as=NULL,
              label="G", fontface="bold", size=4) +
     annotate("text", x=x1, y=y0-2.46+ydiff,
              label="M", fontface="bold", size=4) +
-    annotate("text", x=x1, y=y0-2.66+ydiff,
-             label="Cluster", fontface="bold", size=4) +
+    #annotate("text", x=x1, y=y0-2.66+ydiff,
+    #         label="Cluster", fontface="bold", size=4) +
     (if (!is.null(container))
       geom_text(data=ggdendro::label(hcd),
                 aes(x=x, y=y, hjust=0,
@@ -160,12 +160,12 @@ dendroplot <- function(hc, save_as=NULL,
                   size=size(M[label])),
               nudge_y=2.4-ydiff,
               hjust=0)  +
-    geom_text(data=label(hcd),
-              aes(x=x, y=y,
-                  label=prettyNum(cluster[label], digits=1),
-                  size=size(cluster[label])),
-              nudge_y=2.6-ydiff,
-              hjust=0)  +
+    #geom_text(data=label(hcd),
+    #          aes(x=x, y=y,
+    #              label=prettyNum(cluster[label], digits=1),
+    #              size=size(cluster[label])),
+    #          nudge_y=2.6-ydiff,
+    #          hjust=0)  +
     scale_size_identity() +
     coord_flip() +
     scale_y_reverse(expand=c(0, 0.6)) +

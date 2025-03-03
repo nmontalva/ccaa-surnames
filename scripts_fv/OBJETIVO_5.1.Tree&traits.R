@@ -83,15 +83,15 @@ M_trait$community <- NULL
 M_trait2$community <- NULL
 
 #Cluster
-C_trait <- select_variable(result_traits, selected_communities, "cluster")
-C_trait2 <- select_variable(result_traits, NULL, "cluster")
-C_trait$community <- NULL
-C_trait2$community <- NULL
+#C_trait <- select_variable(result_traits, selected_communities, "cluster")
+#C_trait2 <- select_variable(result_traits, NULL, "cluster")
+#C_trait$community <- NULL
+#C_trait2$community <- NULL
 
 #Final_table
-ft <- result_traits
+ft <- result
 ft <- ft %>% column_to_rownames(var = "community")
-ft2 <- result_traits %>% filter(community %in% selected_communities)
+ft2 <- result %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
@@ -114,9 +114,9 @@ av2 <- as.matrix(A_trait2)[,1]
 mv1 <- as.matrix(M_trait)[,1]
 mv2 <- as.matrix(M_trait2)[,1]
 
-# C
-cv1 <- as.matrix(C_trait)[,1]
-cv2 <- as.matrix(C_trait2)[,1]
+# Cluster
+#cv1 <- as.matrix(C_trait)[,1]
+#cv2 <- as.matrix(C_trait2)[,1]
 
 # Funci?n para estimar estados ancestrales y crear el ?rbol
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
@@ -131,9 +131,9 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
 png("Figures/S_muestra.png")
 svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
 dev.off()
-png("Figures/R_muestra.png")
-rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
-dev.off()
+#png("Figures/R_muestra.png")
+#rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
+#dev.off()
 png("Figures/G_muestra.png")
 gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
 dev.off()
@@ -143,9 +143,9 @@ dev.off()
 png("Figures/M_muestra.png")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
 dev.off()
-png("Figures/C_muestra.png")
-cvc<- estimacion_estados_ancestrales(consensus_tree,cv1,"C")
-dev.off()
+#png("Figures/C_muestra.png")
+#cvc<- estimacion_estados_ancestrales(consensus_tree,cv1,"C")
+#dev.off()
 
 writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
@@ -154,13 +154,13 @@ writeAncestors(consensus_tree, Anc=avc$anc, file="Figures/A_nodos_muestra.phy", 
 writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.phy", digits=6, format=c("phylip"))
 
 #Cluster discrete visualization
-trees<-make.simmap(consensus_tree,cv1,nsim=100)
-obj<-summary(trees,plot=FALSE)
-cols<-setNames(palette()[1:400],mapped.states(trees))
-cols<-cols[1:4]
-plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
-add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
-                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
+#trees<-make.simmap(consensus_tree,cv1,nsim=100)
+#obj<-summary(trees,plot=FALSE)
+#cols<-setNames(palette()[1:400],mapped.states(trees))
+#cols<-cols[1:4]
+#plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
+#add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
+#                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
 
 
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
@@ -174,9 +174,9 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
 png("Figures/S_total.png")
 svt <- estimacion_estados_ancestrales(y_total, sv2, "S")
 dev.off()
-png("Figures/R_total.png")
-rvt <- estimacion_estados_ancestrales(y_total, rv2, "R")
-dev.off()
+#png("Figures/R_total.png")
+#rvt <- estimacion_estados_ancestrales(y_total, rv2, "R")
+#dev.off()
 png("Figures/G_total.png")
 gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
 dev.off()
@@ -186,18 +186,18 @@ dev.off()
 png("Figures/M_total.png")
 mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
 dev.off()
-png("Figures/C_total.png")
-cvt <- estimacion_estados_ancestrales(y_total, cv2, "C")
-dev.off()
+#png("Figures/C_total.png")
+#cvt <- estimacion_estados_ancestrales(y_total, cv2, "C")
+#dev.off()
 
 #Cluster discrete visualization
-trees<-make.simmap(y_total,cv2,nsim=100)
-obj<-summary(trees,plot=FALSE)
-cols<-setNames(palette()[1:400],mapped.states(trees))
-cols<-cols[1:4]
-plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
-add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
-                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
+#trees<-make.simmap(y_total,cv2,nsim=100)
+#obj<-summary(trees,plot=FALSE)
+#cols<-setNames(palette()[1:400],mapped.states(trees))
+#cols<-cols[1:4]
+#plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
+#add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
+#                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
 
 
 ###Comparaciones
@@ -212,9 +212,9 @@ plot_comparison <- function(obj1, obj2, xlabel) {
 }
 
 # Comparaciones
-png("Figures/S_R_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(svc$obj, rvc$obj, c("S", "R"))
-dev.off()
+#png("Figures/S_R_muestra.png",width = 1042, height = 534, res = 300)
+#plot_comparison(svc$obj, rvc$obj, c("S", "R"))
+#dev.off()
 png("Figures/S_A_muestra.png",width = 1042, height = 534, res = 300)
 plot_comparison(svc$obj, avc$obj, c("S", "A"))
 dev.off()
@@ -224,15 +224,15 @@ dev.off()
 png("Figures/S_M_muestra.png",width = 1042, height = 534, res = 300)
 plot_comparison(svc$obj, mvc$obj, c("S", "M"))
 dev.off()
-png("Figures/R_A_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(rvc$obj, avc$obj, c("R", "A"))
-dev.off()
-png("Figures/R_G_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(rvc$obj, gvc$obj, c("R", "G"))
-dev.off()
-png("Figures/R_M_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(rvc$obj, mvc$obj, c("R", "M"))
-dev.off()
+#png("Figures/R_A_muestra.png",width = 1042, height = 534, res = 300)
+#plot_comparison(rvc$obj, avc$obj, c("R", "A"))
+#dev.off()
+#png("Figures/R_G_muestra.png",width = 1042, height = 534, res = 300)
+#plot_comparison(rvc$obj, gvc$obj, c("R", "G"))
+#dev.off()
+#png("Figures/R_M_muestra.png",width = 1042, height = 534, res = 300)
+#plot_comparison(rvc$obj, mvc$obj, c("R", "M"))
+#dev.off()
 png("Figures/A_G_muestra.png",width = 1042, height = 534, res = 300)
 plot_comparison(avc$obj, gvc$obj, c("G", "A"))
 dev.off()
@@ -258,9 +258,9 @@ plot_comparison2 <- function(obj1, obj2, xlabel) {
 
 # Comparaciones
 dev.off()
-png("Figures/S_R_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(svt$obj, rvt$obj, c("S", "R"))
-dev.off()
+#png("Figures/S_R_total.png",width = 2084, height = 1068, res = 300)
+#plot_comparison2(svt$obj, rvt$obj, c("S", "R"))
+#dev.off()
 png("Figures/S_G_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, gvt$obj, c("S", "G"))
 dev.off()
@@ -270,15 +270,15 @@ dev.off()
 png("Figures/S_M_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(svt$obj, mvt$obj, c("S", "M"))
 dev.off()
-png("Figures/R_G_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(rvt$obj, gvt$obj, c("R", "G"))
-dev.off()
-png("Figures/R_A_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(rvt$obj, avt$obj, c("R", "A"))
-dev.off()
-png("Figures/R_M_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(rvt$obj, mvt$obj, c("R", "M"))
-dev.off()
+#png("Figures/R_G_total.png",width = 2084, height = 1068, res = 300)
+#plot_comparison2(rvt$obj, gvt$obj, c("R", "G"))
+#dev.off()
+#png("Figures/R_A_total.png",width = 2084, height = 1068, res = 300)
+#plot_comparison2(rvt$obj, avt$obj, c("R", "A"))
+#dev.off()
+#png("Figures/R_M_total.png",width = 2084, height = 1068, res = 300)
+#plot_comparison2(rvt$obj, mvt$obj, c("R", "M"))
+#dev.off()
 png("Figures/A_G_total.png",width = 2084, height = 1068, res = 300)
 plot_comparison2(avt$obj,gvt$obj, c("G", "A"))
 dev.off()
@@ -291,7 +291,7 @@ dev.off()
 
 ###Phylogenetic signal
 ### Cambiar por physignal.z? Revisar si ese contempla Pagel lamda
-z<-phylosig(consensus_tree,cv1,method = "lambda",test=T)
+z<-phylosig(consensus_tree,sv1,method = "lambda",test=T)
 plot(z)
 
 ##Muestra
@@ -302,7 +302,7 @@ calculate_physignal <- function(trait_vector) {
 }
 
 # Vectores de datos
-trait_vectors <- list(sv1, gv1, av1, mv1,cv1)
+trait_vectors <- list(sv1, gv1, av1, mv1)
 
 # Calcular la senal fisica y generar los gr?ficos en un bucle
 K_values <- list()
@@ -316,7 +316,7 @@ P_value <- sapply(K_values, function(K) K$P)
 
 # Combinar resultados en un marco de datos
 Phy_sig <- data.frame(Phylogenetic_signal, P_value)
-row.names(Phy_sig) <- c("S", "G", "A", "M","Cluster")
+row.names(Phy_sig) <- c("S", "G", "A", "M")
 
 # Redondear los resultados
 Phy_sig <- round(Phy_sig, digits = 4)
@@ -329,10 +329,10 @@ dev.off()
 tree_tips <- consensus_tree$tip.label
 data_tips <- rownames(GM_df)
 setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
-GM_df_cluster <- GM_df[rownames(GM_df) %in% tree_tips, ]
-GM_df_cluster$cluster<-as.numeric(GM_df_cluster$cluster)
-GM_df_cluster <- GM_df_cluster %>%
-  select(cluster)
+#GM_df_cluster <- GM_df[rownames(GM_df) %in% tree_tips, ]
+#GM_df_cluster$cluster<-as.numeric(GM_df_cluster$cluster)
+#GM_df_cluster <- GM_df_cluster %>%
+#  select(cluster)
 # Example with your tree and cluster assignments
 #fit_lambda <- fitDiscrete(
 #  phy = consensus_tree,
@@ -340,15 +340,15 @@ GM_df_cluster <- GM_df_cluster %>%
 #  model = "ER",  # Equal rates model
 #  transform = "lambda"
 #)
-fit_lambda <- fitContinuous(
-  phy = consensus_tree,
-  dat = GM_df_cluster,
-  model = "lambda",  # Equal rates model
-)
+#fit_lambda <- fitContinuous(
+ # phy = consensus_tree,
+ # dat = GM_df_cluster,
+ #  model = "lambda",  # Equal rates model
+#)
 # View results
-print(fit_lambda)
-fit_lambda$opt$lambda ## la evolución del rasgo está ligada al árbol filogenético
-fit_lambda$opt$lnL 
+#print(fit_lambda)
+#fit_lambda$opt$lambda ## la evolución del rasgo está ligada al árbol filogenético
+#fit_lambda$opt$lnL 
 
 #fit null model
 #fit_null <- fitDiscrete(
@@ -357,19 +357,19 @@ fit_lambda$opt$lnL
 #  model = "ER", 
 #  transform = "none"  # No λ transformation
 #)
-fit_null <- fitContinuous(
-  phy = consensus_tree,
-  dat = GM_df_cluster,
-  model = "lambda"
-)
-fit_null$opt$lambda
-fit_null$opt$lnL
+#fit_null <- fitContinuous(
+#  phy = consensus_tree,
+#  dat = GM_df_cluster,
+#  model = "lambda"
+#)
+#fit_null$opt$lambda
+#fit_null$opt$lnL
 
 # LRT between models
-LRT_stat <- 2 * (fit_lambda$opt$lnL - fit_null$opt$lnL)
-p_value <- pchisq(LRT_stat, df = 1, lower.tail = FALSE)
-print(LRT_stat)
-print(p_value)
+#LRT_stat <- 2 * (fit_lambda$opt$lnL - fit_null$opt$lnL)
+#p_value <- pchisq(LRT_stat, df = 1, lower.tail = FALSE)
+#print(LRT_stat)
+#print(p_value)
 
 ##Total
 calculate_physignal <- function(trait_vector, file_name) {
@@ -378,7 +378,7 @@ calculate_physignal <- function(trait_vector, file_name) {
   return(K)
 }
 # Vectores de datos
-trait_vectors2 <- list(sv2, gv2, av2, mv2,cv2)
+trait_vectors2 <- list(sv2, gv2, av2, mv2)
 
 # Calcular la se?al f?sica y generar los gr?ficos en un bucle
 K_values <- list()
@@ -392,7 +392,7 @@ P_value <- sapply(K_values, function(K) K$P)
 
 # Combinar resultados en un marco de datos
 Phy_sig2 <- data.frame(Phylogenetic_signal, P_value)
-row.names(Phy_sig2) <- c("S", "G", "A", "M","Cluster")
+row.names(Phy_sig2) <- c("S", "G", "A", "M")
 
 # Redondear los resultados
 Phy_sig2 <- round(Phy_sig2, digits = 4)
@@ -404,30 +404,30 @@ grid.table(Phy_sig2)
 dev.off()
 
 # Example with your tree and cluster assignments
-fit_lambda_total <- fitDiscrete(
-  phy = y_total,
-  dat = kmeans_result$cluster,
-  model = "ER",  # Equal rates model
-  transform = "lambda"
-)
+#fit_lambda_total <- fitDiscrete(
+#  phy = y_total,
+#  dat = kmeans_result$cluster,
+#  model = "ER",  # Equal rates model
+#  transform = "lambda"
+#)
 # View results
-print(fit_lambda_total)
-fit_lambda_total$opt$lambda
-fit_lambda_total$opt$lnL
+#print(fit_lambda_total)
+#fit_lambda_total$opt$lambda
+#fit_lambda_total$opt$lnL
 
 #fit null model
-fit_null_total <- fitDiscrete(
-  phy = y_total,
-  dat = kmeans_result$cluster,
-  model = "ER", 
-  transform = "none"  # No λ transformation
-)
+#fit_null_total <- fitDiscrete(
+#  phy = y_total,
+#  dat = kmeans_result$cluster,
+#  model = "ER", 
+#  transform = "none"  # No λ transformation
+#)
 
 # LRT between models
-LRT_stat_total <- 2 * (fit_lambda_total$opt$lnL - fit_null_total$opt$lnL)
-p_value_t <- pchisq(LRT_stat_total, df = 1, lower.tail = FALSE)
-print(LRT_stat_total)
-print(p_value_t)
+#LRT_stat_total <- 2 * (fit_lambda_total$opt$lnL - fit_null_total$opt$lnL)
+#p_value_t <- pchisq(LRT_stat_total, df = 1, lower.tail = FALSE)
+#print(LRT_stat_total)
+#print(p_value_t)
 
 
 
@@ -445,7 +445,7 @@ G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
 S <- setNames(obj[,"S"],rownames(obj))
 A <- setNames(obj[,"A"],rownames(obj))
-R <- setNames(obj[,"R"],rownames(obj))
+#R <- setNames(obj[,"R"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
 # Verifica que N, M, A, S, y G sean vectores numéricos
@@ -492,7 +492,7 @@ G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
 S <- setNames(obj[,"S"],rownames(obj))
 A <- setNames(obj[,"A"],rownames(obj))
-R <- setNames(obj[,"R"],rownames(obj))
+#R <- setNames(obj[,"R"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
 #model with N ( efecto del N en el ?ndice)
