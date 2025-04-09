@@ -36,6 +36,13 @@ surname_distance_matrix <- function(comuneros,
   as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
 }
+
+#=======
+#TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
+# Deberíamos revisarlo
+#=======
+
+
 surname_matrix <- surname_distance_matrix(comuneros)
 
 hclust_default_method <- "average"
@@ -91,6 +98,12 @@ surname_distance_muestra <- function(surnames,
   as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
 }
+
+#=======
+#TODO: REVISAR. Es la misma nota que hay arriba respecto al método de conversión de matriz de similitud a matriz de distnacia.
+# Deberíamos revisarlo
+#=======
+
 surname_matrix_muestra <- surname_distance_muestra(surnames)
 hc <-hclust(surname_matrix_muestra,method = "average")
 hd <- as.dendrogram(hc)

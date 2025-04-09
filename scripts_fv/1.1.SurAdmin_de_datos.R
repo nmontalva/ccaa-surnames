@@ -19,7 +19,7 @@ primera <- primera %>%
 
 # Eliminar columna X.1 y reemplazar -9 y datos vacíos por NA
 primera <- primera %>%
-  select(-X.1) %>%
+  dplyr::select(-X.1) %>%
   mutate(across(c(D3S1358, TH01, D21S11, D18S51, Penta.E, D5S818, D13S317, D7S820, D16S539, CSF1PO, Penta.D, vWA, D8S1179, TPOX, FGA), ~ na_if(., -9)))
 
 segunda <- segunda %>%
@@ -51,6 +51,37 @@ colnames(union_df)
 union_df <- union_df %>%
   mutate(across(c(D3S1358, TH01, D21S11, D18S51, Penta.E, D5S818, D13S317, D7S820, D16S539, 
                   CSF1PO, Penta.D, vWA, D8S1179, TPOX, FGA), ~ as.numeric(as.character(.))))
+
+#=======
+#TODO: REVISAR. Me salen 2 warnings al correr la línea 50:
+# > dplyr::last_dplyr_warnings()
+# [[1]]
+# <warning/rlang_warning>
+#   Warning in `mutate()`:
+#   ℹ In argument: `across(...)`.
+# Caused by warning:
+#   ! NAs introduced by coercion
+# ---
+#   Backtrace:
+#   ▆
+# 1. ├─union_df %>% ...
+# 2. ├─dplyr::mutate(...)
+# 3. └─dplyr:::mutate.data.frame(...)
+# 
+# [[2]]
+# <warning/rlang_warning>
+#   Warning in `mutate()`:
+#   ℹ In argument: `across(...)`.
+# Caused by warning:
+#   ! NAs introduced by coercion
+# ---
+#   Backtrace:
+#   ▆
+# 1. ├─union_df %>% ...
+# 2. ├─dplyr::mutate(...)
+# 3. └─dplyr:::mutate.data.frame(...)
+#=======
+
 
 # Fusionar ambas bases de datos
 mi.final <- merge(union_df, primera, all = TRUE)

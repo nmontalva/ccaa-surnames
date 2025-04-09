@@ -13,12 +13,19 @@ library(vegan)
 
 ### Cargar DATOS geogr?ficos ###
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
-coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
-coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+
+#=======
+#TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
+# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
+# Vamos a tener que resolverlo, o seguirá pasando.
+# 
+#=======
 
 ##Test de Mantel##
 #1. Todas las comunidades # #Revisar la matriz de distancia de apellidos
-rownames(coordenadas) <- coordenadas$ï..community
+rownames(coordenadas) <- coordenadas$community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
 my_points_t <- dplyr::select(coordenadas, lon, lat)
 rownames(my_points_t) <- coordenadas$community
@@ -30,11 +37,22 @@ surname_matrix <- as.matrix(surname_matrix)
 #Intersecci?n entre ambas matrices
 # Encontrar los row.names en com?n
 common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
+#=======
+#TODO: REVISAR. No existe el objeto 'geo_total'.
+# Error: object 'geo_total' not found
+# Como esto me impide seguir revisando, voy a correr la siguiente linea, que dejaré comentada:
+# common_rows <- row.names(surname_matrix)
+# Obviamente esto es "trampa". Hay que volver a revisar todo después.
+#=======
 common_rows
 
 # Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n
 mat1_filtered <- surname_matrix[common_rows, common_rows]
 mat2_filtered <- geo_total[common_rows, common_rows]
+#=======
+#TODO: REVISAR. No existe el objeto 'geo_total'.
+# Ahora que leo todo lo que viene después es obvio que no puedo seguir revisando.
+#=======
 
 # Identificar las filas/columnas que quedaron fuera en mat1
 rows_outside_mat1 <- setdiff(row.names(surname_matrix), common_rows)
