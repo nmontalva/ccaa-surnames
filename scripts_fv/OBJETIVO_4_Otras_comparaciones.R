@@ -13,6 +13,12 @@ library(TreeDist)
 ##cor.dendlist
 cor.dendlist(dendlist(d1 = sort(dend.rst), d2 = sort(hd)), method = "FM_index",k=9) #ERROR, revisar
 
+#=======
+#TODO: REVISAR. Error: object 'dend.rst' not found.
+# Supongo que el objeto se creaba al correr alguno de los scripts que no corrieron.
+# 
+#=======
+
 ##cor_cophenetic
 cor_cophenetic(dend.rst,hd,method_coef = "kendall")
 

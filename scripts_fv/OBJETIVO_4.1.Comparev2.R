@@ -96,6 +96,12 @@ mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete",
                       calibration = micalibracion, 
                       control = chronos.control(nb.rate.cat = 1))
 plot.phylo(mytimetree)
+
+#=======
+#TODO: REVISAR. Muchas "warnings" aquí.
+# Parece ser un problema con el cálculo de los largos de las ramas.
+#=======
+
 consensus_tree<-(mytimetree)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
@@ -123,6 +129,12 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
 
 result <-traits(comuneros) 
 consensus_tree <- as.dendrogram(consensus_tree2)
+
+#=======
+#TODO: REVISAR.
+#Error in ape::as.hclust.phylo(object) : the tree is not ultrametric
+#=======
+
 plot(consensus_tree)
 comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
 select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
@@ -254,3 +266,16 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,
 
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
+#=======
+#TODO: REVISAR.
+#Error in dendroplot(consensus_tree, save_as, group_by_col) : 
+#consensus_tree debe ser un objeto de tipo dendrogram
+# Error in dendroplot(consensus_tree, save_as, group_by_col) : 
+#   consensus_tree debe ser un objeto de tipo dendrogram
+# 3.
+# stop("consensus_tree debe ser un objeto de tipo dendrogram")
+# 2.
+# dendroplot(consensus_tree, save_as, group_by_col)
+# 1.
+# consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+#=======

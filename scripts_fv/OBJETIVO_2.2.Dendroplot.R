@@ -10,12 +10,18 @@ library(dendextend)
 library(ggplot2)
 library(gridExtra)
 library(stringr)
+library(conflicted)
 
 
 ##Conflict preference
 conflict_prefer("label","ggdendro")
 conflict_prefer("theme_dendro","ggdendro")
 ## ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5 ##
+
+#=======
+#TODO: REVISAR. ¿Por qué pasa esto? ¿Son conflictos de nombres?
+# Sería ideal arreglarlo.
+#=======
 
 # Mostrar y escribir la tabla final 
 result_dendro<-result
@@ -25,9 +31,52 @@ write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.nam
 
 # Escribir la tabla de las comunidades muestreadas
 STR <- read.csv("Datos/STR.csv", sep = ",")
+
+#=======
+#TODO: REVISAR. Si uno lo corre desde el repo, entonces debería ser:
+#STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
+#=======
+
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% selected_communities)
+
+#=======
+#TODO: REVISAR. La linea 42 me da un error. Creo que el error se debe a que no existe la variable "community" en results_dendro (están como nombres de fila)
+# Intenté esto:
+# result_dendro$community <- row.names(result_dendro)
+# Y corrí la linea 42 dspués. Parece que así funcionó.
+# Error in `dplyr::filter()`:
+#   ℹ In argument: `result_dendro$community %in%
+#   selected_communities`.
+# Caused by error:
+#   ! `..1` must be of size 170 or 1, not size 0.
+# > rlang::last_trace(drop = FALSE)
+# <error/rlang_error>
+#   Error in `dplyr::filter()`:
+#   ℹ In argument: `result_dendro$community %in%
+#   selected_communities`.
+# Caused by error:
+#   ! `..1` must be of size 170 or 1, not size 0.
+# ---
+#   Backtrace:
+#   ▆
+# 1. ├─result_dendro %>% ...
+# 2. ├─dplyr::filter(., result_dendro$community %in% selected_communities)
+# 3. ├─dplyr:::filter.data.frame(., result_dendro$community %in% selected_communities)
+# 4. │ └─dplyr:::filter_rows(.data, dots, by)
+# 5. │   └─dplyr:::filter_eval(...)
+# 6. │     ├─base::withCallingHandlers(...)
+# 7. │     └─mask$eval_all_filter(dots, env_filter)
+# 8. │       └─dplyr (local) eval()
+# 9. ├─dplyr:::dplyr_internal_error(...)
+# 10. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+# 11. │   └─rlang:::signal_abort(cnd, .file)
+# 12. │     └─base::signalCondition(cnd)
+# 13. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+# 14.   └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+#=======
+
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Imprimir im?gen en png y en pdf
@@ -183,3 +232,4 @@ surname_dendrogram <- function(comuneros, save_as=NULL,
 
 # Llamar a la funci?n surname_dendrogram
 surname_dendrogram(comuneros, save_as = "Figures/dendrograma_total.pdf")
+
