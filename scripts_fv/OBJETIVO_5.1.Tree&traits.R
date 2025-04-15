@@ -22,7 +22,12 @@ library(geiger)
 library(nlme)
 library(phytools)
 library(Publish)
+<<<<<<< Updated upstream
 #library(treeio) #No lo puedo instalar
+=======
+library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede instalar en modo binario ejecutable
+library(treeio)
+>>>>>>> Stashed changes
 library(ggplot2)
 library(gridExtra)
 library(geomorph) #No lo puedo instalar
@@ -95,6 +100,7 @@ ft2 <- result %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
+consensus_tree <-as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
 ###Estimar estados ancestrales

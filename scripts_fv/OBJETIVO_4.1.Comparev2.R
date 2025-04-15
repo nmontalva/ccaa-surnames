@@ -7,7 +7,7 @@
 #### OBJETIVO 4 ################################################################
 ### To compare trees builds with different data and their deviations from the consensus tree #################################################################
 
-##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3#################
+##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3 #################
 
 ###LIBRERIAS
 library(ape)
@@ -88,8 +88,14 @@ png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", points
 plot.phylo(consensus_tree2)
 dev.off()
 
+#largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
+#consensus_tree2$edge.length <- largo.ramas
+# Número de nodos internos (Ntip - 1 para árboles binarios)
+
 #Preparacion de árbol con largo de ramas (Todavía está por verse)
+consensus_tree2$edge.length <- phyDPS$edge.length
 consensus_tree2$root.edge <- 0
+<<<<<<< Updated upstream
 largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
 consensus_tree2$edge.length <- largo.ramas
 micalibracion <- makeChronosCalib(consensus_tree2)
@@ -105,6 +111,44 @@ plot.phylo(consensus_tree)
 # Asegúrate de que la columna 'commune' esté en UTF-8
 comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
 comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
+=======
+consensus_tree2 <- compute.brlen(consensus_tree2, method = "Grafen")
+consensus_tree2 <- multi2di(consensus_tree2)
+plot.phylo(consensus_tree2)
+is.rooted(consensus_tree2)
+is.ultrametric(consensus_tree2)
+is.binary(consensus_tree2)
+
+consensus_tree<-(consensus_tree2)
+
+###################### DENDROPLOT CONSENSO & TRAITS ############################
+## Generar dendroplot con el ?rbol de consenso y los traits anotados
+traits <- function(comuneros, group_by_cols = c("community","commune")) {
+  # Asegurarse de que group_by_cols es un vector
+  if (!is.vector(group_by_cols)) {
+    group_by_cols <- as.vector(group_by_cols)
+  }
+  
+  # Calcular los �ndices
+  result <- comuneros %>%
+    group_by(across(all_of(group_by_cols))) %>%
+    summarise(
+      N = n(),
+      S = n_distinct(surname_father) / N,
+      R = mean(rights, na.rm = TRUE),
+      G = gini(shares),
+      A = mean(sex == "M", na.rm = TRUE),
+      M = sum(rights < 1, na.rm = TRUE) / N,
+    )
+  
+  return(result)
+}
+
+result <-traits(comuneros) 
+consensus_tree <- as.dendrogram(consensus_tree2)
+plot(consensus_tree)
+comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
+>>>>>>> Stashed changes
 select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
 
 dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
@@ -230,5 +274,9 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
   dendroplot(raise.dendrogram(as.dendrogram(consensus_tree), max(consensus_tree$edge.length)), save_as, group_by_col)
 }
 
+<<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
+=======
+consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+>>>>>>> Stashed changes

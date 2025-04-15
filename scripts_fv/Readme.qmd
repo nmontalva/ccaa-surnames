@@ -34,7 +34,7 @@ Se encuentran aquí todos los scripts en R utilizados para crear los análisis d
 
 **OBJETIVO_1.2.Manteltest.R** Calcula un test de Mantel entre los datos geográficos y de apellidos.
 
-**OBJETIVO_2.1.Traitsv2.R** Crea tabla con los traits para cada comunidad y calcula las medidas de resumen para estos. Además de un árbol con todas las comunidades y los traits anotados al final de él.
+**OBJETIVO_2.1.Traitsv3.R** Crea tabla con los traits para cada comunidad y calcula las medidas de resumen para estos. Además de un árbol con todas las comunidades y los traits anotados al final de él.
 
 **OBJETIVO_2.2.Dendroplot.R** Crea un tablas de resumen de los traits para todas las comunidades. Genera además una visualización del árbol de apellidos con los traits anotados.
 

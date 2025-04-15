@@ -120,3 +120,4 @@ cor.dendlist(dend_list, method = "baker")
 
 par(mfrow=c(1,1))
 
+## NOTA: Este era un script desordenado en dónde probaba distintos tipos de comparaciones filogenéticas. De todas estas comparaciones se terminó por usar Baker-Gamma, deberiamos dejarlo en el objetivo 4.1 y quitar este sript del github

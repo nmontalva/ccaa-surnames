@@ -31,8 +31,28 @@ surname_distance_matrix <- function(comuneros,
   # generates Hedrick (1971) kinship matrix
   # there are other methods (i.e. lasker, uri)
   hedkin <- hedrick(surnames_freq)
+<<<<<<< Updated upstream
   as.dist(1-hedkin)
 }
+=======
+  # hedrick returns values of similarity
+  # transform them into values of dissimilarity (distance)
+  as.dist(1-hedkin)
+  #as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
+  #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
+}
+
+#=======
+#TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
+# Deberíamos revisarlo
+#=======
+## REVISIÓN: Me di cuenta que (1-hedkin)  no parece tener sentido, al menos teórico. ¿Qué se intenta hacer con este paso? ¿Para qué se está invirtiendo la escala?
+# Alternativas: 
+# (1)Usar simplemente as.dist(hedkin). ¿Por qué no se optó por esto?
+# (2)Usar sqrt(1 - hedkin). Pero en este caso hedrick debería ser una matriz de similitud, que no lo es.
+# (3)Si lo que se busca es normalizar hedkin_normalizado <- hedkin / max(hedkin) y luego distancia <- as.dist(hedkin_normalizado)
+# (4) Si se quiere si o si invertir la escala: distancia <- as.dist(sqrt(1 - (hedkin / max(hedkin))) 
+>>>>>>> Stashed changes
 surname_matrix <- surname_distance_matrix(comuneros)
 
 hclust_default_method <- "average"

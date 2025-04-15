@@ -10,11 +10,25 @@ library(dendextend)
 library(dplyr)
 library(geosphere)
 library(vegan)
+library(phangorn)
 
 ### Cargar DATOS geogr?ficos ###
+<<<<<<< Updated upstream
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
 coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
 coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
+=======
+coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+
+#=======
+#TODO: REVISAR. Al igual que en el objetivo_1.2. las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
+# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
+# Vamos a tener que resolverlo, o seguirá pasando.
+#=======
+## REVISION: Agregué la misma solución que en 1.2
+>>>>>>> Stashed changes
 
 ##Administraci?n de datos ##
 rownames(coordenadas) <- coordenadas$ï..community
@@ -27,7 +41,12 @@ common_communities <- unique(comuneros$community)
 #3. Comunidades muestreadas: ?rbol de consenso #
 #Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
 selected_communities <- unique(STR$pop)
+<<<<<<< Updated upstream
 my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% selected_communities)
+=======
+my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
+
+>>>>>>> Stashed changes
 geo_muestra <- distm (my_points_t, fun = distGeo )
 rownames(geo_muestra) <- as.factor(rownames(my_points_t))
 colnames(geo_muestra) <- as.factor(rownames(my_points_t))
@@ -35,12 +54,19 @@ geo_muestra <- as.matrix(geo_muestra)
 geo_muestra
 
 # como arbol
+<<<<<<< Updated upstream
 Geo_tree <- upgma(as.dist(geo_muestra),method="average")
+=======
+Geo_tree <- phangorn::upgma(as.dist(geo_muestra),method="average")
+>>>>>>> Stashed changes
 plot.phylo(Geo_tree)
 
-##Matriz deGeo_tree##Matriz de distancia con datos de apellidos
+##Matriz de Geo_tree##Matriz de distancia con datos de apellidos
 surname_matrix_muestra
+<<<<<<< Updated upstream
 surname_matrix_muestra2
+=======
+>>>>>>> Stashed changes
 
 ###Intersecci?n entre distintas matrices
 ##Mantel function

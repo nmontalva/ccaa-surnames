@@ -47,17 +47,37 @@ geo_muestra2
 
 #Crar una matriz de distancia con arbol de consenso
 con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
+<<<<<<< Updated upstream
+=======
+
+#=======
+#TODO: REVISAR.
+#Warning message:
+#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
+#=======
+#REVISIÓN: No me aparece este error.
+
+>>>>>>> Stashed changes
 con2 <-as.matrix(cophenetic.phylo(consensus_tree2)) #PhyDSW primero, s/PUCLARO
 con3 <-as.matrix(cophenetic.phylo(consensus_tree3)) #hy primero, c/PUCLARO
 con4 <-as.matrix(cophenetic.phylo(consensus_tree4)) #PhyDSW primero, c/PUCLARO
 
+<<<<<<< Updated upstream
+=======
+#=======
+#TODO: REVISAR. No existe el objeto "consensus_tree4"
+#Error in h(simpleError(msg, call)) : 
+#error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree4' not found
+#=======
+#REVISIÓN: Consensus 3 y 4 ya no existen en el objetivo 4.1 que los creaba porque eliminamos la idea de hacerlos con puclaro agrupado.
+>>>>>>> Stashed changes
 mantel_function <- function(t1,t2) {
   #Conversir en matrix
   t1 <- as.matrix(t1)
   t2 <- as.matrix(t2)
   # Encontrar los row.names en com?n
   common_rows <- intersect(row.names(t1), row.names(t2))
-  # Filtrar las matrices para que sol# Filtrar las matrices para que sol# Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n
+  # Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n
   mat1_filtered <- t1[common_rows, common_rows]
   mat2_filtered <- t2[common_rows, common_rows]
   # Identificar las filas/columnas que quedaron fuera en mat1
@@ -104,7 +124,16 @@ mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
 mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
 mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2)
 
+<<<<<<< Updated upstream
 mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
 mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
 mantel_con3_str <- mantel_function(con3, as.matrix(DSW2))
 mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
+=======
+#=======
+#TODO: REVISAR. Líneas 130 y 131 no van a correr por qué no se formaron los objetos.
+#=======
+
+mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
+mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
+>>>>>>> Stashed changes
