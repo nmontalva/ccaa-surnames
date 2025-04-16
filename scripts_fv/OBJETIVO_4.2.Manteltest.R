@@ -10,6 +10,8 @@ library(dendextend)
 library(dplyr)
 library(geosphere)
 library(vegan)
+library(classInt)
+library(units) #este paquete requiere instalar libunits en OSX y Linux
 
 ### Cargar DATOS geograficos ###
 shape.data <- sf::st_read("scripts_fv/Datos/comunidades_reprojected.shx")
@@ -31,14 +33,14 @@ rownames(my_points_w)<-shape.data2$Name
 ##Test de Mantel##
 #3. Comunidades muestreadas: ?rbol de consenso #
 #Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
-my_points_v <- my_points_v %>% filter(row.names(shape.data) %in% selected_communities)
+my_points_v <- my_points_v %>% dplyr::filter(row.names(shape.data) %in% selected_communities)
 coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
 geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
 rownames(geo_muestra) <- as.factor(rownames(my_points_v))
 colnames(geo_muestra)<- as.factor(rownames(my_points_v))
 geo_muestra
 
-my_points_w <- my_points_w %>% filter(row.names(shape.data2) %in% selected_communities2)
+my_points_w <- my_points_w %>% dplyr::filter(row.names(shape.data2) %in% selected_communities2)
 coords <- sf::st_coordinates(my_points_w)# Estraer coordenadas
 geo_muestra2 <- sf::st_distance(my_points_w)# Calcular matriz de distancias
 rownames(geo_muestra2) <- as.factor(rownames(my_points_w))
@@ -47,33 +49,54 @@ geo_muestra2
 
 #Crar una matriz de distancia con arbol de consenso
 con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 
 #=======
 #TODO: REVISAR.
 #Warning message:
 #  In dist.nodes(x) : the tree has no branch length: fixing them to one.
 #=======
+<<<<<<< HEAD
 #REVISIÓN: No me aparece este error.
 
 >>>>>>> Stashed changes
+=======
+
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 con2 <-as.matrix(cophenetic.phylo(consensus_tree2)) #PhyDSW primero, s/PUCLARO
 con3 <-as.matrix(cophenetic.phylo(consensus_tree3)) #hy primero, c/PUCLARO
+
+#=======
+#TODO: REVISAR. No existe el objeto "consensus_tree3"
+#Error in h(simpleError(msg, call)) : 
+#  error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree3' not found
+#=======
+
 con4 <-as.matrix(cophenetic.phylo(consensus_tree4)) #PhyDSW primero, c/PUCLARO
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 #=======
 #TODO: REVISAR. No existe el objeto "consensus_tree4"
 #Error in h(simpleError(msg, call)) : 
 #error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree4' not found
 #=======
+<<<<<<< HEAD
 #REVISIÓN: Consensus 3 y 4 ya no existen en el objetivo 4.1 que los creaba porque eliminamos la idea de hacerlos con puclaro agrupado.
 <<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 mantel_function <- function(t1,t2) {
   #Conversir en matrix
   t1 <- as.matrix(t1)
@@ -122,17 +145,34 @@ mantel_con2 <- mantel_function(con2, geo_muestra)
 mantel_con3 <- mantel_function(con3, geo_muestra2)
 mantel_con4 <- mantel_function(con4,geo_muestra2)
 
+#=======
+#TODO: REVISAR. Líneas 121 y 122 no van a correr por qué no se formaron los objetos.
+#=======
+
 mantel_con1_ap <- mantel_function(con1, surname_matrix_muestra)
 mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
 mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
 mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2)
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+#=======
+#TODO: REVISAR. Líneas 130 y 131 no van a correr por qué no se formaron los objetos.
+#=======
+
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
 mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
+
+#=======
+#TODO: REVISAR. Líneas 137 y 138 no van a correr por qué no existe el objeto DSW.
+#=======
+
 mantel_con3_str <- mantel_function(con3, as.matrix(DSW2))
 mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -146,3 +186,9 @@ mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+
+#=======
+#TODO: REVISAR. Líneas 144 y 145 no van a correr por qué no existen los objetos con3, con4 ni DSW2.
+#=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22

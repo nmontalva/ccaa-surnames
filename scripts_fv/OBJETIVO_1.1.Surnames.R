@@ -46,6 +46,7 @@ surname_distance_matrix <- function(comuneros,
 #TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
 # Deberíamos revisarlo
 #=======
+<<<<<<< HEAD
 ## REVISIÓN: Me di cuenta que (1-hedkin)  no parece tener sentido, al menos teórico. ¿Qué se intenta hacer con este paso? ¿Para qué se está invirtiendo la escala?
 # Alternativas: 
 # (1)Usar simplemente as.dist(hedkin). ¿Por qué no se optó por esto?
@@ -56,6 +57,10 @@ surname_distance_matrix <- function(comuneros,
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+
+
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 surname_matrix <- surname_distance_matrix(comuneros)
 
 hclust_default_method <- "average"
@@ -111,6 +116,12 @@ surname_distance_muestra <- function(surnames,
   as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
 }
+
+#=======
+#TODO: REVISAR. Es la misma nota que hay arriba respecto al método de conversión de matriz de similitud a matriz de distnacia.
+# Deberíamos revisarlo
+#=======
+
 surname_matrix_muestra <- surname_distance_muestra(surnames)
 hc <-hclust(surname_matrix_muestra,method = "average")
 hd <- as.dendrogram(hc)

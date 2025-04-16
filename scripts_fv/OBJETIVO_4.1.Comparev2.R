@@ -103,6 +103,16 @@ micalibracion <- makeChronosCalib(consensus_tree2)
 mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
                       calibration = micalibracion, 
                       control = chronos.control(nb.rate.cat = 1))
+<<<<<<< HEAD
+=======
+plot.phylo(mytimetree)
+
+#=======
+#TODO: REVISAR. Muchas "warnings" aquí.
+# Parece ser un problema con el cálculo de los largos de las ramas.
+#=======
+
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 consensus_tree<-(mytimetree)
 consensus_tree<-multi2di(consensus_tree)
 plot.phylo(consensus_tree)
@@ -149,6 +159,12 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
 
 result <-traits(comuneros) 
 consensus_tree <- as.dendrogram(consensus_tree2)
+
+#=======
+#TODO: REVISAR.
+#Error in ape::as.hclust.phylo(object) : the tree is not ultrametric
+#=======
+
 plot(consensus_tree)
 comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
 >>>>>>> Stashed changes
@@ -281,9 +297,25 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
 <<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
+<<<<<<< HEAD
 =======
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 >>>>>>> Stashed changes
 =======
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 >>>>>>> Stashed changes
+=======
+#=======
+#TODO: REVISAR.
+#Error in dendroplot(consensus_tree, save_as, group_by_col) : 
+#consensus_tree debe ser un objeto de tipo dendrogram
+# Error in dendroplot(consensus_tree, save_as, group_by_col) : 
+#   consensus_tree debe ser un objeto de tipo dendrogram
+# 3.
+# stop("consensus_tree debe ser un objeto de tipo dendrogram")
+# 2.
+# dendroplot(consensus_tree, save_as, group_by_col)
+# 1.
+# consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+#=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
