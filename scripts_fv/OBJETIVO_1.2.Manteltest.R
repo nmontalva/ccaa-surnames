@@ -20,7 +20,7 @@ coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)
 #TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
 # Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
 # Vamos a tener que resolverlo, o seguirá pasando.
-# 
+# RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
 #=======
 ## REVISION: Encontré el error! Era un problema de marca de orden de bytes (BOM) en sistemas Windows. Lo agregué a la lectura del archivo csv, no debería seguir ocurriendo.
 
@@ -49,7 +49,8 @@ common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 # common_rows <- row.names(surname_matrix)
 # Obviamente esto es "trampa". Hay que volver a revisar todo después.
 
-## REVISIÓN: Agregué la creación de Geo_total. Este error se dió porque creé primero la versión 3.2 de Manteltest y no me dí cuenta que no estaba ese archivo creado en este script.
+# RESOLUCIÓN: HAY QUE CREAR EL OBJETO EN EL SCRIPT QUE SE CORRE PRIMERO
+
 common_rows
 
 # Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n

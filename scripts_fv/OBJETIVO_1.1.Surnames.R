@@ -40,6 +40,10 @@ surname_distance_matrix <- function(comuneros,
 #TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
 # Deberíamos revisarlo
 
+# RESOLUCION: NO CAMBIARLO AHORA, SI NO HASTA ARREGLAR TODOS LOS OTROS SCRIPTS
+#=======
+
+
 ## REVISIÓN: Me di cuenta que (1-hedkin)  no parece tener sentido, al menos teórico. ¿Qué se intenta hacer con este paso? ¿Para qué se está invirtiendo la escala?
 # Alternativas: 
 # (1)Usar simplemente as.dist(hedkin). ¿Por qué no se optó por esto?

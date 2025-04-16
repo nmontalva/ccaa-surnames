@@ -79,6 +79,8 @@ union_df <- union_df %>%
 # 1. ├─union_df %>% ...
 # 2. ├─dplyr::mutate(...)
 # 3. └─dplyr:::mutate.data.frame(...)
+
+## RESOLUCION: Para evitar esto, mejor generar los NA que corresponan antes.
 #=======
 ## REVISIÓN: Estos Warnings corresponden a los OL y otros valores no numéricos ni NA contenidos en la base de datos
 #Aquí se cuentan los NA> colSums(is.na(union_df))
