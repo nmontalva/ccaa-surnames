@@ -64,6 +64,9 @@ ggpairs(data1,
 )
 dev.off()
 
+#=======
+#TODO: REVISAR. Error: object 'data1' not found
+#=======
 
 # Grafico 2
 annotate_r_squared <- function(data1, mapping, ...) {
@@ -92,7 +95,9 @@ ggpairs(data1,
 )
 dev.off()
 
-
+#=======
+#TODO: REVISAR. Error: object 'data1' not found
+#=======
 
 ## Comunidades total
 #Grafico 1
@@ -147,6 +152,9 @@ ggpairs(data,
 
 dev.off()
 
+#=======
+#TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
+#=======
 
 # Gr?fico 2 Correlaciones
 annotate_r_squared <- function(data, mapping, ...) {
@@ -173,3 +181,7 @@ ggpairs(data,
         upper = list(continuous =wrap(annotate_r_squared))
         )
 dev.off()
+
+#=======
+#TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
+#=======

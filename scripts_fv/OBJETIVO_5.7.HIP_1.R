@@ -32,6 +32,12 @@ crear_grafico <- function(vc,v1, label,filename) {
 }
 # Llamar a la funci?n para cada comunidad muestreada
 crear_grafico(svc,sv1, "S", "Figures/S_ancestral_tree_muestra.png")
+
+#=======
+#TODO: REVISAR. error in evaluating the argument 'x' in selecting a method for function 'plot': object 'svc' not found
+# SUENA COMO A QUE SVC ES UN METODO QUE PROVIENE DE UN PAQUETE NO INSTALADO (?)
+#=======
+
 crear_grafico(gvc,gv1,"G", "Figures/G_ancestral_tree_muestra.png")
 crear_grafico(avc,av1, "A", "Figures/A_ancestral_tree_muestra.png")
 crear_grafico(rvc,rv1, "R", "Figures/R_ancestral_tree_muestra.png")

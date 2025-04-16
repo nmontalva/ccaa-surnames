@@ -99,6 +99,11 @@ ft2 <- ft2 %>% column_to_rownames(var = "community")
 ##Consensus##
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
+#=======
+#TODO: REVISAR. Me sale este errpr en la línea 100:
+# Error in compute.brlen(tree) : object "phy" is not of class "phylo"
+#=======
+
 ###Estimar estados ancestrales
 # S
 sv1 <- as.matrix(S_trait)[,1]
@@ -132,19 +137,58 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
 png("Figures/S_muestra.png")
 svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
+
+#=======
+#TODO: REVISAR. Me sale este errpr en la línea 139:
+# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
+# tree should be object of class "phylo".
+# 3. stop("tree should be object of class \"phylo\".")
+# 2. fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
+# 1. estimacion_estados_ancestrales(consensus_tree, sv1, "S")
+#=======
+
 dev.off()
 png("Figures/R_muestra.png")
 rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
+
+#=======
+#TODO: REVISAR. Me sale el mismo error que antes:
+# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
+# tree should be object of class "phylo".
+#=======
+
 dev.off()
 png("Figures/G_muestra.png")
 gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
+
+#=======
+#TODO: REVISAR. Me sale el mismo error que antes:
+# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
+# tree should be object of class "phylo".
+#=======
+
 dev.off()
 png("Figures/A_muestra.png")
 avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
+
+#=======
+#TODO: REVISAR. Me sale el mismo error que antes:
+# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
+# tree should be object of class "phylo".
+#=======
+
 dev.off()
 png("Figures/M_muestra.png")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
+
+#=======
+#TODO: REVISAR. Me sale el mismo error que antes:
+# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
+# tree should be object of class "phylo".
+#=======
 dev.off()
+
+# COMO LO QUE VIENE DEPENDE DE LO ANTERIOR, NO LO SEGUÍ PROBANDO##
 
 writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))

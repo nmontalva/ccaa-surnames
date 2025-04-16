@@ -2,6 +2,10 @@
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
 
+
+## ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5 ##
+
+
 #### OBJETIVO 2 ####
 ### To estimate the traits of surnames' diversity, concentration of commoners' rights and inheritance's agnatic bias for each community based on the distributions of surnames within communities ###
 
@@ -26,7 +30,7 @@ conflict_prefer("theme_dendro","ggdendro")
 # Mostrar y escribir la tabla final 
 result_dendro<-result
 row.names(result_dendro) <-result_dendro$community
-result_dendro <- result_dendro%>%select(-community)
+result_dendro <- result_dendro%>%dplyr::select(-community)
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Escribir la tabla de las comunidades muestreadas

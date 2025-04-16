@@ -16,6 +16,13 @@ library(wesanderson)
 
 ########### Se usa un data.frame basado en el script de kmeans
 df_tree_scaled_numeric <- as.data.frame(df_tree_scaled)  # Asegúrate de que sea un data frame de valores numéricos
+
+#=======
+#TODO: REVISAR. Error: object 'df_tree_scaled' not found.
+#Al parecer todo aquí depende de objetos que se crean en 5.3.
+# Como 5.3. no corre, estos objetos no existen.
+#=======
+
 kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
 Cluster <- as.factor(kmeans_result$cluster)
 colnames(kmeans_result$centers)

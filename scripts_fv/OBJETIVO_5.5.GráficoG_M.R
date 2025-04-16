@@ -19,6 +19,14 @@ library(ggplot2)
 ################################################################################
 # Cluster
 df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
+
+#=======
+#TODO: REVISAR. Error in compute.brlen(x, 1) : object "phy" is not of class "phylo"
+#In addition: Warning message:
+#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
+# AL PARECER ESTE ES UN PROBLEMA RECURRENTE EN VARIAS PARTES
+#=======
+
 df_tree <- na.omit(df_tree)
 df_tree <- as.data.frame(lapply(df_tree, as.numeric))
 df_tree_scaled <- scale(df_tree)
