@@ -54,4 +54,5 @@ STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.name
 #Warning message:
 #  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
 #                 Individuals with no scored loci have been removed
+# RESOLUCION: BZ023 tiene solo ceros.
 #=======

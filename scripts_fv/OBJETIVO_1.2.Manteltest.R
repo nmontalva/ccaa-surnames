@@ -20,7 +20,7 @@ coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)
 #TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
 # Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
 # Vamos a tener que resolverlo, o seguirá pasando.
-# 
+# RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
 #=======
 
 ##Test de Mantel##
@@ -43,6 +43,8 @@ common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 # Como esto me impide seguir revisando, voy a correr la siguiente linea, que dejaré comentada:
 # common_rows <- row.names(surname_matrix)
 # Obviamente esto es "trampa". Hay que volver a revisar todo después.
+
+# RESOLUCIÓN: HAY QUE CREAR EL OBJETO EN EL SCRIPT QUE SE CORRE PRIMERO
 #=======
 common_rows
 
