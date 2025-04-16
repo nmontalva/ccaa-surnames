@@ -95,36 +95,23 @@ dev.off()
 #Preparacion de árbol con largo de ramas (Todavía está por verse)
 consensus_tree2$edge.length <- phyDPS$edge.length
 consensus_tree2$root.edge <- 0
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
-consensus_tree2$edge.length <- largo.ramas
-micalibracion <- makeChronosCalib(consensus_tree2)
-mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
-                      calibration = micalibracion, 
-                      control = chronos.control(nb.rate.cat = 1))
-<<<<<<< HEAD
-=======
-plot.phylo(mytimetree)
+#largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
+#consensus_tree2$edge.length <- largo.ramas
+#micalibracion <- makeChronosCalib(consensus_tree2)
+#mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
+#                      calibration = micalibracion, 
+#                      control = chronos.control(nb.rate.cat = 1))
+#plot.phylo(mytimetree)
 
 #=======
 #TODO: REVISAR. Muchas "warnings" aquí.
 # Parece ser un problema con el cálculo de los largos de las ramas.
 #=======
 
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
-consensus_tree<-(mytimetree)
-consensus_tree<-multi2di(consensus_tree)
-plot.phylo(consensus_tree)
+#consensus_tree<-(mytimetree)
+#consensus_tree<-multi2di(consensus_tree)
+#plot.phylo(consensus_tree)
 
-###################### DENDROPLOT CONSENSO & TRAITS ############################
-## Generar dendroplot con el ?rbol de consenso y los traits anotados
-# Asegúrate de que la columna 'commune' esté en UTF-8
-comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
-comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
-=======
-=======
->>>>>>> Stashed changes
 consensus_tree2 <- compute.brlen(consensus_tree2, method = "Grafen")
 consensus_tree2 <- multi2di(consensus_tree2)
 plot.phylo(consensus_tree2)
@@ -133,6 +120,12 @@ is.ultrametric(consensus_tree2)
 is.binary(consensus_tree2)
 
 consensus_tree<-(consensus_tree2)
+
+###################### DENDROPLOT CONSENSO & TRAITS ############################
+## Generar dendroplot con el ?rbol de consenso y los traits anotados
+# Asegúrate de que la columna 'commune' esté en UTF-8
+comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
+comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
@@ -167,7 +160,6 @@ consensus_tree <- as.dendrogram(consensus_tree2)
 
 plot(consensus_tree)
 comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
->>>>>>> Stashed changes
 select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
 
 dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
@@ -297,15 +289,10 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
 <<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
-<<<<<<< HEAD
-=======
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
->>>>>>> Stashed changes
-=======
+
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
->>>>>>> Stashed changes
-=======
-#=======
+
 #TODO: REVISAR.
 #Error in dendroplot(consensus_tree, save_as, group_by_col) : 
 #consensus_tree debe ser un objeto de tipo dendrogram
@@ -317,5 +304,3 @@ consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_D
 # dendroplot(consensus_tree, save_as, group_by_col)
 # 1.
 # consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
-#=======
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22

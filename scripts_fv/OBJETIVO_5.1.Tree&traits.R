@@ -22,21 +22,13 @@ library(geiger)
 library(nlme)
 library(phytools)
 library(Publish)
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 #library(treeio) #No lo puedo instalar
-=======
-=======
->>>>>>> Stashed changes
 library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede instalar en modo binario ejecutable
 library(treeio)
->>>>>>> Stashed changes
-=======
 #library(treeio) #No lo puedo instalar. Al parecer requiere Bioconductor. BiocManager::install("treeio")
 library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede instalar en modo binario ejecutable
 library(treeio)
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 library(ggplot2)
 library(gridExtra)
 library(geomorph) #No lo puedo instalar
@@ -161,11 +153,9 @@ svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
 #=======
 
 dev.off()
-<<<<<<< HEAD
 #png("Figures/R_muestra.png")
 #rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
 #dev.off()
-=======
 png("Figures/R_muestra.png")
 rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
 
@@ -176,7 +166,6 @@ rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
 #=======
 
 dev.off()
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 png("Figures/G_muestra.png")
 gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
 

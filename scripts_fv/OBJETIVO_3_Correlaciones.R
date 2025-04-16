@@ -11,24 +11,16 @@
 library(Hmisc)
 
 ## Correlación entre matrices 
-<<<<<<< Updated upstream
+
 matrices <- list(RST = c(RST), ASD = c(ASD), GST = c(GST), Nei = c(Nei), cs = c(cs), DSW = c(DSW), Dmu2 = c(Dmu2), FST=c(FST),DPS=c(DPS))
-=======
-matrices <- list(RST = c(RST), RST2 = c(RST2), ASD = c(ASD), GST = c(GST), Nei = c(Nei), cs = c(cs), DSW = c(DSW), Dmu2 = c(Dmu2), FST=c(FST))
 
 #=======
 #TODO: REVISAR. El objeto RST no existe. 
 # También probé corriendo 3.1 y 3.2. antes de correr este, pero tampoco.
 # Así que no puedo probar este script.
 # 
-#=======
-<<<<<<< HEAD
 # REVISION: Este script es antiguo y se corre con una versión más antigua de STR que contenía todas las matrices de distancia que creamos. Ese script aún existe pero lo quité del repositorio para dejarlo más limpio. Quizás deberíamos dejar un espacio para almacenar ese tipo de scripts
 
->>>>>>> Stashed changes
-=======
-
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 combined_data <- do.call(cbind, matrices)
 rcorr_results <- rcorr(combined_data)
 

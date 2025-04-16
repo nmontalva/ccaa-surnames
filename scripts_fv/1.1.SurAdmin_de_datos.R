@@ -52,16 +52,6 @@ union_df <- union_df %>%
   mutate(across(c(D3S1358, TH01, D21S11, D18S51, Penta.E, D5S818, D13S317, D7S820, D16S539, 
                   CSF1PO, Penta.D, vWA, D8S1179, TPOX, FGA), ~ as.numeric(as.character(.))))
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-#======= 
-=======
-#=======
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 #TODO: REVISAR. Me salen 2 warnings al correr la línea 50:
 # > dplyr::last_dplyr_warnings()
 # [[1]]
@@ -90,7 +80,6 @@ union_df <- union_df %>%
 # 2. ├─dplyr::mutate(...)
 # 3. └─dplyr:::mutate.data.frame(...)
 #=======
-<<<<<<< HEAD
 ## REVISIÓN: Estos Warnings corresponden a los OL y otros valores no numéricos ni NA contenidos en la base de datos
 #Aquí se cuentan los NA> colSums(is.na(union_df))
 #Sample.Name     D3S1358        TH01      D21S11      D18S51     Penta.E 
@@ -118,14 +107,6 @@ union_df <- union_df %>%
 # TPOX               0
 # FGA                2
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-
-
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 # Fusionar ambas bases de datos
 mi.final <- merge(union_df, primera, all = TRUE)
 

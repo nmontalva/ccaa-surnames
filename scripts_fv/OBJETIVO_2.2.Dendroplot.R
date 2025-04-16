@@ -33,38 +33,17 @@ result_dendro <- result_dendro%>%dplyr::select(-community)
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Escribir la tabla de las comunidades muestreadas
-<<<<<<< HEAD
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-STR <- read.csv("Datos/STR.csv", sep = ",")
 
-#=======
-#TODO: REVISAR. Si uno lo corre desde el repo, entonces debería ser:
-#STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
-#=======
-
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro2 <- result_dendro %>% dplyr::filter(row.names(result_dendro) %in% selected_communities)
-=======
-=======
->>>>>>> Stashed changes
 
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro$community <- row.names(result_dendro)
 result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% selected_communities)
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-#=======
 #TODO: REVISAR. La linea 42 me da un error. Creo que el error se debe a que no existe la variable "community" en results_dendro (están como nombres de fila)
 # Intenté esto:
 # result_dendro$community <- row.names(result_dendro)
@@ -99,8 +78,6 @@ result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% s
 # 13. └─dplyr (local) `<fn>`(`<dpl:::__>`)
 # 14.   └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
 #=======
-
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 
 # Imprimir im?gen en png y en pdf

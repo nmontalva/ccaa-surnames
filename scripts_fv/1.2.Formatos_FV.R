@@ -49,24 +49,10 @@ STR_alelos_slash[1] <- NULL
 
 STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.names(STR_alelos_slash),loc.names = colnames(STR_alelos_slash),pop = pop,ploidy = 2,NA.char = "000")
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 #=======
 #TODO: REVISAR. La última línea me arroja un Warning:
 #Warning message:
 #  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
 #                 Individuals with no scored loci have been removed
-<<<<<<< HEAD
-#=======
-<<<<<<< Updated upstream
 ## REVISIÓN: Aquí se remueve el individuo BZ023 el cual no tiene 000/000 en todos los loci
->>>>>>> Stashed changes
-=======
 ## REVISIÓN: Aquí se remueve el individuo BZ023 el cual no tiene 000/000 en todos los loci
->>>>>>> Stashed changes
-=======
-#=======
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
