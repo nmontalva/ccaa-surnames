@@ -13,11 +13,14 @@ library(vegan)
 
 ### Cargar DATOS geogr?ficos ###
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
 coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
 coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
 
 =======
+=======
+>>>>>>> Stashed changes
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -29,6 +32,9 @@ coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)
 # 
 #=======
 ## REVISION: Encontré el error! Era un problema de marca de orden de bytes (BOM) en sistemas Windows. Lo agregué a la lectura del archivo csv, no debería seguir ocurriendo.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ##Test de Mantel##
 #1. Todas las comunidades # #Revisar la matriz de distancia de apellidos
@@ -58,6 +64,9 @@ common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 # Obviamente esto es "trampa". Hay que volver a revisar todo después.
 #=======
 ## REVISIÓN: Agregué la creación de Geo_total. Este error se dió porque creé primero la versión 3.2 de Manteltest y no me dí cuenta que no estaba ese archivo creado en este script.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 common_rows
 

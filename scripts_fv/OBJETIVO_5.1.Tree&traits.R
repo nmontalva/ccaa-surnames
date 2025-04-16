@@ -23,8 +23,11 @@ library(nlme)
 library(phytools)
 library(Publish)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #library(treeio) #No lo puedo instalar
 =======
+=======
+>>>>>>> Stashed changes
 library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede instalar en modo binario ejecutable
 library(treeio)
 >>>>>>> Stashed changes

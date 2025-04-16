@@ -57,5 +57,9 @@ STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.name
 #  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
 #                 Individuals with no scored loci have been removed
 #=======
+<<<<<<< Updated upstream
+## REVISIÓN: Aquí se remueve el individuo BZ023 el cual no tiene 000/000 en todos los loci
+>>>>>>> Stashed changes
+=======
 ## REVISIÓN: Aquí se remueve el individuo BZ023 el cual no tiene 000/000 en todos los loci
 >>>>>>> Stashed changes

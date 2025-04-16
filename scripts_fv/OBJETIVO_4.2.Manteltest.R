@@ -70,6 +70,9 @@ con4 <-as.matrix(cophenetic.phylo(consensus_tree4)) #PhyDSW primero, c/PUCLARO
 #error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree4' not found
 #=======
 #REVISIÓN: Consensus 3 y 4 ya no existen en el objetivo 4.1 que los creaba porque eliminamos la idea de hacerlos con puclaro agrupado.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 mantel_function <- function(t1,t2) {
   #Conversir en matrix
@@ -125,15 +128,21 @@ mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
 mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
 mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
 mantel_con3_str <- mantel_function(con3, as.matrix(DSW2))
 mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
 =======
+=======
+>>>>>>> Stashed changes
 #=======
 #TODO: REVISAR. Líneas 130 y 131 no van a correr por qué no se formaron los objetos.
 #=======
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

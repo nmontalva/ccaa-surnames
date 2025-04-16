@@ -53,7 +53,10 @@ union_df <- union_df %>%
                   CSF1PO, Penta.D, vWA, D8S1179, TPOX, FGA), ~ as.numeric(as.character(.))))
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 #======= 
 #TODO: REVISAR. Me salen 2 warnings al correr la línea 50:
 # > dplyr::last_dplyr_warnings()
@@ -110,6 +113,9 @@ union_df <- union_df %>%
 # TPOX               0
 # FGA                2
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 # Fusionar ambas bases de datos
 mi.final <- merge(union_df, primera, all = TRUE)

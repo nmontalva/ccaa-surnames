@@ -14,10 +14,13 @@ library(phangorn)
 
 ### Cargar DATOS geogr?ficos ###
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
 coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
 coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
 =======
+=======
+>>>>>>> Stashed changes
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -28,6 +31,9 @@ coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)
 # Vamos a tener que resolverlo, o seguirá pasando.
 #=======
 ## REVISION: Agregué la misma solución que en 1.2
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ##Administraci?n de datos ##
@@ -46,6 +52,9 @@ my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% selected_commu
 =======
 my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 geo_muestra <- distm (my_points_t, fun = distGeo )
 rownames(geo_muestra) <- as.factor(rownames(my_points_t))
@@ -55,7 +64,11 @@ geo_muestra
 
 # como arbol
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Geo_tree <- upgma(as.dist(geo_muestra),method="average")
+=======
+Geo_tree <- phangorn::upgma(as.dist(geo_muestra),method="average")
+>>>>>>> Stashed changes
 =======
 Geo_tree <- phangorn::upgma(as.dist(geo_muestra),method="average")
 >>>>>>> Stashed changes
@@ -64,7 +77,10 @@ plot.phylo(Geo_tree)
 ##Matriz de Geo_tree##Matriz de distancia con datos de apellidos
 surname_matrix_muestra
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 surname_matrix_muestra2
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 

@@ -8,7 +8,11 @@
 
 ################################## K MEANS #####################################
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### SE ELIMINA POR COMPLETO ESTE SCRIPT DEL PROYECTO FINAL
+=======
+## NOTA: Este script quedaría fuera de los finales
+>>>>>>> Stashed changes
 =======
 ## NOTA: Este script quedaría fuera de los finales
 >>>>>>> Stashed changes

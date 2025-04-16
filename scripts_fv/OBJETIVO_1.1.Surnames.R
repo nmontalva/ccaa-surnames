@@ -52,6 +52,9 @@ surname_distance_matrix <- function(comuneros,
 # (2)Usar sqrt(1 - hedkin). Pero en este caso hedrick debería ser una matriz de similitud, que no lo es.
 # (3)Si lo que se busca es normalizar hedkin_normalizado <- hedkin / max(hedkin) y luego distancia <- as.dist(hedkin_normalizado)
 # (4) Si se quiere si o si invertir la escala: distancia <- as.dist(sqrt(1 - (hedkin / max(hedkin))) 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 surname_matrix <- surname_distance_matrix(comuneros)
 

@@ -25,16 +25,22 @@ write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.nam
 # Escribir la tabla de las comunidades muestreadas
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro2 <- result_dendro %>% dplyr::filter(row.names(result_dendro) %in% selected_communities)
 =======
+=======
+>>>>>>> Stashed changes
 
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 result_dendro$community <- row.names(result_dendro)
 result_dendro2 <- result_dendro %>% dplyr::filter(result_dendro$community %in% selected_communities)
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE)
 

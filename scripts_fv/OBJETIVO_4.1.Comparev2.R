@@ -96,6 +96,7 @@ dev.off()
 consensus_tree2$edge.length <- phyDPS$edge.length
 consensus_tree2$root.edge <- 0
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
 consensus_tree2$edge.length <- largo.ramas
 micalibracion <- makeChronosCalib(consensus_tree2)
@@ -112,6 +113,8 @@ plot.phylo(consensus_tree)
 comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
 comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
 =======
+=======
+>>>>>>> Stashed changes
 consensus_tree2 <- compute.brlen(consensus_tree2, method = "Grafen")
 consensus_tree2 <- multi2di(consensus_tree2)
 plot.phylo(consensus_tree2)
@@ -275,8 +278,12 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
+=======
+consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+>>>>>>> Stashed changes
 =======
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 >>>>>>> Stashed changes
