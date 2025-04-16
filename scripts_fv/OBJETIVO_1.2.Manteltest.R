@@ -12,6 +12,18 @@ library(geosphere)
 library(vegan)
 
 ### Cargar DATOS geogr?ficos ###
+
+#coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
+#coordenadas$community <- gsub(" ", "_", coordenadas$community)
+#coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+
+#=======
+#TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
+# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
+# Vamos a tener que resolverlo, o seguirá pasando.
+# RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
+#=======
+
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -50,6 +62,8 @@ common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 # Obviamente esto es "trampa". Hay que volver a revisar todo después.
 
 # RESOLUCIÓN: HAY QUE CREAR EL OBJETO EN EL SCRIPT QUE SE CORRE PRIMERO
+
+## REVISIÓN: Agregué la creación de Geo_total. Este error se dió porque creé primero la versión 3.2 de Manteltest y no me dí cuenta que no estaba ese archivo creado en este script.
 
 common_rows
 

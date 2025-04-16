@@ -39,7 +39,6 @@ surname_distance_matrix <- function(comuneros,
 }
 #TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
 # Deberíamos revisarlo
-
 # RESOLUCION: NO CAMBIARLO AHORA, SI NO HASTA ARREGLAR TODOS LOS OTROS SCRIPTS
 #=======
 
