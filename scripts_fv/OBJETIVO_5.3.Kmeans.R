@@ -1,22 +1,34 @@
 ##########################################################################################################################################################
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
-
+### Reordenar este script. Lo necesito antes de los Dendroplot ###
 #### OBJETIVO 5 ####
 ### Part 3 ###
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 
 ################################## K MEANS #####################################
-
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+### SE ELIMINA POR COMPLETO ESTE SCRIPT DEL PROYECTO FINAL
+=======
+## NOTA: Este script quedaría fuera de los finales
+>>>>>>> Stashed changes
+=======
+## NOTA: Este script quedaría fuera de los finales
+>>>>>>> Stashed changes
 ################ LIBERIAS #################
-
-library(factoextra)
 library(cluster)
+library(dplyr)
+library(factoextra)
+library(fpc)
+library(ggplot2)
 library(NbClust)
 library(phytools)
-library(fpc)
+
+
 
 #### DATA MUESTREADA ####
+#Árbol
 df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
 
 #=======
@@ -63,6 +75,7 @@ dev.off()
 
 
 #### DATA TOTAL ####
+#Árbol
 df_tree_total <- as.data.frame(as.matrix(surname_matrix))
 df_tree_total <- as.data.frame(lapply(df_tree_total, as.numeric))
 df_tree_scaled_t <- scale(df_tree_total)

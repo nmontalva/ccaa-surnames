@@ -7,13 +7,14 @@
 #### OBJETIVO 4 ################################################################
 ### To compare trees builds with different data and their deviations from the consensus tree #################################################################
 
-##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3#################
+##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3 #################
 
 ###LIBRERIAS
 library(ape)
 library(dendextend)
 library(geiger)
 library(phytools)
+library(stringr)
 
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
@@ -87,14 +88,23 @@ png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", points
 plot.phylo(consensus_tree2)
 dev.off()
 
+#largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
+#consensus_tree2$edge.length <- largo.ramas
+# Número de nodos internos (Ntip - 1 para árboles binarios)
+
 #Preparacion de árbol con largo de ramas (Todavía está por verse)
+consensus_tree2$edge.length <- phyDPS$edge.length
 consensus_tree2$root.edge <- 0
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
 consensus_tree2$edge.length <- largo.ramas
 micalibracion <- makeChronosCalib(consensus_tree2)
 mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
                       calibration = micalibracion, 
                       control = chronos.control(nb.rate.cat = 1))
+<<<<<<< HEAD
+=======
 plot.phylo(mytimetree)
 
 #=======
@@ -102,7 +112,27 @@ plot.phylo(mytimetree)
 # Parece ser un problema con el cálculo de los largos de las ramas.
 #=======
 
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 consensus_tree<-(mytimetree)
+consensus_tree<-multi2di(consensus_tree)
+plot.phylo(consensus_tree)
+
+###################### DENDROPLOT CONSENSO & TRAITS ############################
+## Generar dendroplot con el ?rbol de consenso y los traits anotados
+# Asegúrate de que la columna 'commune' esté en UTF-8
+comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
+comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
+=======
+=======
+>>>>>>> Stashed changes
+consensus_tree2 <- compute.brlen(consensus_tree2, method = "Grafen")
+consensus_tree2 <- multi2di(consensus_tree2)
+plot.phylo(consensus_tree2)
+is.rooted(consensus_tree2)
+is.ultrametric(consensus_tree2)
+is.binary(consensus_tree2)
+
+consensus_tree<-(consensus_tree2)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
@@ -137,6 +167,7 @@ consensus_tree <- as.dendrogram(consensus_tree2)
 
 plot(consensus_tree)
 comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
+>>>>>>> Stashed changes
 select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
 
 dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
@@ -152,7 +183,8 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   hcd <- dendro_data(consensus_tree, type = "rectangle")
   # Obtener las etiquetas como caracteres
   hcd$labels$label <- as.character(hcd$labels$label)
-  
+  stringi::stri_enc_mark(hcd$labels$label[which(hcd$labels$label == "VICUÑA")])
+  hcd$labels$label <- gsub("VICUÑA", "VICUNA", hcd$labels$label)
   # Definir el container
   container <- if (group_by_col == "community") "commune"
   else if (group_by_col == "commune") "province"
@@ -164,7 +196,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   }
   
   # Calcular traits
-  tc <- traits(select_comuneros, c(group_by_col, container))
+  tc <- result
   
   # Funci?n auxiliar para obtener vectores
   vector_of <- function(target_col) {
@@ -182,10 +214,10 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   location <- if (!is.null(container)) vector_of(container) else NULL
   N <- vector_of("N")
   S <- vector_of("S")
-  R <- vector_of("R")
-  G <- vector_of("G")
   A <- vector_of("A")
+  G <- vector_of("G")
   M <- vector_of("M")
+#  cluster <- vector_of("cluster")
   
   # Coordenadas ?tiles
   lastrow <- nrow(hcd$labels)
@@ -207,7 +239,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     xs * 1.3 / max(xs) + (1.7 + lastrow / 170)
   }
   #Ajustar tama?o de las ramas
-  scale_factor <- 0.2  # Ajusta este valor para cambiar el tama?o de las ramas
+  scale_factor <- 0.5  # Ajusta este valor para cambiar el tama?o de las ramas
   hcd$segments$y <- hcd$segments$y * scale_factor
   hcd$segments$yend <- hcd$segments$yend * scale_factor
   
@@ -218,10 +250,10 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
     annotate("text", x = x1, y = y0 - 0.215, label = str_to_title(group_by_col), fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 1.84 + ydiff, label = "#", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.06 + ydiff, label = "S", fontface = "bold", size = 4) +
-    annotate("text", x = x1, y = y0 - 2.26 + ydiff, label = "R", fontface = "bold", size = 4) +
+    annotate("text", x = x1, y = y0 - 2.26 + ydiff, label = "A", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.46 + ydiff, label = "G", fontface = "bold", size = 4) +
-    annotate("text", x = x1, y = y0 - 2.66 + ydiff, label = "A", fontface = "bold", size = 4) +
-    annotate("text", x = x1, y = y0 - 2.86 + ydiff, label = "M", fontface = "bold", size = 4) +
+    annotate("text", x = x1, y = y0 - 2.66 + ydiff, label = "M", fontface = "bold", size = 4) +
+ #   annotate("text", x = x1, y = y0 - 2.90 + ydiff, label = "Cluster", fontface = "bold", size = 4) +
     scale_size_identity() +
     coord_flip() +
     scale_y_reverse(expand = c(0.2, 0)) +
@@ -238,10 +270,10 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   p <- p +
     geom_text(data = label(hcd), aes(x = x, y = y, label = N[label]), nudge_y = 1.8 - ydiff, hjust = 0, size = 3) +
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(S[label], format = "f", digits = 3)), nudge_y = 2.0 - ydiff, hjust = 0, size = 3) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(R[label], format = "f", digits = 3)), nudge_y = 2.2 - ydiff, hjust = 0, size = 3) +
+    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(A[label], format = "f", digits = 3)), nudge_y = 2.2 - ydiff, hjust = 0, size = 3) +
     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(G[label], format = "f", digits = 3)), nudge_y = 2.4 - ydiff, hjust = 0, size = 3) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(A[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.8 - ydiff, hjust = 0, size = 3)
+    geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3)
+  #  geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(cluster[label], format = "f", digits = 0)), nudge_y = 2.85 - ydiff, hjust = 0, size = 3)
   
   # Guardar el gr?fico
   if (!is.null(save_as)) {
@@ -257,15 +289,22 @@ library(conflicted)
 conflict_prefer("theme_dendro","ggdendro")
 conflict_prefer("label", "ggdendro")
 
-consensus_dendrogram <- function(select_comuneros, save_as=NULL,
-                               hclust_method="complete",
-                               group_by_col="community") {
-  hc_total <- surname_clustering(select_comuneros, hclust_method, group_by_col)
-  dendroplot(consensus_tree, save_as, group_by_col)
+consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="community") {
+  dendroplot(raise.dendrogram(as.dendrogram(consensus_tree), max(consensus_tree$edge.length)), save_as, group_by_col)
 }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
+<<<<<<< HEAD
+=======
+consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+>>>>>>> Stashed changes
+=======
+consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+>>>>>>> Stashed changes
+=======
 #=======
 #TODO: REVISAR.
 #Error in dendroplot(consensus_tree, save_as, group_by_col) : 
@@ -279,3 +318,4 @@ consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_D
 # 1.
 # consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 #=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22

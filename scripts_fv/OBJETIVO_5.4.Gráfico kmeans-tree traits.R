@@ -1,6 +1,7 @@
 ##########################################################################################################################################################
 #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
 ##########################################################################################################################################################
+## SE ELIMINA POR COMPLETO ESTE SCRIPT DEL PROYECTO FINAL ##
 
 #### OBJETIVO 5 ####
 ### Part 4 ###

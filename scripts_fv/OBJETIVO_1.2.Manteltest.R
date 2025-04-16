@@ -12,6 +12,8 @@ library(geosphere)
 library(vegan)
 
 ### Cargar DATOS geogr?ficos ###
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -23,6 +25,24 @@ coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)
 # RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
 #=======
 
+=======
+=======
+>>>>>>> Stashed changes
+coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+
+#=======
+#TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
+# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
+# Vamos a tener que resolverlo, o seguirá pasando.
+# 
+#=======
+## REVISION: Encontré el error! Era un problema de marca de orden de bytes (BOM) en sistemas Windows. Lo agregué a la lectura del archivo csv, no debería seguir ocurriendo.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ##Test de Mantel##
 #1. Todas las comunidades # #Revisar la matriz de distancia de apellidos
 rownames(coordenadas) <- coordenadas$community
@@ -30,13 +50,22 @@ colnames(coordenadas)<- c("community","lon","lat","org_name")
 my_points_t <- dplyr::select(coordenadas, lon, lat)
 rownames(my_points_t) <- coordenadas$community
 common_communities <- unique(comuneros$community)
-
+geo_total <- distm (my_points_t, fun = distGeo )
+rownames(geo_total) <- as.factor(rownames(my_points_t))
+colnames(geo_total) <- as.factor(rownames(my_points_t))
+geo_total <- as.matrix(geo_total)
+geo_total
 #Matriz de distancia con datos de apellidos (si se corrio el script "OBJETIVO_1_Surnames.R" es la matriz surname_matrix)
 surname_matrix <- as.matrix(surname_matrix)
 
 #Intersecci?n entre ambas matrices
 # Encontrar los row.names en com?n
 common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 #=======
 #TODO: REVISAR. No existe el objeto 'geo_total'.
 # Error: object 'geo_total' not found
@@ -46,6 +75,14 @@ common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
 
 # RESOLUCIÓN: HAY QUE CREAR EL OBJETO EN EL SCRIPT QUE SE CORRE PRIMERO
 #=======
+<<<<<<< HEAD
+## REVISIÓN: Agregué la creación de Geo_total. Este error se dió porque creé primero la versión 3.2 de Manteltest y no me dí cuenta que no estaba ese archivo creado en este script.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
 common_rows
 
 # Filtrar las matrices para que solo contengan las filas y columnas con row.names en com?n

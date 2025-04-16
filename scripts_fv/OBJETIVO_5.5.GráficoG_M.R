@@ -175,8 +175,8 @@ calc_means<-function(nodos,df) {
   G_values <- df$G_value[df$Node %in% nodos]
   M_values <- df$M_value[df$Node %in% nodos]
   #Calcular promedio- NA == 0
-  G_mean<-mean(G_values)
-  M_mean<-mean(M_values)
+  G_mean<-median(G_values)
+  M_mean<-median(M_values)
   G_mean<-ifelse(is.na(G_values),0,G_values)
   M_mean<-ifelse(is.na(M_values),0,M_values)
   return(data.frame(G_mean=G_mean,M_mean=M_mean))
@@ -192,7 +192,7 @@ level_means_df<- do.call(rbind,levels_means)
 print(level_means_df)
 averages <- level_means_df %>%
   group_by(Level) %>%
-  summarise(across(everything(),mean))
+  summarise(across(everything(),median))
 averages
 
 hist_data<-ggplot_build(ggplot(averages, aes(x = Level)) + 
@@ -217,144 +217,145 @@ ggplot(averages, aes(x = Level)) +
   ) +
   theme_classic() 
 
+
 ########################## Líneas por cluster ##################################
 # Filtrar el nodo 16 (raiz)
-node_16_G <- result_df_G[result_df_G$Node == 16, ]
-node_16_M <- result_df_M[result_df_M$Node == 16, ]
+#node_16_G <- result_df_G[result_df_G$Node == 16, ]
+#node_16_M <- result_df_M[result_df_M$Node == 16, ]
 # Crear tres copias cambiando el valor del Cluster
-node_16_cluster_1G <- node_16_G
-node_16_cluster_1G$Cluster <- 1
+#node_16_cluster_1G <- node_16_G
+#node_16_cluster_1G$Cluster <- 1
 
-node_16_cluster_2G <- node_16_G
-node_16_cluster_2G$Cluster <- 2
+#node_16_cluster_2G <- node_16_G
+#node_16_cluster_2G$Cluster <- 2
 
-node_16_cluster_3G <- node_16_G
-node_16_cluster_3G$Cluster <- 3
+#node_16_cluster_3G <- node_16_G
+#node_16_cluster_3G$Cluster <- 3
 
-node_16_cluster_1M <- node_16_M
-node_16_cluster_1M$Cluster <- 1
+#node_16_cluster_1M <- node_16_M
+#node_16_cluster_1M$Cluster <- 1
 
-node_16_cluster_2M <- node_16_M
-node_16_cluster_2M$Cluster <- 2
+#node_16_cluster_2M <- node_16_M
+#node_16_cluster_2M$Cluster <- 2
 
-node_16_cluster_3M <- node_16_M
-node_16_cluster_3M$Cluster <- 3
+#node_16_cluster_3M <- node_16_M
+#node_16_cluster_3M$Cluster <- 3
 
 # Unir las filas modificadas al dataframe original
-result_df_G <- rbind(result_df_G, node_16_cluster_1G, node_16_cluster_2G, node_16_cluster_3G)
-result_df_G
-result_df_M <- rbind(result_df_M, node_16_cluster_1M,node_16_cluster_2M, node_16_cluster_3M)
-result_df_M
+#result_df_G <- rbind(result_df_G, node_16_cluster_1G, node_16_cluster_2G, node_16_cluster_3G)
+#result_df_G
+#result_df_M <- rbind(result_df_M, node_16_cluster_1M,node_16_cluster_2M, node_16_cluster_3M)
+#result_df_M
 #Eliminar duplicados
-result_df_G <- result_df_G %>% distinct()
-result_df_M <- result_df_M %>% distinct()
+#result_df_G <- result_df_G %>% distinct()
+#result_df_M <- result_df_M %>% distinct()
 
 #Dataframe de ambos
-result_df_GM <- merge(result_df_G, 
-                      result_df_M, 
-                      all.x = TRUE, 
-                      by = c("Node", "Cluster"))
+#result_df_GM <- merge(result_df_G, 
+#                      result_df_M, 
+#                      all.x = TRUE, 
+#                      by = c("Node", "Cluster"))
 
-result_df_GM
-max_path_length<-max(sapply(paths,length))
-max_path_length
-extended_paths <- lapply(paths, function(path){
-  if (length(path)<max_path_length){
-    c(path,rep(tail(path,1),max_path_length - length(path)))
-  }else{
-    path
-  }
-})
-extended_paths
+#result_df_GM
+#max_path_length<-max(sapply(paths,length))
+#max_path_length
+#extended_paths <- lapply(paths, function(path){
+#  if (length(path)<max_path_length){
+#    c(path,rep(tail(path,1),max_path_length - length(path)))
+#  }else{
+#    path
+#  }
+#})
+#extended_paths
 
-calc_means <- function(nodos, df) {
+#calc_means <- function(nodos, df) {
   # Filtrar los datos para los nodos en el nivel actual
-  df_filtered <- df %>% filter(Node %in% nodos)
+#  df_filtered <- df %>% filter(Node %in% nodos)
   
   # Calcular promedios por cluster
-  G_means <- df_filtered %>%
-    group_by(Cluster) %>%
-    summarise(G_mean = mean(G_value, na.rm = TRUE), .groups = 'drop')
+#  G_means <- df_filtered %>%
+#    group_by(Cluster) %>%
+#    summarise(G_mean = median(G_value, na.rm = TRUE), .groups = 'drop')
   
-  M_means <- df_filtered %>%
-    group_by(Cluster) %>%
-    summarise(M_mean = mean(M_value, na.rm = TRUE), .groups = 'drop')
+#  M_means <- df_filtered %>%
+#    group_by(Cluster) %>%
+#    summarise(M_mean = median(M_value, na.rm = TRUE), .groups = 'drop')
   
   # Combinar promedios de G y M para cada cluster
-  cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
+#  cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
   
   # Llenar NAs con 0
-  cluster_means[is.na(cluster_means)] <- 0
+#  cluster_means[is.na(cluster_means)] <- 0
   
-  return(cluster_means)
-}
+#  return(cluster_means)
+#}
 
-levels_means <- list()
-for (level in 1:max_path_length) {
+#levels_means <- list()
+#for (level in 1:max_path_length) {
   # Obtener nodos en el nivel actual
-  nodos_at_level <- sapply(extended_paths, function(path) path[level])
+#  nodos_at_level <- sapply(extended_paths, function(path) path[level])
   
   # Calcular los promedios para cada cluster en este nivel
-  mean_data <- calc_means(nodos_at_level, result_df_GM)
+#  mean_data <- calc_means(nodos_at_level, result_df_GM)
   
   # Agregar la columna de nivel
-  mean_data$Level <- level
+#  mean_data$Level <- level
   
   # Almacenar resultados en la lista
-  levels_means[[level]] <- mean_data
-}
+#  levels_means[[level]] <- mean_data
+#}
 
 # Convertir lista en dataframe
-level_means_df <- do.call(rbind, levels_means)
-print(level_means_df)
+#level_means_df <- do.call(rbind, levels_means)
+#print(level_means_df)
 
 # Calcular promedio general por nivel
-averages <- level_means_df %>%
-  group_by(Level, Cluster) %>%
-  summarise(across(starts_with("G_mean"), mean, na.rm = TRUE),
-            across(starts_with("M_mean"), mean, na.rm = TRUE),
-            .groups = 'drop')
-averages
+#averages_cluster <- level_means_df %>%
+#  group_by(Level, Cluster) %>%
+#  summarise(across(starts_with("G_mean"), median, na.rm = TRUE),
+#            across(starts_with("M_mean"), median, na.rm = TRUE),
+#            .groups = 'drop')
+#averages_cluster
 
 # Crear el gráfico con ggplot2
-ggplot(averages) +
+#ggplot(averages_cluster) +
   # Línea continua para G_mean
-  geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
-            size = 1) +
+#  geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
+#            size = 1) +
   # Línea punteada para M_mean
-  geom_line(aes(x = Level, y = M_mean, color = factor(Cluster), linetype = "M_mean", group = Cluster), 
-            size = 1) +
+#  geom_line(aes(x = Level, y = M_mean, color = factor(Cluster), linetype = "M_mean", group = Cluster), 
+#            size = 1) +
   # Configuración de colores
-  scale_color_manual(values = c("blue", "red", "green")) +
+#  scale_color_manual(values = c("blue", "red", "green")) +
   # Configuración de tipos de línea
-  scale_linetype_manual(values = c("G_mean" = "solid", "M_mean" = "dotted")) +
-  labs(
-    title = "The G and M traits of the tree of sampled communities",
-    x = "Number of clades",
-    y = "G mean",
-    color = "Cluster",
-    linetype = "Trait"
-  ) +
+#  scale_linetype_manual(values = c("G_mean" = "solid", "M_mean" = "dotted")) +
+#  labs(
+#    title = "The G and M traits of the tree of sampled communities",
+#    x = "Number of clades",
+#    y = "G mean",
+#    color = "Cluster",
+#    linetype = "Trait"
+#  ) +
   # Agregar eje secundario para M
-  scale_y_continuous(
-    sec.axis = sec_axis(~ ., name = "M mean")
-  ) +
-  theme_classic()
+#  scale_y_continuous(
+#    sec.axis = sec_axis(~ ., name = "M mean")
+#  ) +
+#  theme_classic()
  
 ################################################################################
 ########################## Todas las comunidades ###############################
 ################################################################################
 # Cluster
-df_tree_total <- as.data.frame(as.matrix(surname_matrix))
-df_tree_total <- as.data.frame(lapply(df_tree_total, as.numeric))
-df_tree_scaled_t <- scale(df_tree_total)
-km <- kmeans(df_tree_scaled_t, centers = 2, iter.max = 100, nstart = 100)
-Cluster <- as.factor(c(km$cluster))
-names(Cluster) <- colnames(km$centers)
+#df_tree_total <- as.data.frame(as.matrix(surname_matrix))
+#df_tree_total <- as.data.frame(lapply(df_tree_total, as.numeric))
+#df_tree_scaled_t <- scale(df_tree_total)
+#km <- kmeans(df_tree_scaled_t, centers = 2, iter.max = 100, nstart = 100)
+#Cluster <- as.factor(c(km$cluster))
+#names(Cluster) <- colnames(km$centers)
 
 # Crear una tabla de clusters
-clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
-clusters_table
+#clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
+#clusters_table
 
 # Tree
 terminal_nodes <-gvt$obj$tree$tip.label
@@ -515,8 +516,8 @@ calc_means<-function(nodos,df) {
   G_values <- df$G_value[df$Node %in% nodos]
   M_values <- df$M_value[df$Node %in% nodos]
   #Calcular promedio- NA == 0
-  G_mean<-mean(G_values)
-  M_mean<-mean(M_values)
+  G_mean<-median(G_values)
+  M_mean<-median(M_values)
   G_mean<-ifelse(is.na(G_values),0,G_values)
   M_mean<-ifelse(is.na(M_values),0,M_values)
   return(data.frame(G_mean=G_mean,M_mean=M_mean))
@@ -531,13 +532,14 @@ for(level in 1:max_path_length){
 }
 level_means_df<- do.call(rbind,levels_means)
 print(level_means_df)
-averages <- level_means_df %>%
+
+averages_total <- level_means_df %>%
   group_by(Level) %>%
-  summarise(across(everything(),mean))
-averages
+  summarise(across(everything(),median))
+averages_total
 
 # Crear el gráfico
-ggplot(averages, aes(x = Level)) + 
+ggplot(averages_total, aes(x = Level)) + 
   geom_point(aes(y=G_mean), color="blue") + # Puntos para G
   geom_line(aes(y=G_mean), color="blue",linetype="dashed")+ #Línea para G
   geom_point(aes(y=M_mean), color="red") + # Puntos para M
@@ -546,8 +548,8 @@ ggplot(averages, aes(x = Level)) +
     name = "G",
     sec.axis = sec_axis(~.*2,name = "M")
   ) +
-  annotate("text",x=mean(averages$Level),y=mean(averages$G_mean),label="G trait",hjust=0.7,vjust=-0.6,size=4,color="blue")+
-  annotate("text",x=mean(averages$Level),y=mean(averages$M_mean),label="M trait",hjust=0.25,vjust=-0.6,size=4,color="red")+
+  annotate("text",x=mean(averages_total$Level),y=mean(averages_total$G_mean),label="G trait",hjust=0.7,vjust=-0.6,size=4,color="blue")+
+  annotate("text",x=mean(averages_total$Level),y=mean(averages_total$M_mean),label="M trait",hjust=0.25,vjust=-0.6,size=4,color="red")+
   labs(
     x="Number of clades",
     title = "The G and M traits for the tree of total communities",
@@ -556,120 +558,120 @@ ggplot(averages, aes(x = Level)) +
 
 ########################## Líneas por cluster ##################################
 # Filtrar el nodo 16 (raiz)
-node_171_G <- result_df_G[result_df_G$Node == 171, ]
-node_171_M <- result_df_M[result_df_M$Node == 171, ]
+#node_171_G <- result_df_G[result_df_G$Node == 171, ]
+#node_171_M <- result_df_M[result_df_M$Node == 171, ]
 # Crear tres copias cambiando el valor del Cluster
-node_171_cluster_1G <- node_171_G
-node_171_cluster_1G$Cluster <- 1
+#node_171_cluster_1G <- node_171_G
+#node_171_cluster_1G$Cluster <- 1
 
-node_171_cluster_2G <- node_171_G
-node_171_cluster_2G$Cluster <- 2
+#node_171_cluster_2G <- node_171_G
+#node_171_cluster_2G$Cluster <- 2
 
 
-node_171_cluster_1M <- node_171_M
-node_171_cluster_1M$Cluster <- 1
+#node_171_cluster_1M <- node_171_M
+#node_171_cluster_1M$Cluster <- 1
 
-node_171_cluster_2M <- node_171_M
-node_171_cluster_2M$Cluster <- 2
+#node_171_cluster_2M <- node_171_M
+#node_171_cluster_2M$Cluster <- 2
 
 
 # Unir las filas modificadas al dataframe original
-result_df_G <- rbind(result_df_G, node_171_cluster_1G, node_171_cluster_2G)
-tail(result_df_G)
-result_df_M <- rbind(result_df_M, node_171_cluster_1M,node_171_cluster_2M)
-tail(result_df_M)
-#Eliminar duplicados
-result_df_G <- result_df_G %>% distinct()
-result_df_M <- result_df_M %>% distinct()
+#result_df_G <- rbind(result_df_G, node_171_cluster_1G, node_171_cluster_2G)
+#tail(result_df_G)
+#result_df_M <- rbind(result_df_M, node_171_cluster_1M,node_171_cluster_2M)
+#tail(result_df_M)
+##Eliminar duplicados
+#result_df_G <- result_df_G %>% distinct()
+#result_df_M <- result_df_M %>% distinct()
 
 #Dataframe de ambos
-result_df_GM <- merge(result_df_G, 
-                      result_df_M, 
-                      all.x = TRUE, 
-                      by = c("Node", "Cluster"))
+#result_df_GM <- merge(result_df_G, 
+#                      result_df_M, 
+#                      all.x = TRUE, 
+#                      by = c("Node", "Cluster"))
 
-result_df_GM
-max_path_length<-max(sapply(paths,length))
-max_path_length
-extended_paths <- lapply(paths, function(path){
-  if (length(path)<max_path_length){
-    c(path,rep(tail(path,1),max_path_length - length(path)))
-  }else{
-    path
-  }
-})
-extended_paths
+#result_df_GM
+#max_path_length<-max(sapply(paths,length))
+#max_path_length
+#extended_paths <- lapply(paths, function(path){
+#  if (length(path)<max_path_length){
+#    c(path,rep(tail(path,1),max_path_length - length(path)))
+#  }else{
+#    path
+#  }
+#})
+#extended_paths
 
-calc_means <- function(nodos, df) {
+#calc_means <- function(nodos, df) {
   # Filtrar los datos para los nodos en el nivel actual
-  df_filtered <- df %>% filter(Node %in% nodos)
+ # df_filtered <- df %>% filter(Node %in% nodos)
   
   # Calcular promedios por cluster
-  G_means <- df_filtered %>%
-    group_by(Cluster) %>%
-    summarise(G_mean = mean(G_value, na.rm = TRUE), .groups = 'drop')
+  #G_means <- df_filtered %>%
+   # group_by(Cluster) %>%
+    #summarise(G_mean = median(G_value, na.rm = TRUE), .groups = 'drop')
   
-  M_means <- df_filtered %>%
-    group_by(Cluster) %>%
-    summarise(M_mean = mean(M_value, na.rm = TRUE), .groups = 'drop')
+  #M_means <- df_filtered %>%
+  #  group_by(Cluster) %>%
+  #  summarise(M_mean = median(M_value, na.rm = TRUE), .groups = 'drop')
   
   # Combinar promedios de G y M para cada cluster
-  cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
+#  cluster_means <- merge(G_means, M_means, by = "Cluster", all = TRUE)
   
   # Llenar NAs con 0
-  cluster_means[is.na(cluster_means)] <- 0
+#  cluster_means[is.na(cluster_means)] <- 0
   
-  return(cluster_means)
-}
+#  return(cluster_means)
+#}
 
-levels_means <- list()
-for (level in 1:max_path_length) {
+#levels_means <- list()
+#for (level in 1:max_path_length) {
   # Obtener nodos en el nivel actual
-  nodos_at_level <- sapply(extended_paths, function(path) path[level])
+ # nodos_at_level <- sapply(extended_paths, function(path) path[level])
   
   # Calcular los promedios para cada cluster en este nivel
-  mean_data <- calc_means(nodos_at_level, result_df_GM)
+  #mean_data <- calc_means(nodos_at_level, result_df_GM)
   
   # Agregar la columna de nivel
-  mean_data$Level <- level
+  #mean_data$Level <- level
   
   # Almacenar resultados en la lista
-  levels_means[[level]] <- mean_data
-}
+  #levels_means[[level]] <- mean_data
+#}
 
 # Convertir lista en dataframe
-level_means_df <- do.call(rbind, levels_means)
-print(level_means_df)
+#level_means_df <- do.call(rbind, levels_means)
+#print(level_means_df)
 
 # Calcular promedio general por nivel
-averages <- level_means_df %>%
-  group_by(Level, Cluster) %>%
-  summarise(across(starts_with("G_mean"), mean, na.rm = TRUE),
-            across(starts_with("M_mean"), mean, na.rm = TRUE),
-            .groups = 'drop')
-averages
+#averages_t_cluster <- level_means_df %>%
+#  group_by(Level, Cluster) %>%
+#  summarise(across(starts_with("G_mean"), median, na.rm = TRUE),
+#            across(starts_with("M_mean"), median, na.rm = TRUE),
+#            .groups = 'drop')
+#averages_t_cluster
 
 # Crear el gráfico con ggplot2
-ggplot(averages) +
+#ggplot(averages_t_cluster) +
   # Línea continua para G_mean
-  geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
-            size = 1) +
+#  geom_line(aes(x = Level, y = G_mean, color = factor(Cluster), linetype = "G_mean", group = Cluster), 
+#            size = 1) +
   # Línea punteada para M_mean
-  geom_line(aes(x = Level, y = M_mean, color = factor(Cluster), linetype = "M_mean", group = Cluster), 
-            size = 1) +
+ # geom_line(aes(x = Level, y = M_mean, color = factor(Cluster), linetype = "M_mean", group = Cluster), 
+ #           size = 1) +
   # Configuración de colores
-  scale_color_manual(values = c("blue", "red")) +
+  #scale_color_manual(values = c("blue", "red")) +
   # Configuración de tipos de línea
-  scale_linetype_manual(values = c("G_mean" = "solid", "M_mean" = "dotted")) +
-  labs(
-    title = "The G and M traits of the tree of sampled communities",
-    x = "Number of clades",
-    y = "G mean",
-    color = "Cluster",
-    linetype = "Trait"
-  ) +
+  #scale_linetype_manual(values = c("G_mean" = "solid", "M_mean" = "dotted")) +
+  #labs(
+   # title = "The G and M traits of the tree of sampled communities",
+  #  x = "Number of clades",
+  #  y = "G mean",
+  #  color = "Cluster",
+  #  linetype = "Trait"
+  #) +
   # Agregar eje secundario para M
-  scale_y_continuous(
-    sec.axis = sec_axis(~ ., name = "M mean")
-  ) +
-  theme_classic()
+  #scale_y_continuous(
+  #  sec.axis = sec_axis(~ ., name = "M mean")
+  #) +
+  #theme_classic()

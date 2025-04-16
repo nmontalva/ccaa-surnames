@@ -11,7 +11,7 @@ library(dendextend)
 library(TreeDist)
 
 ##cor.dendlist
-cor.dendlist(dendlist(d1 = sort(dend.rst), d2 = sort(hd)), method = "FM_index",k=9) #ERROR, revisar
+cor.dendlist(dendlist(d1 = sort(dend.DPS), d2 = sort(hd)), method = "FM_index",k=9) #ERROR, revisar
 
 #=======
 #TODO: REVISAR. Error: object 'dend.rst' not found.
@@ -20,7 +20,7 @@ cor.dendlist(dendlist(d1 = sort(dend.rst), d2 = sort(hd)), method = "FM_index",k
 #=======
 
 ##cor_cophenetic
-cor_cophenetic(dend.rst,hd,method_coef = "kendall")
+cor_cophenetic(dend.DPS,hd,method_coef = "kendall")
 
 ##Bk_plot
 Bk(phyNei,hy,k = nleaves(phyCS)-1)
@@ -64,7 +64,7 @@ plotTree(hc_u)
 # Encontrar p-valor
 set.seed(10000)
 the_cor <- cor_bakers_gamma(hy,hy)
-the_cor2 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
+the_cor2 <- cor_bakers_gamma(as.dendrogram(phyDPS), as.dendrogram(hy))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
 dend_mixed <- hd
@@ -126,3 +126,4 @@ cor.dendlist(dend_list, method = "baker")
 
 par(mfrow=c(1,1))
 
+## NOTA: Este era un script desordenado en dónde probaba distintos tipos de comparaciones filogenéticas. De todas estas comparaciones se terminó por usar Baker-Gamma, deberiamos dejarlo en el objetivo 4.1 y quitar este sript del github

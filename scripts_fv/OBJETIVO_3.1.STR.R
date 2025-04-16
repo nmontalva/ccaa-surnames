@@ -10,7 +10,7 @@ library(ape)
 library(conflicted)
 library(graph4lg)
 library(phylogram)
-
+library(phytools)
 
 ##Conflict preference
 conflict_prefer("as.phylo","ape")

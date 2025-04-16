@@ -13,8 +13,6 @@
 ###nodes of the tree if agnatic primogeniture is the ancestral state. If that is followed by an early stage of
 ###non-partible multigeniture, R and S should be both low at the following internal nodes of the tree.
 
-#### ESPACIO DE TRABAJO ####
-
 ### Estados basales sampled communities###
 
 crear_grafico <- function(vc,v1, label,filename) {
