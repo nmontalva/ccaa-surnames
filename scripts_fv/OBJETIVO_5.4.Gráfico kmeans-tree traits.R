@@ -18,12 +18,6 @@ library(wesanderson)
 ########### Se usa un data.frame basado en el script de kmeans
 df_tree_scaled_numeric <- as.data.frame(df_tree_scaled)  # Asegúrate de que sea un data frame de valores numéricos
 
-#=======
-#TODO: REVISAR. Error: object 'df_tree_scaled' not found.
-#Al parecer todo aquí depende de objetos que se crean en 5.3.
-# Como 5.3. no corre, estos objetos no existen.
-#=======
-
 kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
 Cluster <- as.factor(kmeans_result$cluster)
 colnames(kmeans_result$centers)
@@ -87,6 +81,9 @@ plot_data <- data.frame(df_tree_scaled_numeric,
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
+
+#TODO Error in eval(ei, envir) : object 'R_trait' not found
+
 obj.r <- estimacion_estados_ancestrales(consensus_tree, rv1)
 y.r <- c(obj.r$tree$maps) 
 lims.r <- obj.r$lims 

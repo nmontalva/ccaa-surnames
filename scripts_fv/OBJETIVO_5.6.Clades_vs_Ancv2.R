@@ -19,14 +19,6 @@ library(phytools)
 
 # Cluster
 df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
-
-#=======
-#TODO: REVISAR. Error in compute.brlen(x, 1) : object "phy" is not of class "phylo"
-#In addition: Warning message:
-#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
-# Nota: Lo mismo que en todos los otros scripts del O5.
-#=======
-
 df_tree <- na.omit(df_tree)
 df_tree <- as.data.frame(lapply(df_tree, as.numeric))
 df_tree_scaled <- scale(df_tree)
@@ -42,6 +34,9 @@ clusters_table
 ################################## S ###########################################
 # Tree
 S_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={0.221892,0.387561},ancstate={0.304726}]:0.123261,EL_DIVISADERO:0.251235)[&CI={0.211899,0.418322},ancstate={0.315111}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.173239,0.40556},ancstate={0.289399}]:0.077413,EL_ALTAR:0.471233)[&CI={0.168678,0.414167},ancstate={0.291423}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.142831,0.417768},ancstate={0.280299}]:0.084733,MANQUEHUA:0.719062)[&CI={0.121324,0.412715},ancstate={0.26702}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.105892,0.25871},ancstate={0.182301}]:0.011386,PUNITAQUI:0.180663)[&CI={0.106218,0.258429},ancstate={0.182324}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.104629,0.267465},ancstate={0.186047}]:0.125087,BARRAZA:0.328789)[&CI={0.109971,0.322882},ancstate={0.216427}]:0.069566,LA_CALERA:0.398355)[&CI={0.101371,0.336418},ancstate={0.218895}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.086222,0.386008},ancstate={0.236115}]:0.385711,EL_ESPINAL:1)[&CI={0.099883,0.43725},ancstate={0.268567}];")
+#TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
+
 par(mar=c(1,1,1,1))
 plot(S_tree,font=2); nodelabels(bg="white",cex =0.5)
 terminal_nodes <-S_tree$tip.label
@@ -166,9 +161,13 @@ clusters_table
 # Tree
 R_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={0.852732,1.124395},ancstate={0.988563}]:0.123261,EL_DIVISADERO:0.251235)[&CI={0.797287,1.135777},ancstate={0.966532}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.798782,1.179741},ancstate={0.989261}]:0.077413,EL_ALTAR:0.471233)[&CI={0.75163,1.15418},ancstate={0.952905}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.618735,1.069575},ancstate={0.844155}]:0.084733,MANQUEHUA:0.719062)[&CI={0.586604,1.064424},ancstate={0.825514}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.725941,0.976531},ancstate={0.851236}]:0.011386,PUNITAQUI:0.180663)[&CI={0.713754,0.963348},ancstate={0.838551}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.676076,0.943093},ancstate={0.809585}]:0.125087,BARRAZA:0.328789)[&CI={0.552073,0.901204},ancstate={0.726638}]:0.069566,LA_CALERA:0.398355)[&CI={0.496686,0.882114},ancstate={0.6894}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.491837,0.983424},ancstate={0.73763}]:0.385711,EL_ESPINAL:1)[&CI={0.439061,0.992273},ancstate={0.715667}];
 ")
+#TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
 paths
 # Extraer los estados ancestrales
 R_anc_states <- rvc$anc$ace
+#TODO Error: object 'rvc' not found #Ya no funciona para abajo.
+
 R_anc_states
 #Extraer estados actuales
 R_trait_vector <- setNames(R_trait$R, rownames(R_trait))

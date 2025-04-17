@@ -1,17 +1,5 @@
 #NEXUS
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-[R-package APE, Wed Feb 05 09:49:38 2025]
-=======
-[R-package APE, Mon Apr 14 19:07:39 2025]
->>>>>>> Stashed changes
-=======
-[R-package APE, Mon Apr 14 19:07:39 2025]
->>>>>>> Stashed changes
-=======
-[R-package APE, Wed Apr 16 10:55:55 2025]
->>>>>>> 841c4755a13e22ff3c2cbd31b954c62774cf7b22
+[R-package APE, Wed Apr 16 17:11:15 2025]
 
 BEGIN TAXA;
 	DIMENSIONS NTAX = 170;

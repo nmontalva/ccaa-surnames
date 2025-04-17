@@ -194,6 +194,9 @@ pca_result <- prcomp(result_traits[, c("G", "M")], scale. = TRUE)
 summary(pca_result)
 result_traits_pca<-result_traits
 result_traits_pca$x <- x
+
+#TODO:Error in eval(ei, envir) : object 'x' not found
+
 result_traits_pca$PC2 <- pca_result$x[, 2]
 result_traits_pca$PC1 <- pca_result$x[, 1]
 # Modelo de regresión con interacción

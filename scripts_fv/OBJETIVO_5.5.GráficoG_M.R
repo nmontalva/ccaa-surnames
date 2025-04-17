@@ -44,6 +44,10 @@ clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
 clusters_table
 # Tree
 G_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={-0.0521,0.128952},ancstate={0.038426}]:0.123261,EL_DIVISADERO:0.251235)[&CI={-0.000347,0.225242},ancstate={0.112448}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.054363,0.308255},ancstate={0.181309}]:0.077413,EL_ALTAR:0.471233)[&CI={0.057315,0.325597},ancstate={0.191456}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.1019,0.402365},ancstate={0.252132}]:0.084733,MANQUEHUA:0.719062)[&CI={0.092656,0.411103},ancstate={0.251879}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.138494,0.305502},ancstate={0.221998}]:0.011386,PUNITAQUI:0.180663)[&CI={0.144077,0.31042},ancstate={0.227248}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.154424,0.33238},ancstate={0.243402}]:0.125087,BARRAZA:0.328789)[&CI={0.181639,0.41432},ancstate={0.29798}]:0.069566,LA_CALERA:0.398355)[&CI={0.190979,0.44785},ancstate={0.319415}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.111258,0.43888},ancstate={0.275069}]:0.385711,EL_ESPINAL:1)[&CI={0.080061,0.448753},ancstate={0.264407}];")
+
+#TODO: Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
+
 terminal_nodes <-G_tree$tip.label
 terminal_nodes
 

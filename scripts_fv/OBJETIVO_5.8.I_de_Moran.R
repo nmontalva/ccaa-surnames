@@ -13,8 +13,8 @@ library(SDPDmod)
 
 #Datos geográficos
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
-coordenadas$ï..community <- gsub(" ", "_", coordenadas$ï..community)
-coordenadas$ï..community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$ï..community)] <- "RINCONADA_DE_PUNITAQUI"
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
 rownames(coordenadas) <- coordenadas$ï..community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
 coordenadas<-select(coordenadas,community,lon,lat)
@@ -57,6 +57,10 @@ n <- nrow(community_data)
 k_est <- sqrt(n)/2
 k_est_2 <- n^(1/2)
 neighbors_knn <- knn2nb(knearneigh(coords, k = k_est_2)) #Or k_est_2 ## NO FUNCIONA
+
+#TODO Warning message:
+#In matrix(z$nn, np, k, byrow = TRUE) :
+#  data length [2177] is not a sub-multiple or multiple of the number of rows [168]
 
 # Convert to spatial weights
 weights_knn <- nb2listw(neighbors_knn, style = "W")

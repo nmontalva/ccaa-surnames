@@ -1,3 +1,22 @@
+---Actualización del 16/04
+# No corre
+- Objetivo_4_otras_comparaciones.R
+- Objetivo_4.2.Manteltest.R
+- Objetivo_5.1.Trees&Traits.R
+- Objetivo_5.3.Kmeans.R (aunque dices que ya no es importante)
+- Objetivo_5.4.Gráfico kmeans...
+- Objetivo_5.6.Clades_vs_Anc2.R
+- Objetivo_5.7.HIP_1.R
+
+
+# Corre con advertencias
+- Objetivo_4.1.Comaprev2.R
+- Objetivo 5.2.Visualizacion.R (En sentido estricto sí corre, pero no dibuja nada)
+- Objetivo_5.5.GráficoG_M.R
+- Objetivo_5.8.I_de_Moran.R
+
+---ANTIGUOS
+
 # No puedo correr los siguientes scripts
 
 - Objetivo_1.2.Manteltest.R

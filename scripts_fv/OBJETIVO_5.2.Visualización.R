@@ -223,6 +223,8 @@ ggpairs(data,
         )
 dev.off()
 
+##TODO: 1: Package `magick` is required to draw images. Image not drawn.
+
 #=======
 #TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
 #=======

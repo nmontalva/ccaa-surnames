@@ -11,13 +11,7 @@ library(dendextend)
 library(TreeDist)
 
 ##cor.dendlist
-cor.dendlist(dendlist(d1 = sort(dend.DPS), d2 = sort(hd)), method = "FM_index",k=9) #ERROR, revisar
-
-#=======
-#TODO: REVISAR. Error: object 'dend.rst' not found.
-# Supongo que el objeto se creaba al correr alguno de los scripts que no corrieron.
-# 
-#=======
+cor.dendlist(dendlist(d1 = sort(dend.DPS), d2 = sort(hd)), method = "FM_index",k=9)
 
 ##cor_cophenetic
 cor_cophenetic(dend.DPS,hd,method_coef = "kendall")
@@ -31,8 +25,10 @@ Bk_plot(
 Bk_permutations(phyRST,hy)
 cor_FM_index(dend.rst,hd, k=5)
 
+#TODO Error: object 'phyNei' not found
+
 #trees ultrametric and rooted
-GST_u <- force.ultrametric(njGST, method = c("extend"))
+GST_u <- force.ultrametric(njGST, method = c("extend")) #TODO Error: object 'njGST' not found
 GST_u$root.edge <- 0
 Nei_u <-force.ultrametric(njNei,method = c("extend"))
 Nei_u$root.edge <- 0
@@ -51,15 +47,17 @@ Dmu2_u$root.edge <- 0
 FST_u <- force.ultrametric(njFST, method = c("extend"))
 FST_u$root.edge <- 0
 
+#TODO Nada de las lineas impares desde la 41 a la 47 correo por que no existen esos objetos.
+
 Geo_tree <- upgma(as.dist(geo_muestra),method="average")
 plotTree(Geo_tree)
 Geo_tree_nj <- nj(as.dist(geo_muestra))
 plotTree(Geo_tree_nj)
-Geo_u <-force.ultrametric(Geo_tree_nj,method = c("extend"))
+Geo_u <-force.ultrametric(Geo_tree_nj,method = c("extend")) 
 Geo_u$root.edge <- 0
-hc_u <-force.ultrametric(hc_nj, method=c("extend"))
+hc_u <-force.ultrametric(hc_nj, method=c("extend")) #TODO Error: object 'hc_nj' not found
 hc_u$root.edge <- 0
-plotTree(hc_u)
+plotTree(hc_u) #TODO Error: object 'hc_u' not found
 
 # Encontrar p-valor
 set.seed(10000)
@@ -85,13 +83,15 @@ set.seed(NULL)
 
 ##dist.dendlist
 dist.dendlist(dendlist(d1 = as.dendrogram(hcrst), d2 = hd))
+#TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'object' in selecting a method for function 'as.dendrogram': object 'hcrst' not found
 
 ## Compare phylo
 comparePhylo(ape::as.phylo(hcrst), hy, plot = TRUE, force.rooted = TRUE) # SMM es el ?nico ?rbol que comparte split con el de apellidos
+#TODO Error: object 'hcrst' not found
 
 ## TreeDist
-distance <- TreeDistance(phyRST,hy)
-distance
+distance <- TreeDistance(phyRST,hy) #TODO Error: object 'phyRST' not found
+distance #TODO Error: object 'distance' not found, lo mismo con las de abajo
 dis_info<-ClusteringInfoDistance(phyRST, hy, reportMatching = TRUE)
 dis_info
 
@@ -127,3 +127,4 @@ cor.dendlist(dend_list, method = "baker")
 par(mfrow=c(1,1))
 
 ## NOTA: Este era un script desordenado en dónde probaba distintos tipos de comparaciones filogenéticas. De todas estas comparaciones se terminó por usar Baker-Gamma, deberiamos dejarlo en el objetivo 4.1 y quitar este sript del github
+# Nota: Tal vez renombrarlo en lugar de quitarlo.

@@ -56,6 +56,7 @@ con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
 #  In dist.nodes(x) : the tree has no branch length: fixing them to one.
 #=======
 #REVISIÓN: No me aparece este error.
+#18/04: A mi si me aparece.
 
 con2 <-as.matrix(cophenetic.phylo(consensus_tree2)) #PhyDSW primero, s/PUCLARO
 #con3 <-as.matrix(cophenetic.phylo(consensus_tree3)) #hy primero, c/PUCLARO
@@ -121,35 +122,19 @@ mantel_function <- function(t1,t2) {
 
 mantel_con1 <- mantel_function(con1, geo_muestra)
 mantel_con2 <- mantel_function(con2, geo_muestra)
-mantel_con3 <- mantel_function(con3, geo_muestra2)
-mantel_con4 <- mantel_function(con4,geo_muestra2)
-
-#=======
-#TODO: REVISAR. Líneas 121 y 122 no van a correr por qué no se formaron los objetos.
-#=======
+mantel_con3 <- mantel_function(con3, geo_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
+mantel_con4 <- mantel_function(con4,geo_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not foun
 
 mantel_con1_ap <- mantel_function(con1, surname_matrix_muestra)
 mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
-mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
-mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2)
+mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
+mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not found
 
-#=======
-#TODO: REVISAR. Líneas 130 y 131 no van a correr por qué no se formaron los objetos.
-#=======
+mantel_con1_str <- mantel_function(con1, as.matrix(DSW)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'DSW' not found
+mantel_con2_str <- mantel_function(con2, as.matrix(DSW)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'DSW' not found
 
-mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
-mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
-
-#=======
-#TODO: REVISAR. Líneas 137 y 138 no van a correr por qué no existe el objeto DSW.
-#=======
-
-mantel_con3_str <- mantel_function(con3, as.matrix(DSW2))
-mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
-
-#=======
-#TODO: REVISAR. Líneas 130 y 131 no van a correr por qué no se formaron los objetos.
-#=======
+mantel_con3_str <- mantel_function(con3, as.matrix(DSW2)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
+mantel_con4_str <- mantel_function(con4, as.matrix(DSW2)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not found
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))

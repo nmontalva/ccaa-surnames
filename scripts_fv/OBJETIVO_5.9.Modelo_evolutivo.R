@@ -102,8 +102,22 @@ surfaceSummary(fwd = forward_model_M_s, bwd = backward_model_M_s)
 dataframe_to_plot <- M_df_filtered_s
 names(dataframe_to_plot) <- M_df_filtered_s$community
 surfaceTreePlot(consensus_tree, backward_model_M_s[[1]], labelshifts = TRUE)
-surfaceTraitPlot(dataframe_to_plot, backward_model_M_s[[1]])
 
+#TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
+#Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
+#Error in if (any(DF[A, ] != DF[B, ])) { : 
+#    missing value where TRUE/FALSE needed
+#  In addition: Warning message:
+#    In fitContinuous(consensus_tree, G_df_filtered_s, model = "OU") : 
+#    Parameter estimates appear at bounds:
+#    alpha
+#  Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#  Also defined by ‘tidytree’
+
+surfaceTraitPlot(dataframe_to_plot, backward_model_M_s[[1]])
+#TODO Error: object 'backward_model_M_s' not found
 
 ########################## SIMULACIONES ARBOL ##################################
 #Los modelos nulos simulados evalúan si los patrones de agrupamiento observados en los datos son estadísticamente significativos al compararlos con una distribución nula generada a partir de datos aleatorios o simulados. Este enfoque está relacionado en cierta medida con la prueba de Mantel (ambos comparan los patrones observados con las expectativas nulas), pero es más flexible y se adapta a hipótesis específicas.
@@ -173,7 +187,12 @@ cat("P-valor para M (usando random trees):", p_value_M, "\n")
 trait_data_G <- setNames(G_values$G, G_values$community)
 trait_data_M <- setNames(M_values$M, M_values$community)
 phy_tree_s <- consensus_tree
+#TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
+
 phy_tree <- y_total
+#TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
 
 # Señal filogenética observada
 G_physignal <- phylosig(phy_tree, trait_data_G, method = "lambda",test = T)

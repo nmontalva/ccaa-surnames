@@ -104,11 +104,6 @@ ft2 <- ft2 %>% column_to_rownames(var = "community")
 consensus_tree <-as.phylo(consensus_tree)
 plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
-#=======
-#TODO: REVISAR. Me sale este errpr en la línea 100:
-# Error in compute.brlen(tree) : object "phy" is not of class "phylo"
-#=======
-
 ###Estimar estados ancestrales
 # S
 sv1 <- as.matrix(S_trait)[,1]
@@ -142,59 +137,31 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
 png("Figures/S_muestra.png")
 svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
-
-#=======
-#TODO: REVISAR. Me sale este errpr en la línea 139:
-# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
-# tree should be object of class "phylo".
-# 3. stop("tree should be object of class \"phylo\".")
-# 2. fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
-# 1. estimacion_estados_ancestrales(consensus_tree, sv1, "S")
-#=======
-
 dev.off()
+
 #png("Figures/R_muestra.png")
 #rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
 #dev.off()
 png("Figures/R_muestra.png")
-rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
+rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R") #TODO Error: object 'rv1' not found
 
-#=======
-#TODO: REVISAR. Me sale el mismo error que antes:
-# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
-# tree should be object of class "phylo".
-#=======
+#TODO: Error in eval(ei, envir) : object 'rv1' not found
+# Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+# Also defined by ‘tidytree’
 
 dev.off()
 png("Figures/G_muestra.png")
 gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
-
-#=======
-#TODO: REVISAR. Me sale el mismo error que antes:
-# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
-# tree should be object of class "phylo".
-#=======
-
 dev.off()
+
 png("Figures/A_muestra.png")
 avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
-
-#=======
-#TODO: REVISAR. Me sale el mismo error que antes:
-# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
-# tree should be object of class "phylo".
-#=======
-
 dev.off()
+
 png("Figures/M_muestra.png")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
-
-#=======
-#TODO: REVISAR. Me sale el mismo error que antes:
-# Error in fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE) : 
-# tree should be object of class "phylo".
-#=======
 dev.off()
+
 #png("Figures/C_muestra.png")
 #cvc<- estimacion_estados_ancestrales(consensus_tree,cv1,"C")
 #dev.off()
@@ -203,6 +170,8 @@ dev.off()
 
 writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
+#TODO Error: object 'rvc' not found
+
 writeAncestors(consensus_tree, Anc=gvc$anc, file="Figures/G_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=avc$anc, file="Figures/A_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.phy", digits=6, format=c("phylip"))
@@ -440,6 +409,8 @@ for (i in seq_along(trait_vectors)) {
   K_values[[i]] <- calculate_physignal(trait_vectors[[i]])
 }
 
+#TODO [1] "some species in tree are missing from x , dropping missing taxa from the tree"
+
 # Calcular los valores de senal fisica y p-value
 Phylogenetic_signal <- sapply(K_values, function(K) K$lambda)
 P_value <- sapply(K_values, function(K) K$P)
@@ -494,7 +465,7 @@ C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft2
 x <- write.tree(consensus_tree)
-tree_consensus.tree <- read.tree(text=x)
+tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools' Also defined by ‘tidytree’
 G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
 S <- setNames(obj[,"S"],rownames(obj))
@@ -541,7 +512,7 @@ C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft
 x <- write.tree(y_total)
-tree_consensus.tree <- read.tree(text=x)
+tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’
 G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
 S <- setNames(obj[,"S"],rownames(obj))
@@ -571,9 +542,10 @@ publish(bm_glsM)
 
 ##Generate PICs and test while conditioning on phylogeny
 #Prepare the tree
-consensus_tree_rooted <- midpoint.root(consensus_tree)
+consensus_tree_rooted <- midpoint.root(consensus_tree) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’
 # Resuelve las politomías
-consensus_tree_dicotomous <- multi2di(consensus_tree_rooted)
+consensus_tree_dicotomous <- multi2di(consensus_tree_rooted) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+#Also defined by ‘tidytree’
 #Sampled communities
 S_pic1<-pic(x = ft2$S, phy = consensus_tree_dicotomous)
 A_pic1<-pic(x = ft2$A, phy = consensus_tree_dicotomous)
@@ -601,3 +573,4 @@ calc_r <- function(x, y) {
   return(list(r_squared = r_squared, p_value = p_value))
 }
 data <- data.frame(S_pic,A_pic,G_pic,M_pic)
+

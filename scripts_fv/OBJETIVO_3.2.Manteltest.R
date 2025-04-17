@@ -35,7 +35,7 @@ common_communities <- unique(comuneros$community)
 #3. Comunidades muestreadas: ?rbol de consenso #
 #Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
 selected_communities <- unique(STR$pop)
-my_points_t <- my_points_t %>% filter(row.names(my_points_t) %in% selected_communities)
+my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 
 my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)

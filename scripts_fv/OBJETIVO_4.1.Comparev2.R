@@ -285,22 +285,13 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
   dendroplot(raise.dendrogram(as.dendrogram(consensus_tree), max(consensus_tree$edge.length)), save_as, group_by_col)
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
-#TODO: REVISAR.
-#Error in dendroplot(consensus_tree, save_as, group_by_col) : 
-#consensus_tree debe ser un objeto de tipo dendrogram
-# Error in dendroplot(consensus_tree, save_as, group_by_col) : 
-#   consensus_tree debe ser un objeto de tipo dendrogram
-# 3.
-# stop("consensus_tree debe ser un objeto de tipo dendrogram")
-# 2.
-# dendroplot(consensus_tree, save_as, group_by_col)
-# 1.
-# consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+#TODO: Las últimas 3 líneas con texto arrojan, cada una, esta advertencia:
+# Warning message:
+#   In max(consensus_tree$edge.length) :
+#   no non-missing arguments to max; returning -Inf
