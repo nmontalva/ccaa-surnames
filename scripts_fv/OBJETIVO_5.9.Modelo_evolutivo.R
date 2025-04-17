@@ -197,8 +197,8 @@ phy_tree <- y_total
 # Señal filogenética observada
 G_physignal <- phylosig(phy_tree, trait_data_G, method = "lambda",test = T)
 M_physignal <- phylosig(phy_tree, trait_data_M, method = "lambda",test = T)
-G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda",test = T)
-M_physignal_s <- phylosig(phy_tree_s, trait_data_M, method = "lambda",test = T)
+G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda",test = T) #TODO [1] "some species in x are missing from tree, dropping missing taxa from x"
+M_physignal_s <- phylosig(phy_tree_s, trait_data_M, method = "lambda",test = T) #TODO [1] "some species in x are missing from tree, dropping missing taxa from x"
 
 ##Random.trees
 #Todas las comunidades
@@ -220,7 +220,14 @@ cat("P-valor G usando random trees:", p_value_random_trees_G, "\n")
 null_signals_G_bm <- apply(simulated_traits_G, 2, function(trait) {
   phylosig(phy_tree, trait, method = "lambda")$lambda
 })
+
+#TODO Error: object 'simulated_traits_G' not found
+
 p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
+
+#TODO Error in h(simpleError(msg, call)) : 
+#  error in evaluating the argument 'x' in selecting a method for function 'mean': object 'null_signals_G_bm' not found
+
 cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
 
 hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
@@ -269,6 +276,9 @@ cat("P-valor M usando random.trees.s:", p_value_random.trees.s_M, "\n")
 null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
   phylosig(phy_tree_s, trait, method = "lambda")$lambda
 })
+
+#TODO Error: object 'simulated_traits_M' not found
+
 p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
 cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
 
