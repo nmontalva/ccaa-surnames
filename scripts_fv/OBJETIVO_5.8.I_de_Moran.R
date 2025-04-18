@@ -12,15 +12,15 @@ library(geosphere)
 library(SDPDmod)
 
 #Datos geográficos
-coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
+coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
-rownames(coordenadas) <- coordenadas$ï..community
+rownames(coordenadas) <- coordenadas$community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
 coordenadas<-select(coordenadas,community,lon,lat)
 
 #Data community
-View(GM_df)
+#View(GM_df)
 # Ajustar el modelo de regresión de G ~ M
 modelo <- lm(G ~ M, data = GM_df)
 G.reg.M <- predict(modelo)
@@ -56,14 +56,14 @@ weights <- nb2listw(neighbors, style = "W")
 n <- nrow(community_data)
 k_est <- sqrt(n)/2
 k_est_2 <- n^(1/2)
-neighbors_knn <- knn2nb(knearneigh(coords, k = k_est_2)) #Or k_est_2 ## NO FUNCIONA
-
+#neighbors_knn <- knn2nb(knearneigh(coords, k = k_est_2)) #Or k_est_2 ## NO FUNCIONA
+# Convert to spatial weights
+#weights_knn <- nb2listw(neighbors_knn, style = "W")
 #TODO Warning message:
 #In matrix(z$nn, np, k, byrow = TRUE) :
 #  data length [2177] is not a sub-multiple or multiple of the number of rows [168]
 
-# Convert to spatial weights
-weights_knn <- nb2listw(neighbors_knn, style = "W")
+
 
 # Moran's I for G,M
 moran_G <- moran.test(community_data$G, weights)

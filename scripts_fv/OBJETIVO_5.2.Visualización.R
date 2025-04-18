@@ -119,6 +119,7 @@ dev.off()
 #=======
 #TODO: REVISAR. Error: object 'data1' not found
 #=======
+# REVISION: Si corre el objetivo 5.1 debería crearse el objeto data1
 
 ## Comunidades total
 #Grafico 1
@@ -228,3 +229,4 @@ dev.off()
 #=======
 #TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
 #=======
+## REVISION: Deberian arreglarse todos los problemas si se corre completo el objetivo 5.1

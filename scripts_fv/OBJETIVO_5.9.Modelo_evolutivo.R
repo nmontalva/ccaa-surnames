@@ -62,8 +62,8 @@ surfaceSummary(fwd = forward_model_G_s, bwd = backward_model_G_s)
 # Graficar resultados
 dataframe_to_plot <- G_df_filtered_s
 names(dataframe_to_plot) <- G_df_filtered_s$community
-surfaceTreePlot(consensus_tree, backward_model_G_s[[1]], labelshifts = T)
-surfaceTraitPlot(G_df_filtered_s, backward_model_G_s[[1]])
+#surfaceTreePlot(consensus_tree, backward_model_G_s[[1]], labelshifts = T) #No funciona
+#surfaceTraitPlot(G_df_filtered_s, backward_model_G_s[[1]]) # No funciona
 
 ########################## M #################################
 # Filtrar los datos para que coincidan con las etiquetas del árbol
@@ -71,7 +71,7 @@ tree_tips <- consensus_tree$tip.label
 data_tips <- M_values$community
 setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
 M_df_filtered_s <- M_values[rownames(M_values) %in% tree_tips, ]
-M_df_filtered_s <- dplyr::select(M_df_filtered_sample,M)
+M_df_filtered_s <- dplyr::select(M_df_filtered_s,M)
 
 # Fit BM model for M
 fit_bm_M_s <- fitContinuous(consensus_tree, M_df_filtered_s, model = "BM")
@@ -101,7 +101,7 @@ surfaceSummary(fwd = forward_model_M_s, bwd = backward_model_M_s)
 # Graficar resultados
 dataframe_to_plot <- M_df_filtered_s
 names(dataframe_to_plot) <- M_df_filtered_s$community
-surfaceTreePlot(consensus_tree, backward_model_M_s[[1]], labelshifts = TRUE)
+#surfaceTreePlot(consensus_tree, backward_model_M_s[[1]], labelshifts = TRUE)
 
 #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
 #Also defined by ‘tidytree’
@@ -116,7 +116,7 @@ surfaceTreePlot(consensus_tree, backward_model_M_s[[1]], labelshifts = TRUE)
 #  Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
 #  Also defined by ‘tidytree’
 
-surfaceTraitPlot(dataframe_to_plot, backward_model_M_s[[1]])
+#surfaceTraitPlot(dataframe_to_plot, backward_model_M_s[[1]])
 #TODO Error: object 'backward_model_M_s' not found
 
 ########################## SIMULACIONES ARBOL ##################################
@@ -194,11 +194,12 @@ phy_tree <- y_total
 #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
 #Also defined by ‘tidytree’
 
-# Señal filogenética observada
+# Señal filogenética observada (Pagel lambda)
 G_physignal <- phylosig(phy_tree, trait_data_G, method = "lambda",test = T)
 M_physignal <- phylosig(phy_tree, trait_data_M, method = "lambda",test = T)
-G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda",test = T)
+G_physignal_s <- phylosig(phy_tree_s, trait_data_G, method = "lambda",test = T) 
 M_physignal_s <- phylosig(phy_tree_s, trait_data_M, method = "lambda",test = T)
+# Aparece "some species in x are missing from tree, dropping missing taxa from x" porque filtra a las comunidades que no están en el árbol de consenso.
 
 ##Random.trees
 #Todas las comunidades
@@ -217,14 +218,15 @@ random_signals_G <- sapply(random.total, function(tree) {
 p_value_random_trees_G <- mean(random_signals_G >= G_physignal$lambda)
 cat("P-valor G usando random trees:", p_value_random_trees_G, "\n")
 
-null_signals_G_bm <- apply(simulated_traits_G, 2, function(trait) {
-  phylosig(phy_tree, trait, method = "lambda")$lambda
-})
-p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
-cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
+#Distribución nula (no funcionará hasta que esté lo de BM)
+#null_signals_G_bm <- apply(simulated_traits_G, 2, function(trait) {
+#  phylosig(phy_tree, trait, method = "lambda")$lambda
+#})
+#p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
+#cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
 
-hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
-abline(v = G_physignal, col = "red", lwd = 2)
+#hist(random_signals_G, main = "Distribución nula para G", xlab = "Lambda")
+#abline(v = G_physignal, col = "red", lwd = 2)
 
 #M
 random_signals_M <- sapply(random.total, function(tree) {
@@ -233,14 +235,15 @@ random_signals_M <- sapply(random.total, function(tree) {
 p_value_random_trees_M <- mean(random_signals_M >= M_physignal$lambda)
 cat("P-valor M usando random trees:", p_value_random_trees_M, "\n")
 
-null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
-  phylosig(phy_tree, trait, method = "lambda")$lambda
-})
-p_value_M_bm <- mean(null_signals_M_bm >= M_physignal)
-cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
+#Distribución nula (no funcionará hasta que esté lo de BM)
+#null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
+#  phylosig(phy_tree, trait, method = "lambda")$lambda
+#})
+#p_value_M_bm <- mean(null_signals_M_bm >= M_physignal)
+#cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
 
-hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
-abline(v = M_physignal, col = "red", lwd = 2)
+#hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
+#abline(v = M_physignal, col = "red", lwd = 2)
 
 ##Árbol de consenso
 #G
@@ -249,15 +252,15 @@ random_signals_G_sample <- sapply(random.trees, function(tree) {
 })
 p_value_random.trees_G_sample  <- mean(random_signals_G >= G_physignal$lambda)
 cat("P-valor G usando random.trees.s:", p_value_random.trees_G_sample, "\n")
+#Distribución nula (no funcionará hasta que esté lo de BM)
+#null_signals_G_bm_sample <- apply(simulated_traits_G, 2, function(trait) {
+#  phylosig(phy_tree_s, trait, method = "lambda")$lambda
+#})
+#p_value_G_bm_sample  <- mean(null_signals_G_bm_sample  >= G_physignal$lambda)
+#cat("P-valor G (Brownian motion):", p_value_G_bm_sample , "\n")
 
-null_signals_G_bm_sample <- apply(simulated_traits_G, 2, function(trait) {
-  phylosig(phy_tree_s, trait, method = "lambda")$lambda
-})
-p_value_G_bm_sample  <- mean(null_signals_G_bm_sample  >= G_physignal$lambda)
-cat("P-valor G (Brownian motion):", p_value_G_bm_sample , "\n")
-
-hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
-abline(v = G_physignal, col = "red", lwd = 2)
+#hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
+#abline(v = G_physignal, col = "red", lwd = 2)
 
 #M
 random_signals_M <- sapply(random.trees, function(tree) {
@@ -266,11 +269,11 @@ random_signals_M <- sapply(random.trees, function(tree) {
 p_value_random.trees.s_M <- mean(random_signals_M >= M_physignal$lambda)
 cat("P-valor M usando random.trees.s:", p_value_random.trees.s_M, "\n")
 
-null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
-  phylosig(phy_tree_s, trait, method = "lambda")$lambda
-})
-p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
-cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
+#null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
+#  phylosig(phy_tree_s, trait, method = "lambda")$lambda
+#})
+#p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
+#cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
 
-hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
-abline(v = M_physignal, col = "red", lwd = 2)
+#hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
+#abline(v = M_physignal, col = "red", lwd = 2)

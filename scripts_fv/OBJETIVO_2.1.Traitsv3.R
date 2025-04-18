@@ -37,7 +37,7 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
     group_by_cols <- as.vector(group_by_cols)
   }
   
-  # Calcular los �ndices
+  # Calcular los indices
   result <- comuneros %>%
     group_by(across(all_of(group_by_cols))) %>%
     summarise(

@@ -41,8 +41,8 @@ conflict_prefer("select", "dplyr")
 conflict_prefer("filter", "dplyr")
 conflict_prefer("treedata", "geiger")
 conflict_prefer("as.phylo", "phylogram")
-#### CREACI�N DE �RBOLES PARA CADA TRAIT ####
-#Ocuparemos (1) �rbol de apellidos(y_total), (2) todas las tablas del objetivo 2, y (3) consenso STR/Apellido(consensus_3)
+#### CREACION DE ARBOLES PARA CADA TRAIT ####
+#Ocuparemos (1) arbol de apellidos(y_total), (2) todas las tablas del objetivo 2, y (3) consenso STR/Apellido(consensus_3)
 
 ###Explorar los datos
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
@@ -142,14 +142,7 @@ dev.off()
 #png("Figures/R_muestra.png")
 #rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
 #dev.off()
-png("Figures/R_muestra.png")
-rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R") #TODO Error: object 'rv1' not found
 
-#TODO: Error in eval(ei, envir) : object 'rv1' not found
-# Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
-# Also defined by ‘tidytree’
-
-dev.off()
 png("Figures/G_muestra.png")
 gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
 dev.off()
@@ -169,9 +162,7 @@ dev.off()
 # COMO LO QUE VIENE DEPENDE DE LO ANTERIOR, NO LO SEGUÍ PROBANDO##
 
 writeAncestors(consensus_tree, Anc=svc$anc, file="Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
-writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
-#TODO Error: object 'rvc' not found
-
+#writeAncestors(consensus_tree, Anc=rvc$anc, file="Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=gvc$anc, file="Figures/G_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=avc$anc, file="Figures/A_nodos_muestra.phy", digits=6, format=c("phylip"))
 writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.phy", digits=6, format=c("phylip"))
@@ -313,45 +304,44 @@ plot_comparison2(gvt$obj, mvt$obj, c("G", "M"))
 dev.off()
 
 ###Phylogenetic signal
-### Cambiar por physignal.z? Revisar si ese contempla Pagel lamda
+### Cambiar por physignal.z? 
 z<-phylosig(consensus_tree,sv1,method = "lambda",test=T)
-plot(z)
+z
 
 ##Muestra
-calculate_physignal <- function(trait_vector) {
-  class(trait_vector) <- "numeric"
-  K <- phylosig(consensus_tree,trait_vector,method = "lambda",test=T)
-  return(K)
+analyze_phylosignal <- function(tree, trait) {
+  # 1. Verificar correspondencia entre árbol y datos
+  if(!all(names(trait) %in% tree$tip.label)) {
+    stop("Los nombres en el trait no coinciden con las puntas del árbol")
+  }
+  
+  # 2. Asegurar que el trait es numérico
+  trait_num <- setNames(as.numeric(trait), names(trait))
+  
+  # 3. Calcular lambda de Pagel con más simulaciones
+  res <- phylosig(tree, trait_num, method = "lambda", test = TRUE, nsim = 9999)
+  
+  # 4. Calcular K de Blomberg como alternativa
+  res_k <- phylosig(tree, trait_num, method = "K", test = TRUE, nsim = 9999)
+  
+  list(Pagel_lambda = res, Blomberg_K = res_k)
 }
 
-# Vectores de datos
-trait_vectors <- list(sv1, gv1, av1, mv1)
-
-# Calcular la senal fisica y generar los gr?ficos en un bucle
-K_values <- list()
-for (i in seq_along(trait_vectors)) {
-  K_values[[i]] <- calculate_physignal(trait_vectors[[i]])
-}
-
-# Calcular los valores de senal fisica y p-value
-Phylogenetic_signal <- sapply(K_values, function(K) K$lambda)
-P_value <- sapply(K_values, function(K) K$P)
-
-# Combinar resultados en un marco de datos
-Phy_sig <- data.frame(Phylogenetic_signal, P_value)
-row.names(Phy_sig) <- c("S", "G", "A", "M")
-
-# Redondear los resultados
-Phy_sig <- round(Phy_sig, digits = 4)
+# Aplicar a todos los traits
+Phy_sigx <- lapply(list(S = sv1, G = gv1, A = av1, M = mv1), 
+                  function(t) analyze_phylosignal(consensus_tree, t))  
+# Tabla resumen mejorada
+Phy_sig <- data.frame(
+  Lambda = format(round(sapply(Phy_sigx, function(x) x$Pagel_lambda$lambda), 5), nsmall = 5),
+  pvalue_lambda = format(round(sapply(Phy_sigx, function(x) x$Pagel_lambda$P), 5), nsmall = 5),
+  Blomberg_K = format(round(sapply(Phy_sigx, function(x) x$Blomberg_K$K), 5), nsmall = 5),
+  pvalue_K = format(round(sapply(Phy_sigx, function(x) x$Blomberg_K$P), 5), nsmall = 5)
+)
 publish(Phy_sig)
-# Generar la tabla y guardarla como imagen
-png("Figures/Phylosignal_muestra2.png", width = 300, height = 200)
+png("Figures/Phylosignal_muestra2.png", width = 400, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
-tree_tips <- consensus_tree$tip.label
-data_tips <- rownames(GM_df)
-setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
 #GM_df_cluster <- GM_df[rownames(GM_df) %in% tree_tips, ]
 #GM_df_cluster$cluster<-as.numeric(GM_df_cluster$cluster)
 #GM_df_cluster <- GM_df_cluster %>%
@@ -395,38 +385,69 @@ setdiff(data_tips, tree_tips)  # Nombres en los datos que no están en el árbol
 #print(p_value)
 
 ##Total
-calculate_physignal <- function(trait_vector, file_name) {
-  class(trait_vector) <- "numeric"
-  K <- phylosig(y_total,trait_vector,method = "lambda",test=T)
-  return(K)
+calculate_phylosignal <- function(tree, trait_vector, trait_name = "") {
+  # Verificar y ajustar nombres
+  trait_numeric <- as.numeric(trait_vector)
+  names(trait_numeric) <- names(trait_vector)
+  
+  # Filtrar para coincidencia exacta entre árbol y datos
+  matched_data <- match_tree_and_traits(tree, trait_numeric)
+  
+  # Calcular métricas
+  lambda_res <- phylosig(matched_data$tree, matched_data$trait, 
+                         method = "lambda", test = TRUE, nsim = 9999)
+  K_res <- phylosig(matched_data$tree, matched_data$trait,
+                    method = "K", test = TRUE, nsim = 9999)
+  
+  list(
+    trait = trait_name,
+    lambda = lambda_res$lambda,
+    lambda_p = lambda_res$P,
+    K = K_res$K,
+    K_p = K_res$P
+  )
 }
-# Vectores de datos
-trait_vectors2 <- list(sv2, gv2, av2, mv2)
 
-# Calcular la se?al f?sica y generar los gr?ficos en un bucle
-K_values <- list()
-for (i in seq_along(trait_vectors)) {
-  K_values[[i]] <- calculate_physignal(trait_vectors[[i]])
+# Función auxiliar para emparejar árbol y traits
+match_tree_and_traits <- function(tree, trait) {
+  common_taxa <- intersect(tree$tip.label, names(trait))
+  if(length(common_taxa) == 0) stop("No hay coincidencia entre árbol y traits")
+  
+  list(
+    tree = keep.tip(tree, common_taxa),
+    trait = trait[common_taxa]
+  )
 }
 
-#TODO [1] "some species in tree are missing from x , dropping missing taxa from the tree"
+# Análisis para todos los traits totales
+trait_list_total <- list(
+  "S" = sv2,
+  "G" = gv2,
+  "A" = av2,
+  "M" = mv2
+)
 
-# Calcular los valores de senal fisica y p-value
-Phylogenetic_signal <- sapply(K_values, function(K) K$lambda)
-P_value <- sapply(K_values, function(K) K$P)
+Phy_sig_t <- lapply(names(trait_list_total), function(trait_name) {
+  calculate_phylosignal(y_total, trait_list_total[[trait_name]], trait_name)
+})
 
-# Combinar resultados en un marco de datos
-Phy_sig2 <- data.frame(Phylogenetic_signal, P_value)
-row.names(Phy_sig2) <- c("S", "G", "A", "M")
-
-# Redondear los resultados
-Phy_sig2 <- round(Phy_sig2, digits = 4)
-publish(Phy_sig2)
-
-# Generar la tabla y guardarla como imagen
-png("Figures/Phylosignal_total.png", width = 300, height = 200)
-grid.table(Phy_sig2)
+# Crear tabla de resultados con redondeo a 5 decimales
+Phy_sig_total <- do.call(rbind, lapply(Phy_sig_t , function(x) {
+  data.frame(
+    Trait = x$trait,
+    Lambda = round(x$lambda, 5),
+    pvalue_Lambda = round(x$lambda_p, 5),
+    Blomberg_K = round(x$K, 5),
+    pvalue_K = round(x$K_p, 5),
+    stringsAsFactors = FALSE
+  )
+}))
+publish(Phy_sig_total)
+png("Figures/Phylosignal_total.png", width = 400, height = 200)
+grid.table(Phy_sig_total)
 dev.off()
+#TODO [1] "some species in tree are missing from x , dropping missing taxa from the tree"
+#REVISION: No debería aparecer ese error nuevamente
 
 # Example with your tree and cluster assignments
 #fit_lambda_total <- fitDiscrete(
@@ -453,8 +474,6 @@ dev.off()
 #p_value_t <- pchisq(LRT_stat_total, df = 1, lower.tail = FALSE)
 #print(LRT_stat_total)
 #print(p_value_t)
-
-
 
 ###Regresion PGLS
 ##Phylo-regression for sampled data
@@ -512,7 +531,7 @@ C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft
 x <- write.tree(y_total)
-tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’
+tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’ # REVISION: No me aparece este error.
 G <- setNames(obj[,"G"],rownames(obj))
 M <- setNames(obj[,"M"],rownames(obj))
 S <- setNames(obj[,"S"],rownames(obj))
@@ -542,10 +561,10 @@ publish(bm_glsM)
 
 ##Generate PICs and test while conditioning on phylogeny
 #Prepare the tree
-consensus_tree_rooted <- midpoint.root(consensus_tree) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’
+consensus_tree_rooted <- midpoint.root(consensus_tree) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’ #REVISION: Tampoco me aparece error
 # Resuelve las politomías
 consensus_tree_dicotomous <- multi2di(consensus_tree_rooted) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
-#Also defined by ‘tidytree’
+#Also defined by ‘tidytree’ #REVISION:Tampoco me aparece este error
 #Sampled communities
 S_pic1<-pic(x = ft2$S, phy = consensus_tree_dicotomous)
 A_pic1<-pic(x = ft2$A, phy = consensus_tree_dicotomous)

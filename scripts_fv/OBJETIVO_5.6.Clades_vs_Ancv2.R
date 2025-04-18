@@ -157,122 +157,118 @@ dev.off()
   
 ################################## R ###########################################
 # Cluster
-clusters_table
-# Tree
-R_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={0.852732,1.124395},ancstate={0.988563}]:0.123261,EL_DIVISADERO:0.251235)[&CI={0.797287,1.135777},ancstate={0.966532}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.798782,1.179741},ancstate={0.989261}]:0.077413,EL_ALTAR:0.471233)[&CI={0.75163,1.15418},ancstate={0.952905}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.618735,1.069575},ancstate={0.844155}]:0.084733,MANQUEHUA:0.719062)[&CI={0.586604,1.064424},ancstate={0.825514}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.725941,0.976531},ancstate={0.851236}]:0.011386,PUNITAQUI:0.180663)[&CI={0.713754,0.963348},ancstate={0.838551}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.676076,0.943093},ancstate={0.809585}]:0.125087,BARRAZA:0.328789)[&CI={0.552073,0.901204},ancstate={0.726638}]:0.069566,LA_CALERA:0.398355)[&CI={0.496686,0.882114},ancstate={0.6894}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.491837,0.983424},ancstate={0.73763}]:0.385711,EL_ESPINAL:1)[&CI={0.439061,0.992273},ancstate={0.715667}];
-")
+#clusters_table
+#Tree
+#R_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={0.852732,1.124395},ancstate={0.988563}]:0.123261,EL_DIVISADERO:0.251235)[&CI={0.797287,1.135777},ancstate={0.966532}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.798782,1.179741},ancstate={0.989261}]:0.077413,EL_ALTAR:0.471233)[&CI={0.75163,1.15418},ancstate={0.952905}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.618735,1.069575},ancstate={0.844155}]:0.084733,MANQUEHUA:0.719062)[&CI={0.586604,1.064424},ancstate={0.825514}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.725941,0.976531},ancstate={0.851236}]:0.011386,PUNITAQUI:0.180663)[&CI={0.713754,0.963348},ancstate={0.838551}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.676076,0.943093},ancstate={0.809585}]:0.125087,BARRAZA:0.328789)[&CI={0.552073,0.901204},ancstate={0.726638}]:0.069566,LA_CALERA:0.398355)[&CI={0.496686,0.882114},ancstate={0.6894}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.491837,0.983424},ancstate={0.73763}]:0.385711,EL_ESPINAL:1)[&CI={0.439061,0.992273},ancstate={0.715667}];")
 #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
-#Also defined by ‘tidytree’
-paths
+#Also defined by ‘tidytree’ paths
 # Extraer los estados ancestrales
-R_anc_states <- rvc$anc$ace
-#TODO Error: object 'rvc' not found #Ya no funciona para abajo.
-
-R_anc_states
+#R_anc_states <- rvc$anc$ace
+#R_anc_states
 #Extraer estados actuales
-R_trait_vector <- setNames(R_trait$R, rownames(R_trait))
-print(R_trait_vector)
+#R_trait_vector <- setNames(R_trait$R, rownames(R_trait))
+#print(R_trait_vector)
 
 #Crear un data.frame
-result_list <- list() 
+#result_list <- list() 
 # Iterar sobre cada nodo terminal y su ruta desde la raíz
-for (i in seq_along(paths)) {
+#for (i in seq_along(paths)) {
   # Nodo terminal y ruta de nodos desde la raíz hasta el nodo terminal
-  tip <- terminal_nodes[i]
-  path <- paths[[i]]
+#  tip <- terminal_nodes[i]
+#  path <- paths[[i]]
   
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
+#  cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
   # Obtener el valor de R para el nodo terminal desde R_trait
-  R_value_terminal <- R_trait_vector[tip]
+#  R_value_terminal <- R_trait_vector[tip]
   
   # Agregar el nodo terminal al dataframe con su valor de R y su cluster
-  result_list <- append(result_list, list(data.frame(
-    Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-    Cluster = cluster,
-    R_value = R_value_terminal
-  )))
+#  result_list <- append(result_list, list(data.frame(
+#    Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
+#    Cluster = cluster,
+#    R_value = R_value_terminal
+#  )))
   
   # Agregar cada nodo ancestral en el path (excluyendo el terminal)
-  for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo terminal
+#  for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo terminal
     # Asignar el valor de R para el nodo ancestral
-    R_value <- ifelse(as.character(node) %in% names(R_anc_states), R_anc_states[as.character(node)], NA)
+#    R_value <- ifelse(as.character(node) %in% names(R_anc_states), R_anc_states[as.character(node)], NA)
     
     # Agregar el nodo ancestral, cluster y valor de R al resultado
-    result_list <- append(result_list, list(data.frame(
-      Node = node,
-      Cluster = cluster,  # Asignamos el mismo cluster del terminal
-      R_value = R_value
-    )))
-  }
-}
+#    result_list <- append(result_list, list(data.frame(
+#      Node = node,
+#      Cluster = cluster,  # Asignamos el mismo cluster del terminal
+#      R_value = R_value
+#    )))
+#  }
+#}
 
 # Combinar todos los dataframes en uno solo
-result_df_R <- do.call(rbind, result_list)
-result_df_R <- result_df_R[!duplicated(result_df_R$Node), ]  # Eliminar filas duplicadas de cada nodo
-row.names(result_df_R)<-NULL
-print(result_df_R)
+#result_df_R <- do.call(rbind, result_list)
+#result_df_R <- result_df_R[!duplicated(result_df_R$Node), ]  # Eliminar filas duplicadas de cada nodo
+#row.names(result_df_R)<-NULL
+#print(result_df_R)
 
 # Expansión de result_df_R basado en paths (distancia desde la raíz)
-expanded_df <- do.call(rbind, lapply(1:length(paths), function(i) {
-  path <- paths[[i]]
+#expanded_df <- do.call(rbind, lapply(1:length(paths), function(i) {
+#  path <- paths[[i]]
   # Obtener el cluster y valores de R para cada nodo en el path
-  cluster <- result_df_R$Cluster[match(path[length(path)], result_df_R$Node)]
-  R_values <- result_df_R$R_value[match(path, result_df_R$Node)]
+#  cluster <- result_df_R$Cluster[match(path[length(path)], result_df_R$Node)]
+#  R_values <- result_df_R$R_value[match(path, result_df_R$Node)]
   # Crear una columna de pasos desde la raíz (distancia en pasos desde el nodo 16)
-  steps_from_root <- seq(0, length(path)-1)
+#  steps_from_root <- seq(0, length(path)-1)
   # Crear un dataframe temporal para el path
-  data.frame(Step = steps_from_root, Cluster = cluster, R_value = R_values, Terminal_Node = path[length(path)])
-}))
-max_steps <- max((expanded_df$Step))
-expanded_df_extended <- do.call(rbind, lapply(split(expanded_df, expanded_df$Terminal_Node), function(df) {
+#  data.frame(Step = steps_from_root, Cluster = cluster, R_value = R_values, Terminal_Node = path[length(path)])
+#}))
+#max_steps <- max((expanded_df$Step))
+#expanded_df_extended <- do.call(rbind, lapply(split(expanded_df, expanded_df$Terminal_Node), function(df) {
   # Calcular valores adicionales de R
-  last_step <- max(df$Step)
-  last_value <-tail(df$R_value, 1)
-  cluster <- unique(df$Cluster)
+#  last_step <- max(df$Step)
+#  last_value <-tail(df$R_value, 1)
+#  cluster <- unique(df$Cluster)
   
   # Generar filas adicionales hasta el máximo de pasos deseado
-  additional_steps <- data.frame(
-    Step = seq(last_step, max_steps),
-    Cluster = cluster,
-    R_value = last_value,  # Usamos el último valor
-    Terminal_Node = df$Terminal_Node[1]
-  )
+#  additional_steps <- data.frame(
+#    Step = seq(last_step, max_steps),
+#    Cluster = cluster,
+#    R_value = last_value,  # Usamos el último valor
+#    Terminal_Node = df$Terminal_Node[1]
+#  )
   
   # Combinar el dataframe original con los pasos adicionales
-  rbind(df, additional_steps)
-}))
+#  rbind(df, additional_steps)
+#}))
 
 # Graficar los valores de M a lo largo del camino de nodos desde la raíz para cada cluster
-ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +  # Añadir puntos en cada nodo
-  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
-  labs(
-    title = "Valores de R a lo largo de los nodos",
-    x = "Paso desde la raíz",
-    y = "Valor de R",
-    color = "Cluster"
-  ) +
-  theme_minimal() +
-  scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
+#ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
+#  geom_line(size = 1) +
+#  geom_point(size = 2) +  # Añadir puntos en cada nodo
+#  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
+#  labs(
+#    title = "Valores de R a lo largo de los nodos",
+#    x = "Paso desde la raíz",
+#    y = "Valor de R",
+#    color = "Cluster"
+#  ) +
+#  theme_minimal() +
+#  scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-png("Figures/R_TRAIT.png",width = 2000, height = 750, res = 300)
-ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +  # Añadir puntos en cada nodo
-  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
-  labs(
-    title = "Valores de R a lo largo de los nodos",
-    x = "Paso desde la raíz",
-    y = "Valor de R",
-    color = "Cluster"
-  ) +
-  theme_minimal() +
-  scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
+#png("Figures/R_TRAIT.png",width = 2000, height = 750, res = 300)
+#ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
+#  geom_line(size = 1) +
+#  geom_point(size = 2) +  # Añadir puntos en cada nodo
+#  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
+#  labs(
+#    title = "Valores de R a lo largo de los nodos",
+#    x = "Paso desde la raíz",
+#    y = "Valor de R",
+#    color = "Cluster"
+#  ) +
+#  theme_minimal() +
+#  scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-dev.off()
+#dev.off()
 ################################## A ###########################################
 # Cluster
 clusters_table
@@ -780,138 +776,138 @@ dev.off()
 
 ################################## R ###########################################
 # Obtener los nodos terminales
-terminal_nodes <- rvt$obj$tree$tip.label
+#terminal_nodes <- rvt$obj$tree$tip.label
 
 # Obtener las rutas de nodos desde la raíz
-paths <- nodepath(rvt$obj$tree, 1:169)
+#paths <- nodepath(rvt$obj$tree, 1:169)
 
 # Extraer los estados ancestrales
-R_anc_states <- rvt$anc$ace
+#R_anc_states <- rvt$anc$ace
 
 # Extraer estados actuales
-R_trait_vector <- setNames(R_trait2$R, rownames(R_trait2))
-print(R_trait_vector)
+#R_trait_vector <- setNames(R_trait2$R, rownames(R_trait2))
+#print(R_trait_vector)
 
 # Crear un data.frame para almacenar resultados
-result_list <- list() 
+#result_list <- list() 
 
 # Iterar sobre cada nodo terminal y su ruta desde la raíz
-for (i in seq_along(paths)) {
+#for (i in seq_along(paths)) {
   # Nodo terminal y ruta de nodos desde la raíz hasta el nodo terminal
-  tip <- terminal_nodes[i]
-  path <- paths[[i]]
+#  tip <- terminal_nodes[i]
+#  path <- paths[[i]]
   
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
-  cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
+#  cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
+#  cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
   
   # Obtener el valor de R para el nodo terminal desde R_trait
-  R_value_terminal <- ifelse(tip %in% names(R_trait_vector), R_trait_vector[tip], NA)
+#  R_value_terminal <- ifelse(tip %in% names(R_trait_vector), R_trait_vector[tip], NA)
   
   # Verificar si hay un cluster y un valor de R válido
-  if (!is.na(cluster) && !is.na(R_value_terminal)) {
+#  if (!is.na(cluster) && !is.na(R_value_terminal)) {
     # Agregar el nodo terminal al dataframe con su valor de R y su cluster
-    result_list[[i]] <- data.frame(
-      Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-      Cluster = cluster,
-      R_value = R_value_terminal
-    )
+#    result_list[[i]] <- data.frame(
+#      Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
+#      Cluster = cluster,
+#      R_value = R_value_terminal
+#    )
     
     # Agregar cada nodo ancestral en el path (excluyendo el terminal)
-    for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo terminal
+#    for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo terminal
       # Asignar el valor de R para el nodo ancestral
-      R_value <- ifelse(as.character(node) %in% names(R_anc_states), 
-                        R_anc_states[as.character(node)], NA)
+#      R_value <- ifelse(as.character(node) %in% names(R_anc_states), 
+#                        R_anc_states[as.character(node)], NA)
       
       # Asegurarse de que el nodo ancestral tenga un cluster asignado
       # Asignar el cluster del terminal (debe estar asignado ya)
-      if (!is.na(cluster) && !is.na(R_value)) {
-        result_list[[length(result_list) + 1]] <- data.frame(
-          Node = node,
-          Cluster = cluster,  # Asignamos el mismo cluster del terminal
-          R_value = R_value
-        )
-      }
-    }
-  }
-}
+#      if (!is.na(cluster) && !is.na(R_value)) {
+#        result_list[[length(result_list) + 1]] <- data.frame(
+#          Node = node,
+#          Cluster = cluster,  # Asignamos el mismo cluster del terminal
+#          R_value = R_value
+#        )
+#      }
+#    }
+#  }
+#}
 
 # Combinar todos los dataframes en uno solo
-result_df_R <- do.call(rbind, result_list)
+#result_df_R <- do.call(rbind, result_list)
 
 # Eliminar filas duplicadas de cada nodo (manteniendo el primero)
-result_df_R <- result_df_R[!duplicated(result_df_R$Node), ]
+#result_df_R <- result_df_R[!duplicated(result_df_R$Node), ]
 
 # Resetear los nombres de las filas
-row.names(result_df_R) <- NULL
+#row.names(result_df_R) <- NULL
 
 # Ver el dataframe resultante
-print(result_df_R)
+#print(result_df_R)
 
-expanded_df <- do.call(rbind, lapply(1:length(paths), function(i) {
-  path <- paths[[i]]
-  cluster <- result_df_R$Cluster[match(path[length(path)], result_df_R$Node)]
-  R_values <- result_df_R$R_value[match(path, result_df_R$Node)]
+#expanded_df <- do.call(rbind, lapply(1:length(paths), function(i) {
+#  path <- paths[[i]]
+#  cluster <- result_df_R$Cluster[match(path[length(path)], result_df_R$Node3)]
+#  R_values <- result_df_R$R_value[match(path, result_df_R$Node)]
   # Crear una columna de pasos desde la raíz (distancia en pasos desde el nodo 16)
-  steps_from_root <- seq(0, length(path)-1)
-  data.frame(Step = steps_from_root, 
-             Cluster = cluster, 
-             R_value = R_values, 
-             Terminal_Node = path[length(path)])
-}))
-max_steps <- max((expanded_df$Step))
-max_steps
+#  steps_from_root <- seq(0, length(path)-1)
+#  data.frame(Step = steps_from_root, 
+#             Cluster = cluster, 
+#             R_value = R_values, 
+#             Terminal_Node = path[length(path)])
+#}))
+#max_steps <- max((expanded_df$Step))
+#max_steps
 # Eliminar filas donde R_value es NA
-expanded_df <- expanded_df[!is.na(expanded_df$R_value), ]
+#expanded_df <- expanded_df[!is.na(expanded_df$R_value), ]
 
 # Asegurarse de que el Cluster no tenga NA
-expanded_df <- expanded_df[!is.na(expanded_df$Cluster), ]
+#expanded_df <- expanded_df[!is.na(expanded_df$Cluster), ]
 
-expanded_df_extended <- do.call(rbind, lapply(split(expanded_df, expanded_df$Terminal_Node), function(df) {
+#expanded_df_extended <- do.call(rbind, lapply(split(expanded_df, expanded_df$Terminal_Node), function(df) {
   # Calcular valores adicionales de R
-  last_step <- max(df$Step)
-  last_value <-tail(df$R_value, 1)
-  cluster <- unique(df$Cluster)
+#  last_step <- max(df$Step)
+#  last_value <-tail(df$R_value, 1)
+#  cluster <- unique(df$Cluster)
   
   # Generar filas adicionales hasta el máximo de pasos deseado
-  additional_steps <- data.frame(
-    Step = seq(last_step, max_steps),
-    Cluster = cluster,
-    R_value = last_value,  # Usamos el último valor
-    Terminal_Node = df$Terminal_Node[1]
-  )
+#  additional_steps <- data.frame(
+#    Step = seq(last_step, max_steps),
+#    Cluster = cluster,
+#    R_value = last_value,  # Usamos el último valor
+#    Terminal_Node = df$Terminal_Node[1]
+#  )
   
   # Combinar el dataframe original con los pasos adicionales
-  rbind(df, additional_steps)
-}))
-ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
-  geom_line(size = 0.1, alpha = 0.6) +
-  geom_point(size = 0.1) +  # Añadir puntos en cada nodo
-  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
-  labs(
-    title = "Valores de R a lo largo de los nodos",
-    x = "Paso desde la raíz",
-    y = "Valor de R",
-    color = "Cluster"
-  ) +
-  theme_minimal() +
-  scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
+#  rbind(df, additional_steps)
+#}))
+#ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
+#  geom_line(size = 0.1, alpha = 0.6) +
+#  geom_point(size = 0.1) +  # Añadir puntos en cada nodo
+#  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
+#  labs(
+#    title = "Valores de R a lo largo de los nodos",
+#    x = "Paso desde la raíz",
+#    y = "Valor de R",
+#    color = "Cluster"
+#  ) +
+#  theme_minimal() +
+#  scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de R a lo largo del camino de nodos desde la raíz para cada cluster
-png("Figures/R_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
-ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
-  geom_line(size = 0.1, alpha = 0.6) +
-  geom_point(size = 0.1) +  # Añadir puntos en cada nodo
-  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
-  labs(
-    title = "Valores de R a lo largo de los nodos",
-    x = "Paso desde la raíz",
-    y = "Valor de R",
-    color = "Cluster"
-  ) +
-  theme_minimal() +
-  scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
-dev.off()
+#png("Figures/R_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+#ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
+#  geom_line(size = 0.1, alpha = 0.6) +
+#  geom_point(size = 0.1) +  # Añadir puntos en cada nodo
+#  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
+#  labs(
+#    title = "Valores de R a lo largo de los nodos",
+#    x = "Paso desde la raíz",
+#    y = "Valor de R",
+#    color = "Cluster"
+#  ) +
+#  theme_minimal() +
+#  scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
+#dev.off()
 
 ################################## A ###########################################
 # Obtener los nodos terminales

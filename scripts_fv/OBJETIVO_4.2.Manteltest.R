@@ -122,22 +122,22 @@ mantel_function <- function(t1,t2) {
 
 mantel_con1 <- mantel_function(con1, geo_muestra)
 mantel_con2 <- mantel_function(con2, geo_muestra)
-mantel_con3 <- mantel_function(con3, geo_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
-mantel_con4 <- mantel_function(con4,geo_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not foun
+#mantel_con3 <- mantel_function(con3, geo_muestra2)
+#mantel_con4 <- mantel_function(con4,geo_muestra2) 
 
 mantel_con1_ap <- mantel_function(con1, surname_matrix_muestra)
 mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
-mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
-mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not found
+#mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
+#mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2) 
 
-mantel_con1_str <- mantel_function(con1, as.matrix(DSW)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'DSW' not found
-mantel_con2_str <- mantel_function(con2, as.matrix(DSW)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'DSW' not found
+#mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
+#mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
 
-mantel_con3_str <- mantel_function(con3, as.matrix(DSW2)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con3' not found
-mantel_con4_str <- mantel_function(con4, as.matrix(DSW2)) #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'con4' not found
+#mantel_con3_str <- mantel_function(con3, as.matrix(DSW2)) 
+#mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
 
-#TODO: REVISAR. Líneas 144 y 145 no van a correr por qué no existen los objetos con3, con4 ni DSW2.
+#TODO: REVISAR. Muchas líneas no van a correr por qué no existen los objetos con3, con4 (comunidades con Puclaro) y DSW y DSW2 que son matrices de distancia para la construcción del árbol de STR que ya no se ocupan. Los dejé comentados.
 

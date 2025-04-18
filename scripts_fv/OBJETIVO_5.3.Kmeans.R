@@ -93,25 +93,25 @@ pamk_res <-pamk(df_tree_scaled_t,krange=1:14,criterion="asw", usepam=TRUE,
      scaling=FALSE, alpha=0.001, diss=inherits(df_tree_scaled_t, "dist"),
      critout=FALSE, ns=10, seed=NULL) 
 pam_res <- pam(df_tree_scaled_t, 6)
-fviz_cluster(pam_res, palette = c("#00AFBB", "#FC4E07"), ellipse.type = "t", repel = TRUE, ggtheme = theme_classic())
+fviz_cluster(pam_res, palette = c("#00AFBB","black","pink","green","red", "#FC4E07"), ellipse.type = "t", repel = TRUE, ggtheme = theme_classic())
 
 ## Gap stat ##
 fviz_nbclust(df_tree_scaled_t, kmeans, method = "gap_stat") #7
 
 ## NbClust ## No funcionó
 
-#<-NbClust(diss = surname_matrix, min.nc=2, max.nc=7, method="kmeans", index="all")
+#NbClust(diss = surname_matrix, min.nc=2, max.nc=7, method="kmeans", index="all")
 mds_coords <- cmdscale(surname_matrix, k = 5)
 mds_df <- as.data.frame(mds_coords)
-resumclust <- NbClust(data = mds_df,diss = surname_matrix, distance = NULL, min.nc = 2,
-                           max.nc = 7, method = "average", index = "alllong")
-print(resumclust) # 2
+#resumclust <- NbClust(data = mds_df,diss = surname_matrix, distance = NULL, min.nc = 2,max.nc = 7, method = "average", index = "alllong")
+#print(resumclust) # 2
 
 # Ejecutar el K-means con un número de clústeres seleccionado
 pam_res <- pam(df_tree_scaled_t, 3)
-fviz_cluster(pam_res, palette = c("#00AFBB", "#FC4E07"), ellipse.type = "t", repel = F, ggtheme = theme_classic())
+fviz_cluster(pam_res, palette = c("#00AFBB","pink", "#FC4E07"), ellipse.type = "t", repel = F, ggtheme = theme_classic())
 
 km <- kmeans(df_tree_scaled_t, centers = 2, iter.max = 100, nstart = 100)
 fviz_cluster(km, data = df_tree_scaled_t)
 
 ## 2 clusters principales ##
+

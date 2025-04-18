@@ -76,49 +76,49 @@ dev.off()
 
 
 ############# R #############
-plot_data <- data.frame(df_tree_scaled_numeric, 
-                        R_trait = R_trait$R, 
-                        cluster = as.factor(kmeans_result$cluster))
-plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
+#plot_data <- data.frame(df_tree_scaled_numeric, 
+#                        R_trait = R_trait$R, 
+#                        cluster = as.factor(kmeans_result$cluster))
+#plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
 
 #TODO Error in eval(ei, envir) : object 'R_trait' not found
 
-obj.r <- estimacion_estados_ancestrales(consensus_tree, rv1)
-y.r <- c(obj.r$tree$maps) 
-lims.r <- obj.r$lims 
-cols.r <- obj.r$cols 
-trans.r <- seq(lims.r[1], lims.r[2], length.out = length(cols.r))  
-tip_values.r <- rv1[consensus_tree$tip.label]  
-tip_colors.r <- sapply(tip_values.r, function(value) {
-  idx <- which.min(abs(trans.r - value)) 
-  cols.r[as.character(idx)] 
-})
-names(tip_colors.r) <- names(tip_values.r)
+#obj.r <- estimacion_estados_ancestrales(consensus_tree, rv1)
+#y.r <- c(obj.r$tree$maps) 
+#lims.r <- obj.r$lims 
+#cols.r <- obj.r$cols 
+#trans.r <- seq(lims.r[1], lims.r[2], length.out = length(cols.r))  
+#tip_values.r <- rv1[consensus_tree$tip.label]  
+#tip_colors.r <- sapply(tip_values.r, function(value) {
+#  idx <- which.min(abs(trans.r - value)) 
+#  cols.r[as.character(idx)] 
+#})
+#names(tip_colors.r) <- names(tip_values.r)
 
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
-png("Figures/R_trait_cluster.png", width = 5000, height = 2000, res = 300)
+#png("Figures/R_trait_cluster.png", width = 5000, height = 2000, res = 300)
 
 # Configuración de múltiples gráficos
-par(mfrow = c(1, 2), mar = c(5, 4, 4, 2) + 0.1)
+#par(mfrow = c(1, 2), mar = c(5, 4, 4, 2) + 0.1)
 
-plot(plot_data$PC1, plot_data$PC2,
-     col = tip_colors.r,
-     pch = as.numeric(plot_data$cluster),  # Diferentes símbolos para cada cluster
-     cex = 1.5,
-     xlab = "Dim 1",
-     ylab = "Dim 2",
-     main = "Gráfico de Clústeres - R")
+#plot(plot_data$PC1, plot_data$PC2,
+#     col = tip_colors.r,
+#     pch = as.numeric(plot_data$cluster),  # Diferentes símbolos para cada cluster
+#     cex = 1.5,
+#     xlab = "Dim 1",
+#     ylab = "Dim 2",
+#     main = "Gráfico de Clústeres - R")
 
 # Agregar leyenda para formas (Cluster)
-legend("bottomright",inset = c(0.01, 0.01), legend = levels(plot_data$cluster), pch = 1:length(levels(plot_data$cluster)),
-       title = "Cluster", cex = 1)
+#legend("bottomright",inset = c(0.01, 0.01), legend = levels(plot_data$cluster), pch = 1:length(levels(plot_data$cluster)),
+#       title = "Cluster", cex = 1)
 
 # Gráfico de contMap
-plot(obj.r, type = "phylogram", legend = 0.3 * max(nodeHeights(consensus_tree)), ftype = "i",  fsize = c(1), leg.txt = "R")
+#plot(obj.r, type = "phylogram", legend = 0.3 * max(nodeHeights(consensus_tree)), ftype = "i",  fsize = c(1), leg.txt = "R")
 
 # Cerrar el PNG
-dev.off()
+#dev.off()
 
 ############# A #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
@@ -299,43 +299,43 @@ plot(obj.S, type = "phylogram", legend = 0.5 * max(nodeHeights(y_total)), ftype 
 dev.off()
 
 # Agregar leyenda para formas (Cluster)
-legend(inset = c(-0.25,0.7), legend = levels(plot_data$cluster), pch = 1:length(levels(plot_data$cluster)),
-       title = "Cluster", cex = 1,y.intersp = 0,xpd = T)
-par(xpd = FALSE)
+#legend(inset = c(-0.25,0.7), legend = levels(plot_data$cluster), pch = 1:length(levels(plot_data$cluster)),
+#       title = "Cluster", cex = 1,y.intersp = 0,xpd = T)
+#par(xpd = FALSE)
 ############# R #############
-plot_data <- data.frame(df_tree_scaled_numeric, 
-                        R_trait = R_trait2$R, 
-                        cluster = as.factor(kmeans_result$cluster))
-plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
-obj.r <- estimacion_estados_ancestrales(y_total, rv2)
-y.r <- c(obj.r$tree$maps) 
-lims.r <- obj.r$lims 
-cols.r <- obj.r$cols 
-trans.r <- seq(lims.r[1], lims.r[2], length.out = length(cols.r))  
-tip_values.r <- rv2[y_total$tip.label]  
-tip_colors.r <- sapply(tip_values.r, function(value) {
-  idx <- which.min(abs(trans.r - value)) 
-  cols.r[as.character(idx)] 
-})
-names(tip_colors.r) <- names(tip_values.r)
+#plot_data <- data.frame(df_tree_scaled_numeric, 
+#                      R_trait = R_trait2$R, 
+#                       cluster = as.factor(kmeans_result$cluster))
+#plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
+#obj.r <- estimacion_estados_ancestrales(y_total, rv2)
+#y.r <- c(obj.r$tree$maps) 
+#lims.r <- obj.r$lims 
+#cols.r <- obj.r$cols 
+#trans.r <- seq(lims.r[1], lims.r[2], length.out = length(cols.r))  
+#tip_values.r <- rv2[y_total$tip.label]  
+#tip_colors.r <- sapply(tip_values.r, function(value) {
+#  idx <- which.min(abs(trans.r - value)) 
+#  cols.r[as.character(idx)] 
+#})
+#names(tip_colors.r) <- names(tip_values.r)
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
-png("Figures/R_total_cluster.png", width = 6000, height = 2000, res = 300)
+#png("Figures/R_total_cluster.png", width = 6000, height = 2000, res = 300)
 
 # Configuración de múltiples gráficos
 # Ajusta márgenes según sea necesario
-layout(matrix(c(1, 2), nrow = 1), widths = c(2, 1))
-plot(plot_data$PC1, plot_data$PC2,
-     col = tip_colors.r,  # Asignar colores según S_trait
-     pch = as.numeric(plot_data$cluster),  # Diferentes símbolos para cada cluster
-     cex = 1.5,
-     bg = Cluster,
-     xlab = "Dim 1",
-     ylab = "Dim 2",
-     main = "Gráfico de Clústeres - R")
+#layout(matrix(c(1, 2), nrow = 1), widths = c(2, 1))
+#plot(plot_data$PC1, plot_data$PC2,
+#     col = tip_colors.r,  # Asignar colores según S_trait
+#     pch = as.numeric(plot_data$cluster),  # Diferentes símbolos para cada cluster
+#     cex = 1.5,
+#     bg = Cluster,
+#     xlab = "Dim 1",
+#     ylab = "Dim 2",
+#     main = "Gráfico de Clústeres - R")
 
 # Gráfico de contMap
-plot(obj.r, type = "phylogram", legend = 0.5 * max(nodeHeights(y_total)), ftype = "off", leg.txt = "R")
-dev.off()
+#plot(obj.r, type = "phylogram", legend = 0.5 * max(nodeHeights(y_total)), ftype = "off", leg.txt = "R")
+#dev.off()
 ############# A #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
                         A_trait = A_trait2$A, 

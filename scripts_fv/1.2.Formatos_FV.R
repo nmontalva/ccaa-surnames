@@ -13,17 +13,17 @@ library(tidyverse)
 
 ## Cargar bases de datos ##
 STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
+STR <- STR[STR$ind != "BZ023", ]
 STR$pop <- gsub(" ", "_", STR$pop)
 colnames(STR) <- gsub("\\.1$", " ", colnames(STR))
 write.table(STR, file = "scripts_fv/Datos/STR1.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
 STR [, 3:ncol(STR)] <- lapply(STR[, 3:ncol(STR)], function(x) sprintf("%02d", x))
 locis <- colnames(STR[,3:32])
 locis_unicos <- unique(trimws(locis))
-
 pop<-STR$pop
 
 STR_alelos_slash  <- read_delim("scripts_fv/Datos/STR_ceros.csv",";", escape_double = FALSE, trim_ws = TRUE)
-
+STR_alelos_slash <- STR_alelos_slash[STR_alelos_slash$ID != "BZ023", ]
 STR_alelos_slash <- STR_alelos_slash %>% 
   unite( D3S1358, D3S1358.1, D3S1358.2, sep = "/", remove = TRUE) %>% 
   unite(TH01, TH01.1, TH01.2, sep = "/", remove = TRUE) %>% 
@@ -41,7 +41,7 @@ STR_alelos_slash <- STR_alelos_slash %>%
   unite(TPOX, TPOX.1, TPOX.2, sep = "/", remove = TRUE) %>% 
   unite(FGA, FGA.1, FGA.2, sep = "/", remove = TRUE)
 
-STR_alelos_slash <- STR_alelos_slash[ !(STR_alelos_slash$ID %in% c("AS", "DS", "JG", "MR", "NM", "VG", "WW182", "pos_ctrl")), ]
+STR_alelos_slash <- STR_alelos_slash[ !(STR_alelos_slash$ID %in% c("AS", "DS", "JG", "MR", "NM", "VG", "WW182", "pos_ctrl")), ] # Quitar controles
 STR_alelos_slash<-as.data.frame(STR_alelos_slash)
 row.names(STR_alelos_slash) <- STR_alelos_slash$ID 
 STR_alelos_slash[1] <- NULL
@@ -53,5 +53,5 @@ STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.name
 #Warning message:
 #  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
 #                 Individuals with no scored loci have been removed
-# RESOLUCION: BZ023 tiene solo ceros.
+# RESOLUCION: BZ023 tiene solo ceros. Fue removido con anterioridad.
 

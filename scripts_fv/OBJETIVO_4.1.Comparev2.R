@@ -75,50 +75,32 @@ consensus_tree2 <- reorder(consensus_tree2, "postorder")
 plotTree(consensus_tree1)
 plotTree(consensus_tree2)
 
-
 par(mfrow=c(1,2))
 plot(consensus_tree1, main="Apellidos primero")
 plot(consensus_tree2, main="DPS primero")
 par(mfrow=c(1,1))
 dev.off()
 
-
-
 png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
 plot.phylo(consensus_tree2)
 dev.off()
 
-#largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
-#consensus_tree2$edge.length <- largo.ramas
-# Número de nodos internos (Ntip - 1 para árboles binarios)
-
 #Preparacion de árbol con largo de ramas (Todavía está por verse)
-consensus_tree2$edge.length <- phyDPS$edge.length
+is.binary(consensus_tree2)
 consensus_tree2$root.edge <- 0
-#largo.ramas <- ((hy$edge.length) + (phyDPS$edge.length))/2
-#consensus_tree2$edge.length <- largo.ramas
-#micalibracion <- makeChronosCalib(consensus_tree2)
-#mytimetree <- chronos(consensus_tree2, lambda = 1, model = "discrete", 
-#                      calibration = micalibracion, 
-#                      control = chronos.control(nb.rate.cat = 1))
-#plot.phylo(mytimetree)
-
+# Promediar longitudes de ambos árboles (si topologías son compatibles)
+consensus_tree2$edge.length <- (hy$edge.length + phyDPS$edge.length) / 2
+consensus_tree2$edge.length[consensus_tree2$edge.length == 0] <- 1e-6  # Reemplazar ceros para evitar la división por 0
+consensus_tree2 <- nnls.tree(cophenetic(consensus_tree2), consensus_tree2, rooted = TRUE)
 #=======
 #TODO: REVISAR. Muchas "warnings" aquí.
-# Parece ser un problema con el cálculo de los largos de las ramas.
+# Parece ser un  con el cálculo de los largos de las ramas.
 #=======
-
-#consensus_tree<-(mytimetree)
-#consensus_tree<-multi2di(consensus_tree)
-#plot.phylo(consensus_tree)
-
-consensus_tree2 <- compute.brlen(consensus_tree2, method = "Grafen")
+# REVISION: Al cambiar el método de cálculo de largo de ramas debería ser ultramétrico. 
 consensus_tree2 <- multi2di(consensus_tree2)
 plot.phylo(consensus_tree2)
 is.rooted(consensus_tree2)
 is.ultrametric(consensus_tree2)
-is.binary(consensus_tree2)
-
 consensus_tree<-(consensus_tree2)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
@@ -135,7 +117,7 @@ traits <- function(comuneros, group_by_cols = c("community","commune")) {
     group_by_cols <- as.vector(group_by_cols)
   }
   
-  # Calcular los �ndices
+  # Calcular los indices
   result <- comuneros %>%
     group_by(across(all_of(group_by_cols))) %>%
     summarise(
@@ -282,16 +264,15 @@ conflict_prefer("theme_dendro","ggdendro")
 conflict_prefer("label", "ggdendro")
 
 consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="community") {
-  dendroplot(raise.dendrogram(as.dendrogram(consensus_tree), max(consensus_tree$edge.length)), save_as, group_by_col)
+  raised_tree <- raise.dendrogram(as.dendrogram(consensus_tree2), max(consensus_tree2$edge.length))
+  dendroplot(raised_tree, save_as, group_by_col)
 }
 
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
-consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
-
-consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
-
+consensus_tree<-(consensus_tree2)
 #TODO: Las últimas 3 líneas con texto arrojan, cada una, esta advertencia:
 # Warning message:
 #   In max(consensus_tree$edge.length) :
 #   no non-missing arguments to max; returning -Inf
+##REVISION: No debería volver a salir este error y generarse una figura con el arbol de consenso y los traits anotados.
