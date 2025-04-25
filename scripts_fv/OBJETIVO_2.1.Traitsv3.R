@@ -86,7 +86,7 @@ shapiro.test(result$M)
 #Ningún índice se distribuye de manera normal
 
 #### G y M DATA TOTAL ####
-GM_df <- as.data.frame(select(result,community, G,M))
+GM_df <- as.data.frame(dplyr::select(result,community, G,M))
 rownames(GM_df) <- GM_df$community
 GM_df <- GM_df[, -1]
 # Escalar los datos (opcional)

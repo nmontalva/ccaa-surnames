@@ -112,7 +112,7 @@ mantel_function <- function(t1,t2) {
   mantel.test <- mantel.rtest(
     mat2_filtered, # La primera de las dos matrices de disimilitud
     mat1_filtered, # La segunda matriz
-    nrepet = 1000000
+    nrepet = iter
   )
   
   #Visualizar mantel

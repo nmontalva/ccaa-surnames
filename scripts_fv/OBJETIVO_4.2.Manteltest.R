@@ -110,7 +110,7 @@ mantel_function <- function(t1,t2) {
     mat2_filtered, # La primera de las dos matrices de disimilitud
     mat1_filtered, # La segunda matriz
     method = "pearson", # M?todo, el m?s com?n es pearson puede ser ( "pearson", "spearman", o "kendall")
-    permutations = 999, # N?mero de permutaciones, usar how() para determinarlas
+    permutations = iter, # N?mero de permutaciones, usar how() para determinarlas
     strata = NULL, # Valor integrer o factor que identifique estratificaci?n para las permutaciones
     na.rm = FALSE, # Remover NS 
     parallel = getOption("mc.cores") # Opciones para procesos paralelos

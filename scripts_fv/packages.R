@@ -7,7 +7,7 @@ packages <- c(
   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "treeio", "geomorph", "devtools",
   "cowplot", "GGally", "png", "grid", "factoextra", "cluster", "NbClust", "fpc", "PlotTools",
-  "wesanderson"
+  "wesanderson", "BiocManager", "magick", "SDPDmod", "surface", "picante"
 )
 
 # Log files

@@ -24,6 +24,12 @@ library(vegan)
 # RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
 #=======
 
+## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
+
+iter <- 1000 # set to 1000000 for actual analyses
+
+##--##
+
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -98,7 +104,7 @@ set.seed(152)
 mantel.rtest(
     mat2_filtered, # La primera de las dos matrices de disimilitud
     mat1_filtered, # La segunda matriz
-    nrepet = 1000000
+    nrepet = iter
   )
 
 #2. Comunidades muestreadas #
@@ -143,5 +149,5 @@ set.seed(152)
 mantel.rtest(
   mat2_filtered, # La primera de las dos matrices de disimilitud
   mat1_filtered, # La segunda matriz
-  nrepet = 1000000
+  nrepet = iter
 )

@@ -1303,7 +1303,7 @@ png("Figures/M_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = M_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 0.1, alpha = 0.6) +
   geom_point(size = 0.1) +  # Añadir puntos en cada nodo
-  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, size = 1.2, linetype = "dashed") +  # Línea de tendencia
+  geom_smooth(aes(group = Cluster), method = "lm", se = FALSE, linewidth = 1.2, linetype = "dashed") +  # Línea de tendencia
   labs(
     title = "Valores de M a lo largo de los nodos",
     x = "Paso desde la raíz",

@@ -87,7 +87,7 @@ shapiro.test(result$M)
 
 #Crear cluster
 #### G y M DATA TOTAL ####
-GM_df <- as.data.frame(select(result,community, G,M))
+GM_df <- as.data.frame(dplyr::select(result,community, G,M))
 rownames(GM_df) <- GM_df$community
 GM_df <- GM_df[, -1]
 # Escalar los datos (opcional)
@@ -168,19 +168,19 @@ result_traits <- merge(result,GM_df, by =c("community","G","M"))
 colnames(result_traits)
 hist(result_traits$cluster)
 
-
+conflicts_prefer(dplyr::filter)
 ###TEST DE KRUSTALL-WALLIS ENTRE CLUSTER DE G Y M
 ## Arbol muestra
 #G
 G_kw <-result_traits %>%
   filter(community %in% selected_communities) %>%
-  select(community,G,cluster) %>%
+  dplyr::select(community,G,cluster) %>%
   {kruskal.test(G~cluster,data=.)} #diff entre medianas
 print(G_kw)
 #M
 M_kw <-result_traits %>%
   filter(community %in% selected_communities) %>%
-  select(community,M,cluster) %>%
+  dplyr::select(community,M,cluster) %>%
   {kruskal.test(M~cluster,data=.)} #diff entre medianas
 print(M_kw)
 ## Arbol total
@@ -193,7 +193,7 @@ kruskal.test(result_traits$M~result_traits$cluster) #diff entre medianas
 pca_result <- prcomp(result_traits[, c("G", "M")], scale. = TRUE)
 summary(pca_result)
 result_traits_pca<-result_traits
-result_traits_pca$x <- x
+result_traits_pca$x <- x ##TODO Esto no corre (25-04)
 
 #TODO:Error in eval(ei, envir) : object 'x' not found
 

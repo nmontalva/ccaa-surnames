@@ -1,3 +1,14 @@
+---Actualización 25-04
+- OBJETIVO_2.1.Traitsv2.R Línea 196.
+> result_traits_pca$x <- x
+Error en eval(ei, envir): objeto 'x' no encontrado
+
+PREGUNTAS:
+OBJETIVO_2.2.Dendroplot todavía dice ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5
+¿Se puede solucionar este problema?
+
+
+
 ---Actualización del 16/04
 # No corre
 - Objetivo_4_otras_comparaciones.R

@@ -11,6 +11,7 @@ library(cowplot)
 library(GGally)
 library(png)
 library(grid)
+library(magick)
 
 
 ## Matriz de graficos ##

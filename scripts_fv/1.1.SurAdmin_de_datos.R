@@ -65,7 +65,7 @@ mi.final <- merge(union_df, primera, all = TRUE)
 
 # Eliminar columna AMEL
 mi.final <- mi.final %>%
-  select(-AMEL)
+  dplyr::select(-AMEL)
 
 #Borrar otras bases 
 primera <- NULL
@@ -124,7 +124,7 @@ mi.final_wide <- mi.final %>%
 colnames(mi.final_wide)
 
 #Quitar las últimas 4 columnas
-STRv2 <-data.frame(mi.final_wide%>% select(-tail(names(.), 4)))
+STRv2 <-data.frame(mi.final_wide%>% dplyr::select(-tail(names(.), 4)))
 colnames(STRv2)
 STRv2
 #Guardar en STRv.2
