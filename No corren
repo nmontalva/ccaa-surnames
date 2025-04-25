@@ -1,7 +1,28 @@
 ---Actualización 25-04
-- OBJETIVO_2.1.Traitsv2.R Línea 196.
+- OBJETIVO_2.1.Traitsv2.R Línea 196. (tal vez no importa por ser v2)
 > result_traits_pca$x <- x
 Error en eval(ei, envir): objeto 'x' no encontrado
+
+- Objetivo_4.2.Manteltest.R- Revisar Warnings: In dist.nodes(x) : the tree has no branch length: fixing them to one.
+
+- Objetivo_4_Otras_comparaciones.R. Línea 20.
+##Bk_plot
+> Bk(phyNei,hy,k = nleaves(phyCS)-1)
+Error en eval(ei, envir): objeto 'phyNei' no encontrado
+Además, mucho para abajo tampoco corre.
+
+- Objetivo_5.9.Modelo_evolutivo.R (No es que no corra. Si corre)
+> fit_ou_M_s <- fitContinuous(consensus_tree, M_df_filtered_s, model = "OU")
+Avisos:
+1: In fitContinuous(consensus_tree, M_df_filtered_s, model = "OU") :
+  Non-ultrametric tree with OU model, using VCV method.
+2: In cache$dat - mu :
+  Reciclar un array de longitud 1 en la aritmética de vector-array ha sido discontinuado
+  Utilice c() o as.vector() en su lugar.
+3: In cache$dat - mu :
+  Reciclar un array de longitud 1 en la aritmética de vector-array ha sido discontinuado
+  Utilice c() o as.vector() en su lugar.
+Además, hay varias inconsistencias (probablemente de git-merge) con este script.
 
 PREGUNTAS:
 OBJETIVO_2.2.Dendroplot todavía dice ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5
