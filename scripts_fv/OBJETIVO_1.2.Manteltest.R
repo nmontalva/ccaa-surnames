@@ -24,10 +24,6 @@ library(vegan)
 # RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
 #=======
 
-## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
-
-iter <- 1000 # set to 1000000 for actual analyses
-
 ##--##
 
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")

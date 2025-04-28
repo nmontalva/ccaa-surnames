@@ -1,0 +1,21 @@
+=== Project run started at: 2025-04-27 21:13:42 ===
+
+[ERROR] in scripts_fv/OBJETIVO_3_Correlaciones.R:
+object 'RST' not found
+6: stop("'file' must be NULL or an already open connection")
+5: sink(output_log, append = TRUE, type = "message") at wrapper.R#66
+4: eval(ei, envir)
+3: eval(ei, envir)
+2: withVisible(eval(ei, envir))
+1: source("~/Documents/ccaa-surnames/ccaa-surnames/wrapper/wrapper.R", 
+       echo = TRUE)
+
+[ERROR] in scripts_fv/OBJETIVO_4_Otras_comparaciones.R:
+object 'phyNei' not found
+6: stop("'file' must be NULL or an already open connection")
+5: sink(output_log, append = TRUE, type = "message") at wrapper.R#66
+4: eval(ei, envir)
+3: eval(ei, envir)
+2: withVisible(eval(ei, envir))
+1: source("~/Documents/ccaa-surnames/ccaa-surnames/wrapper/wrapper.R", 
+       echo = TRUE)

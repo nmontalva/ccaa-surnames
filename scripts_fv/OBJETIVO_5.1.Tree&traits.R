@@ -25,7 +25,7 @@ library(Publish)
 
 #library(treeio) #No lo puedo instalar
 library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede instalar en modo binario ejecutable
-BiocManager::install("treeio")
+library("treeio") #Ver "packages.R" para instalar este paqute
 library(ggplot2)
 library(gridExtra)
 library(geomorph) #No lo puedo instalar
