@@ -1,4 +1,7 @@
-=== Project run started at: 2025-04-27 21:13:42 ===
+=== Project run started at: 2025-04-28 15:21:16 ===
+
+[WARNING] in scripts_fv/packages.R:
+package ‘picante’ was built under R version 4.4.3
 
 [WARNING] in scripts_fv/OBJETIVO_4.2.Manteltest.R:
 the tree has no branch length: fixing them to one.

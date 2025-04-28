@@ -90,12 +90,12 @@ for (i in seq_along(scripts)) {
   tryCatch({
     source(script, echo = TRUE, max.deparse.length = Inf)
   }, error = function(e) {
-    message("❌ Error in script: ", script)
+    message("Error in script: ", script)
     append_log(error_log, paste0("\n[ERROR] in ", script, ":\n", conditionMessage(e)))
     traceback_lines <- capture.output(traceback())
     append_log(error_log, paste(traceback_lines, collapse = "\n"))
   }, warning = function(w) {
-    message("⚠️ Warning in script: ", script)
+    message("Warning in script: ", script)
     append_log(warning_log, paste0("\n[WARNING] in ", script, ":\n", conditionMessage(w)))
   })
   
@@ -133,7 +133,7 @@ summary_text <- c(
   paste0("- Errors detected: ", num_errors),
   paste0("- Warnings detected: ", num_warnings),
   if (num_errors == 0) "\n✅ No errors. Project ready to use!"
-  else "\n⚠️ Some errors occurred. Check 'logs/errors.log' for full details."
+  else "\n️ Some errors occurred. Check 'logs/errors.log' for full details."
 )
 
 # Print to console
