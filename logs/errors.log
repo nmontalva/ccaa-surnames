@@ -1,92 +1,16 @@
-=== Project run started at: 2025-04-28 15:21:16 ===
+=== Project run started at: 2025-05-02 12:06:48 ===
 
-[ERROR] in scripts_fv/OBJETIVO_3_Correlaciones.R:
-objeto 'RST' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
-
-[ERROR] in scripts_fv/OBJETIVO_4_Otras_comparaciones.R:
-objeto 'phyNei' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
-
-[ERROR] in scripts_fv/OBJETIVO_5.1.Tree&traits.R:
-unable to open file 'Figures/M_total.png' for writing
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
-
-[ERROR] in scripts_fv/OBJETIVO_5.2.Visualización.R:
-objeto 'data1' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
-
-[ERROR] in scripts_fv/OBJETIVO_5.5.GráficoG_M.R:
-objeto 'mvt' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
+[ERROR] in scripts_fv/OBJETIVO_5.5.Gr�ficoG_M.R:
+objeto 'gvc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)
 
 [ERROR] in scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
-objeto 'mvt' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
+objeto 'svc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)
 
 [ERROR] in scripts_fv/OBJETIVO_5.7.HIP_1.R:
-error in evaluating the argument 'x' in selecting a method for function 'plot': objeto 'mvt' no encontrado
-5: dimnames(x)[[1L]] %||% if (do.NULL) NULL else {
-       nr <- NROW(x)
-       if (nr > 0L) 
-           paste0(prefix, seq_len(nr))
-       else character()
-   }
-4: rownames(trait_data)
-3: base::intersect(x, y, ...)
-2: intersect.default(tree$tip.label, rownames(trait_data))
-1: intersect(tree$tip.label, rownames(trait_data))
+error in evaluating the argument 'x' in selecting a method for function 'plot': objeto 'svc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)

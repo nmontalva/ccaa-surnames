@@ -443,34 +443,6 @@ publish(Phy_sig_total)
 png("Figures/Phylosignal_total.png", width = 400, height = 200)
 grid.table(Phy_sig_total)
 dev.off()
-#TODO [1] "some species in tree are missing from x , dropping missing taxa from the tree"
-#REVISION: No debería aparecer ese error nuevamente
-
-# Example with your tree and cluster assignments
-#fit_lambda_total <- fitDiscrete(
-#  phy = y_total,
-#  dat = kmeans_result$cluster,
-#  model = "ER",  # Equal rates model
-#  transform = "lambda"
-#)
-# View results
-#print(fit_lambda_total)
-#fit_lambda_total$opt$lambda
-#fit_lambda_total$opt$lnL
-
-#fit null model
-#fit_null_total <- fitDiscrete(
-#  phy = y_total,
-#  dat = kmeans_result$cluster,
-#  model = "ER", 
-#  transform = "none"  # No λ transformation
-#)
-
-# LRT between models
-#LRT_stat_total <- 2 * (fit_lambda_total$opt$lnL - fit_null_total$opt$lnL)
-#p_value_t <- pchisq(LRT_stat_total, df = 1, lower.tail = FALSE)
-#print(LRT_stat_total)
-#print(p_value_t)
 
 ###Regresion PGLS
 ##Phylo-regression for sampled data

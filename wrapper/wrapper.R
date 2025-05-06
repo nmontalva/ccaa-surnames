@@ -23,20 +23,21 @@ scripts <- c(
   "scripts_fv/OBJETIVO_1.1.Surnames.R",
   "scripts_fv/OBJETIVO_1.2.Manteltest.R",
   "scripts_fv/OBJETIVO_2.1.Traitsv3.R",
-  #"scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
+  "scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
   "scripts_fv/OBJETIVO_3.1.STR.R",
-  "scripts_fv/OBJETIVO_3_Correlaciones.R",
+  #"scripts_fv/OBJETIVO_3_Correlaciones.R", #Ya no se usa en los analisis
   "scripts_fv/OBJETIVO_3.2.Manteltest.R",
   "scripts_fv/OBJETIVO_4.1.Comparev2.R",
   "scripts_fv/OBJETIVO_4.2.Manteltest.R",
-  "scripts_fv/OBJETIVO_4_Otras_comparaciones.R",
+  #"scripts_fv/OBJETIVO_4_Otras_comparaciones.R",#Este script eran varias comparaciones posibles entre árboles y sólo se usó Bakers Gamma. Eliminé este script y lo que se usa está ahora en 4.1.
   "scripts_fv/OBJETIVO_5.1.Tree&traits.R",
-  "scripts_fv/OBJETIVO_5.2.Visualización.R", #mejor no usar acentos (ó) en los nombres de archivos
+  "scripts_fv/OBJETIVO_5.2.Visualizacion.R",
   # 5.3, 5.4 ya no van
   "scripts_fv/OBJETIVO_5.5.GráficoG_M.R",
   "scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R",
   "scripts_fv/OBJETIVO_5.7.HIP_1.R",
-  "scripts_fv/OBJETIVO_5.8.I_de_Moran.R"
+  "scripts_fv/OBJETIVO_5.8.I_de_Moran.R",
+  "scripts_fv/OBJETIVO_5.9.Random_trees.R"
 )
 
 log_dir <- "logs"
@@ -132,7 +133,7 @@ summary_text <- c(
   paste0("- Scripts executed: ", total_steps),
   paste0("- Errors detected: ", num_errors),
   paste0("- Warnings detected: ", num_warnings),
-  if (num_errors == 0) "\n✅ No errors. Project ready to use!"
+  if (num_errors == 0) "\n No errors. Project ready to use!"
   else "\n️ Some errors occurred. Check 'logs/errors.log' for full details."
 )
 
@@ -148,3 +149,4 @@ if (num_errors == 0) {
 } else {
   writeLines("failure", con = status_flag)
 }
+

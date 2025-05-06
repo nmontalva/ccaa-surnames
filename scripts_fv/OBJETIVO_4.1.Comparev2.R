@@ -1,9 +1,9 @@
 ################################################################################
 ################################################################################
-#########Project 111160402: Cultural phylogenetics and coevolution of wealth#### ##########inheritance and land tenure norms in agropastoralist communities######
+#########Project 111160402: Cultural phylogenetics and coevolution of wealth#### 
+##########inheritance and land tenure norms in agropastoralist communities######
 ################################################################################
 ################################################################################
-
 #### OBJETIVO 4 ################################################################
 ### To compare trees builds with different data and their deviations from the consensus tree #################################################################
 
@@ -13,6 +13,7 @@
 library(ape)
 library(dendextend)
 library(geiger)
+library(phangorn)
 library(phytools)
 library(stringr)
 
@@ -60,6 +61,29 @@ x %>% plot(main = paste("entanglement =", round(entanglement(x), 2)),common_subt
 legend(x = 5.8, y = 7.5,legend = leyenda, cex = 0.3, pt.cex = 0.5,inset=c(0.05,0.05),text.width = 0.8,box.lty = 2)
 dev.off()
 
+################ BAKER GAMMA:COMPARACION APELLIDOS/STR #########################
+# Encontrar p-valor
+set.seed(10000)
+the_cor <- cor_bakers_gamma(hy,hy)
+the_cor2 <- cor_bakers_gamma(as.dendrogram(phyDPS), as.dendrogram(hy))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- hd
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(hd, dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor, lty = 2, col = 2)
+abline(v = the_cor2, lty = 2, col = 4)
+legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
+the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)
@@ -92,11 +116,6 @@ consensus_tree2$root.edge <- 0
 consensus_tree2$edge.length <- (hy$edge.length + phyDPS$edge.length) / 2
 consensus_tree2$edge.length[consensus_tree2$edge.length == 0] <- 1e-6  # Reemplazar ceros para evitar la división por 0
 consensus_tree2 <- nnls.tree(cophenetic(consensus_tree2), consensus_tree2, rooted = TRUE)
-#=======
-#TODO: REVISAR. Muchas "warnings" aquí.
-# Parece ser un  con el cálculo de los largos de las ramas.
-#=======
-# REVISION: Al cambiar el método de cálculo de largo de ramas debería ser ultramétrico. 
 consensus_tree2 <- multi2di(consensus_tree2)
 plot.phylo(consensus_tree2)
 is.rooted(consensus_tree2)
@@ -105,46 +124,14 @@ consensus_tree<-(consensus_tree2)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
-# Asegúrate de que la columna 'commune' esté en UTF-8
-comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
-comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
-
-###################### DENDROPLOT CONSENSO & TRAITS ############################
-## Generar dendroplot con el ?rbol de consenso y los traits anotados
-traits <- function(comuneros, group_by_cols = c("community","commune")) {
-  # Asegurarse de que group_by_cols es un vector
-  if (!is.vector(group_by_cols)) {
-    group_by_cols <- as.vector(group_by_cols)
-  }
-  
-  # Calcular los indices
-  result <- comuneros %>%
-    group_by(across(all_of(group_by_cols))) %>%
-    summarise(
-      N = n(),
-      S = n_distinct(surname_father) / N,
-      R = mean(rights, na.rm = TRUE),
-      G = gini(shares),
-      A = mean(sex == "M", na.rm = TRUE),
-      M = sum(rights < 1, na.rm = TRUE) / N,
-    )
-  
-  return(result)
-}
-
-result <-traits(comuneros) 
+result_dendro2
 consensus_tree <- as.dendrogram(consensus_tree2)
 
-#=======
-#TODO: REVISAR.
-#Error in ape::as.hclust.phylo(object) : the tree is not ultrametric
-#=======
-
 plot(consensus_tree)
-comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
+#comuneros$commune <-gsub("Ñ", "N", comuneros$commune)
 select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
 
-dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
+dendroplot <- function(consensus_tree,result_dendro2, save_as = NULL, group_by_col = "community") {
   library(ggdendro)
   library(ggplot2)
   
@@ -157,8 +144,6 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   hcd <- dendro_data(consensus_tree, type = "rectangle")
   # Obtener las etiquetas como caracteres
   hcd$labels$label <- as.character(hcd$labels$label)
-  stringi::stri_enc_mark(hcd$labels$label[which(hcd$labels$label == "VICUÑA")])
-  hcd$labels$label <- gsub("VICUÑA", "VICUNA", hcd$labels$label)
   # Definir el container
   container <- if (group_by_col == "community") "commune"
   else if (group_by_col == "commune") "province"
@@ -170,7 +155,7 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   }
   
   # Calcular traits
-  tc <- result
+  tc <- result_dendro2
   
   # Funci?n auxiliar para obtener vectores
   vector_of <- function(target_col) {
@@ -219,8 +204,8 @@ dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community
   
   # Graficar
   p <- ggplot() +
-    geom_segment(data = segment(hcd), aes(x = x, y = y, xend = xend, yend = yend)) +
-    geom_text(data = label(hcd), aes(x = x, y = y, label = label, hjust = 0), nudge_y = 0.01, nudge_x = 0.05, size = 2) +
+    geom_segment(data = hcd$segments, aes(x = x, y = y, xend = xend, yend = yend)) +
+    geom_text(data = hcd$labels, aes(x = x, y = y, label = label, hjust = 0), nudge_y = 0.01, nudge_x = 0.05, size = 2) +
     annotate("text", x = x1, y = y0 - 0.215, label = str_to_title(group_by_col), fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 1.84 + ydiff, label = "#", fontface = "bold", size = 4) +
     annotate("text", x = x1, y = y0 - 2.06 + ydiff, label = "S", fontface = "bold", size = 4) +
@@ -264,15 +249,11 @@ conflict_prefer("theme_dendro","ggdendro")
 conflict_prefer("label", "ggdendro")
 
 consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="community") {
-  raised_tree <- raise.dendrogram(as.dendrogram(consensus_tree2), max(consensus_tree2$edge.length))
+  raised_tree <- raise.dendrogram(as.dendrogram(consensus_tree), max(consensus_tree$edge.length))
   dendroplot(raised_tree, save_as, group_by_col)
 }
 
 consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
 
 consensus_tree<-(consensus_tree2)
-#TODO: Las últimas 3 líneas con texto arrojan, cada una, esta advertencia:
-# Warning message:
-#   In max(consensus_tree$edge.length) :
-#   no non-missing arguments to max; returning -Inf
-##REVISION: No debería volver a salir este error y generarse una figura con el arbol de consenso y los traits anotados.
+

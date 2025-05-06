@@ -6,7 +6,7 @@
 ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
 
 ## Cargar DATOS ##
-comuneros <- read.csv("scripts_fv/Datos/commoners.csv")
+comuneros <- read.csv("scripts_fv/Datos/commoners.csv", fileEncoding = "UTF-8-BOM")
 comuneros$community <- gsub(" ", "_", comuneros$community)
 comuneros$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , comuneros$community)] <- "RINCONADA_DE_PUNITAQUI"
 
