@@ -5,7 +5,7 @@
 # ----- 1. Normal CRAN packages -----
 
 packages <- c(
-  "dplyr", "ade4", "tidyr", "adegenet", "readr", "tidyverse", "reldist", "ape",
+  "dplyr", "igraph", "ade4", "tidyr", "adegenet", "readr", "tidyverse", "reldist", "ape",
   "ggdendro", "ggpubr", "phylogram", "phytools", "dendextend", "geosphere", "vegan", "e1071",
   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "geomorph",

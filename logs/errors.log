@@ -1,16 +1,1 @@
-=== Project run started at: 2025-05-02 12:06:48 ===
-
-[ERROR] in scripts_fv/OBJETIVO_5.5.GráficoG_M.R:
-objeto 'gvc' no encontrado
-1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
-       encoding = "UTF-8", echo = TRUE)
-
-[ERROR] in scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
-objeto 'svc' no encontrado
-1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
-       encoding = "UTF-8", echo = TRUE)
-
-[ERROR] in scripts_fv/OBJETIVO_5.7.HIP_1.R:
-error in evaluating the argument 'x' in selecting a method for function 'plot': objeto 'svc' no encontrado
-1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
-       encoding = "UTF-8", echo = TRUE)
+=== Project run started at: 2025-05-07 10:48:00 ===
