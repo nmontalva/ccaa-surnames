@@ -116,7 +116,7 @@ surfaceTraitPlot(GM_sub[1:2], mod[[1]], cols=c("black","red","blue"))
  cols <- rainbow(length(regimenes))
  
  # Dibujar árbol con colores asignados
- surfaceTreePlot(consensus_tree, mod[[1]], cols = cols)
+ surfaceTreePlot(consensus_tree, mod[[1]], cols = cols, cex = 0.001)
  
  # Añadir leyenda adaptativa con colores y theta
  legend("bottomleft",

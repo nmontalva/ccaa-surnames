@@ -7,50 +7,24 @@ plot_result <- function(results) {
   
   plots <- list()
   
-  # AIC plot
+  # AIC Plot
   plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
-    geom_col() +
+    geom_col(width = 0.6) +
     geom_text(aes(label = round(AIC, 1)), vjust = -0.5) +
-    labs(title = "AIC Comparison") +
-    theme_minimal()
+    labs(title = "Model Comparison", y = "AIC") +
+    theme_minimal() +
+    theme(legend.position = "none")
   
-  # Only create tree plot if <= 50 tips
-  if (length(results$data$community) <= 50) {
-    n_regimes <- length(unique(results$regimes$regime))
-    pal <- if (n_regimes == 1) {
-      setNames("#1f77b4", results$regimes$regime[1])
-    } else {
-      setNames(rainbow(n_regimes), results$regimes$regime)
-    }
+  # Tree Plot
+  if (!is.null(results$data$regime)) {
+    regimes <- na.omit(unique(results$data$regime))
+    colors <- setNames(rainbow(length(regimes)), regimes)
     
-    tip_data <- data.frame(
-      label = results$data$community,
-      regime = results$data$regime,
-      stringsAsFactors = FALSE
-    )
-    
-    theta_labels <- paste0(
-      results$regimes$regime, 
-      ": θ=", 
-      round(if ("theta_original" %in% colnames(results$regimes)) {
-        results$regimes$theta_original
-      } else {
-        results$regimes$theta
-      }, 3)
-    )
-    
-    plots$tree_plot <- ggtree(results$surface$named_tree) %<+% tip_data +
-      geom_tree(aes(color = regime), size = 0.8) +
-      scale_color_manual(
-        values = pal,
-        labels = theta_labels,
-        name = "Regime (θ)"
-      ) +
-      theme_tree2() +
-      theme(
-        legend.position = "right",
-        plot.title = element_text(size = 12, face = "bold")
-      )
+    plots$tree_plot <- ggtree(results$surface$named_tree) %<+% results$data +
+      geom_tree(aes(color = regime), size = 0.7) +
+      scale_color_manual(values = colors, name = "Regime") +
+      theme(legend.position = "right") +
+      labs(title = "Phylogenetic Regimes")
   }
   
   return(plots)

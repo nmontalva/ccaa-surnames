@@ -113,7 +113,7 @@ nombres_finales <- names(theta_vector)
 # Tabla
 tabla_regimenes <- data.frame(
   Regimen = nombres_finales,
-  Theta = as.numeric(unlist(mod[[length(bwd)]]$fit$G@theta)),
+  Theta = round(plogis(as.numeric(unlist(mod[[length(bwd)]]$fit$G@theta))), digits= 4),
   Alpha = alpha,
   Sigma2 = sigma2,
   VarianzaEstacionaria = var_est
@@ -137,18 +137,19 @@ ggplot(tabla_regimenes, aes(x = Regimen, y = Theta)) +
 fit_obj <- mod[[length(bwd)]]$fit$G
 
 # Extraer theta y nombres de regímenes
-theta_vals <- as.numeric(unlist(mod[[length(bwd)]]$fit$G@theta))
+theta_vals <- as.numeric(unlist(mod[[length(bwd)]]$fit$M@theta))
 regimenes <- nombres_finales
 
 # Definir colores automáticamente (puedes usar otros si prefieres)
 cols <- rainbow(length(regimenes))
 
 # Dibujar árbol con colores asignados
-surfaceTreePlot(tree, mod[[length(mod)]], cols = cols)
+surfaceTreePlot(tree, mod[[length(mod)]], cols = cols, labelshifts = TRUE, cex = 0.001)
 
 # Añadir leyenda adaptativa con colores y theta
 legend("bottomleft",
- legend = paste0(regimenes, ": θ = ", plogis(round(theta_vals, length(regimenes)))),
+ legend = paste0(regimenes, ": θ = ",
+                 round(plogis(round(theta_vals, length(regimenes))), digits = 3)),
  fill = cols,
  title = "Regímenes")
 

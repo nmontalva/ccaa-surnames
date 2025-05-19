@@ -2,7 +2,7 @@
 
 # 1. First test just data preparation:
 
-result <- evolutionary_analysis(
+result <- evolutionary_analysis_PRE(
   data = GM_df,
   variable = "G",
   tree = consensus_tree,
@@ -37,6 +37,7 @@ result <- evolutionary_analysis(
   tree = consensus_tree,
   steps = 1:4
 )
+
 print(result$summary$regimes)
 
 # 5. Complete analysis with plots:
@@ -44,7 +45,7 @@ print(result$summary$regimes)
 result <- evolutionary_analysis(
   data = GM_df,
   variable = "G",
-  tree = consensus_tree,
+  tree = y_total,
   steps = 1:5
 )
 print(result$plots$tree_plot)

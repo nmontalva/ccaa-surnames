@@ -83,3 +83,23 @@ tryCatch({
 }, error = function(e) {
   message("❌ Failed to load treeio: ", e$message)
 })
+
+# ---- Install ggtree separately (requires BiocManager) ----
+
+# Refresh installed packages snapshot
+installed <- rownames(installed.packages())
+
+if (!"treeio" %in% installed) {
+  message("Installing treeio via BiocManager...")
+  if (!"BiocManager" %in% installed) {
+    install.packages("BiocManager")
+  }
+  BiocManager::install("ggtree")
+}
+
+message("Trying to load: ggtree")
+tryCatch({
+  library(ggtree)
+}, error = function(e) {
+  message("❌ Failed to load ggtree: ", e$message)
+})

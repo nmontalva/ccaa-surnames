@@ -14,7 +14,7 @@ rm(list = ls())
 # ¿Podemos solucionar la incompatibilidad entre O2.2. y O.5.?
 
 ## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
-iter <- 1000 # set to 1000000 for actual analyses
+iter <- 10000 # set to 1000000 for actual analyses
 
 scripts <- c(
   "scripts_fv/packages.R",
@@ -129,7 +129,7 @@ num_errors <- if (file.exists(error_log)) sum(grepl("\\[ERROR\\]", readLines(err
 num_warnings <- if (file.exists(warning_log)) sum(grepl("\\[WARNING\\]", readLines(warning_log))) else 0
 
 summary_text <- c(
-  "\n📋 Summary:",
+  "\n Summary:",
   paste0("- Scripts executed: ", total_steps),
   paste0("- Errors detected: ", num_errors),
   paste0("- Warnings detected: ", num_warnings),

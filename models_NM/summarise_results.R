@@ -4,54 +4,69 @@
 #' @param single_regime Output from fit_single_regime
 #' @return Comprehensive results summary
 summarise_results <- function(prepped, surface_res, single_regime) {
-  final_model <- surface_res$final_model
-  
-  # Initialize default single regime case
-  regimes <- rep("single_regime", length(prepped$tree$tip.label))
-  theta <- setNames(mean(prepped$var_vec), "single_regime")
-  alpha <- sigma2 <- NA
-  
-  # Check if regimes were found
-  if (length(final_model$fit) > 0 && prepped$analysis_var %in% names(final_model$fit)) {
-    hmod <- final_model$fit[[prepped$analysis_var]]
-    if (inherits(hmod, "hansentree")) {
-      regimes <- hmod@regimes$regs[1:length(prepped$var_vec)]
-      theta <- tryCatch({
-        if (is.matrix(hmod@theta)) hmod@theta[,1] else hmod@theta
-      }, error = function(e) {
-        setNames(rep(mean(prepped$var_vec), length(unique(regimes))), 
-                paste0("regime_", seq_along(unique(regimes))))
-      })
-      alpha <- tryCatch(hmod@alpha, error = function(e) NA)
-      sigma2 <- tryCatch(hmod@sigma.squared, error = function(e) NA)
-    }
-  }
-  
-  # Create comprehensive results
-  list(
+  # Initialize default single regime results
+  results <- list(
     data = data.frame(
       community = names(prepped$var_vec),
       original_value = prepped$data[[prepped$original_var]],
       transformed_value = prepped$var_vec,
-      regime = regimes,
+      regime = "single_regime",
       stringsAsFactors = FALSE
     ),
     single_models = single_regime,
-    parameters = data.frame(
-      alpha = alpha,
-      sigma2 = sigma2,
-      stat_var = if (!is.na(alpha) && !is.na(sigma2)) sigma2/(2*alpha) else NA
-    ),
     regimes = data.frame(
-      regime = names(theta),
-      theta = theta,
+      regime = "single_regime",
+      theta = mean(prepped$var_vec),
       theta_original = if (prepped$analysis_var == paste0(prepped$original_var, "_logit")) {
-        plogis(theta)
+        plogis(mean(prepped$var_vec))
       } else {
-        theta
+        mean(prepped$var_vec)
       },
       stringsAsFactors = FALSE
     ),
-    surface = surface_res
+    parameters = data.frame(
+      alpha = NA,
+      sigma2 = NA,
+      stat_var = NA,
+      n_shifts = 0,
+      delta_aic_vs_OU = NA
+    )
   )
+  
+  # Try to extract surface results if available
+  if (!is.null(surface_res$backward) && length(surface_res$backward) > 0) {
+    final_model <- surface_res$backward[[length(surface_res$backward)]]
+    
+    if (length(final_model$fit) > 0 && prepped$analysis_var %in% names(final_model$fit)) {
+      hmod <- final_model$fit[[prepped$analysis_var]]
+      
+      # Get regime assignments
+      regimes <- as.character(hmod@regimes$regs[1:length(prepped$var_vec)])
+      results$data$regime <- regimes
+      
+      # Get theta values
+      theta <- if (is.matrix(hmod@theta)) hmod@theta[,1] else hmod@theta
+      results$regimes <- data.frame(
+        regime = names(theta),
+        theta = theta,
+        theta_original = if (prepped$analysis_var == paste0(prepped$original_var, "_logit")) {
+          plogis(theta)
+        } else {
+          theta
+        },
+        stringsAsFactors = FALSE
+      )
+      
+      # Get parameters
+      results$parameters <- data.frame(
+        alpha = hmod@alpha,
+        sigma2 = hmod@sigma.squared,
+        stat_var = hmod@sigma.squared/(2*hmod@alpha),
+        n_shifts = length(unique(regimes)) - 1,
+        delta_aic_vs_OU = final_model$aic - single_regime$AIC$AIC[2]
+      )
+    }
+  }
+  
+  return(results)
 }
