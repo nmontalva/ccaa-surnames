@@ -1,7 +1,10 @@
-=== Project run started at: 2025-05-18 13:47:43 ===
+=== Project run started at: 2025-06-11 09:40:06 ===
 
 [WARNING] in scripts_fv/OBJETIVO_4.1.Comparev2.R:
 no non-missing arguments to max; returning -Inf
 
-[WARNING] in scripts_fv/OBJETIVO_4.2.Manteltest.R:
-the tree has no branch length: fixing them to one.
+[WARNING] in scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
+Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.

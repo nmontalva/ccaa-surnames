@@ -1,8 +1,8 @@
-=== Project run started at: 2025-05-18 13:47:43 ===
+=== Project run started at: 2025-06-11 09:40:06 ===
 
  Summary:
 - Scripts executed: 17
-- Errors detected: 0
+- Errors detected: 2
 - Warnings detected: 2
 
- No errors. Project ready to use!
+️ Some errors occurred. Check 'logs/errors.log' for full details.

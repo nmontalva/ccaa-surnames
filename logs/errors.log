@@ -1,1 +1,10 @@
-=== Project run started at: 2025-05-18 13:47:43 ===
+=== Project run started at: 2025-06-11 09:40:06 ===
+
+[ERROR] in scripts_fv/OBJETIVO_4.2.Manteltest.R:
+unable to load shared object '/home/nico/R/x86_64-pc-linux-gnu-library/4.5/sf/libs/sf.so':
+  libgdal.so.36: cannot open shared object file: No such file or directory
+No traceback available 
+
+[ERROR] in scripts_fv/OBJETIVO_5.8.I_de_Moran.R:
+package ‘sf’ could not be loaded
+No traceback available 
