@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 === Project run started at: 2025-05-02 12:06:48 ===
 
 [WARNING] in scripts_fv/packages.R:
@@ -26,3 +27,15 @@ package ‘spdep’ was built under R version 4.1.3
 
 [WARNING] in scripts_fv/OBJETIVO_5.9.Random_trees.R:
 package ‘picante’ was built under R version 4.1.3
+=======
+=== Project run started at: 2025-06-11 09:40:06 ===
+
+[WARNING] in scripts_fv/OBJETIVO_4.1.Comparev2.R:
+no non-missing arguments to max; returning -Inf
+
+[WARNING] in scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
+Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+â„¹ Please use `linewidth` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+>>>>>>> master

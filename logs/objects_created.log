@@ -1,1 +1,50 @@
+<<<<<<< HEAD
 === Project run started at: 2025-05-02 12:06:48 ===
+=======
+=== Project run started at: 2025-06-11 09:40:06 ===
+
+Objects created by scripts_fv/packages.R:
+current_files, global_files, global_objects, i, install_if_needed, installed, log_errors, log_failed, log_installed, log_skipped, new_files, output_con, packages, script, step_message, total_steps
+
+Objects created by scripts_fv/1.1.SurAdmin_de_datos.R:
+current_objects, mi.final, mi.final_wide, new_names, new_objects, STRv2
+
+Objects created by scripts_fv/1.2.Formatos_FV.R:
+locis, locis_unicos, pop, STR, STR_alelos_slash, STR_genind
+
+Objects created by scripts_fv/OBJETIVO_1.1.Surnames.R:
+comuneros, comuneros2, ddata, hc, hc_total, hclust_default_method, hd, hy, p, selected_communities, selected_communities2, STR2, surname_clustering, surname_distance_matrix, surname_distance_muestra, surname_matrix, surname_matrix_muestra, surnames, y_total
+
+Objects created by scripts_fv/OBJETIVO_1.2.Manteltest.R:
+common_communities, common_rows, coordenadas, geo_muestra, geo_total, mat1_filtered, mat1_outside, mat2_filtered, mat2_outside, my_points_t, rows_outside_mat1, rows_outside_mat2
+
+Objects created by scripts_fv/OBJETIVO_2.1.Traitsv3.R:
+col, exclude_cols, gini, GM_df, GM_scaled, include_cols, result, traits
+
+Objects created by scripts_fv/OBJETIVO_2.2.Dendroplot.R:
+dendroplot, result_dendro, result_dendro2, surname_dendrogram
+
+Objects created by scripts_fv/OBJETIVO_3.1.STR.R:
+dend.DPS, DPS, phyDPS
+
+Objects created by scripts_fv/OBJETIVO_3.2.Manteltest.R:
+Geo_tree, mantel_DPS, mantel_DPS_Ap, mantel_function
+
+Objects created by scripts_fv/OBJETIVO_4.1.Comparev2.R:
+combined_trees1, combined_trees2, comunidades, consensus_dendrogram, consensus_tree, consensus_tree1, consensus_tree2, cor_bakers_gamma_results, dend_mixed, e, hy_num, leyenda, phyDPS_num, R, select_comuneros, the_cor, the_cor2, x
+
+Objects created by scripts_fv/OBJETIVO_5.1.Tree&traits.R:
+A, A_pic, A_pic1, A_trait, A_trait2, analyze_phylosignal, av1, av2, avc, avt, bm_glsG, bm_glsM, bm_glsN, C, calc_r, calculate_phylosignal, consensus_tree_dicotomous, consensus_tree_rooted, data, data1, estimacion_estados_ancestrales, ft, ft2, G, G_pic, G_pic1, G_trait, G_trait2, gv1, gv2, gvc, gvt, M, M_pic, M_pic1, M_trait, M_trait2, match_tree_and_traits, mv1, mv2, mvc, mvt, N, N_trait2, obj, Phy_sig, Phy_sig_t, Phy_sig_total, Phy_sigx, plot_comparison, plot_comparison2, S, S_pic, S_pic1, S_trait, S_trait2, sampled_matched, select_variable, spc, sv1, sv2, svc, svt, trait_list_total, tree_consensus.tree, V, vector.data, z
+
+Objects created by scripts_fv/OBJETIVO_5.2.Visualizacion.R:
+annotate_r_squared, custom_image_plot, image_index, image_paths, image_paths1, plot_with_image
+
+Objects created by scripts_fv/OBJETIVO_5.5.GráficoG_M.R:
+averages, averages_total, calc_means, cluster, Cluster, cluster_row, clusters_table, df_tree, df_tree_scaled, df_tree_scaled_numeric, extended_paths, G_anc_states, G_trait_vector, G_tree, G_value, G_value_terminal, hist_data, kmeans_result, level, level_means_df, levels_means, M_anc_states, M_trait_vector, M_value, M_value_terminal, max_path_length, mean_2, node, nodos_at_level, path, paths, result_df_G, result_df_GM, result_df_M, result_list, terminal_nodes, tip, y_max
+
+Objects created by scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
+expanded_df, expanded_df_extended, max_steps, result_df_S, S_anc_states, S_trait_vector, S_tree, S_value, S_value_terminal
+
+Objects created by scripts_fv/OBJETIVO_5.7.HIP_1.R:
+crear_grafico, crear_grafico2, incorporacion_fosil, incorporacion_fosil2
+>>>>>>> master

@@ -123,8 +123,18 @@ is.ultrametric(consensus_tree2)
 consensus_tree<-(consensus_tree2)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
+<<<<<<< HEAD
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
 result_dendro2
+=======
+## Generar dendroplot con el árbol de consenso y los traits anotados
+#TODO
+# result_dendro2 no existe (!)
+# Se genera en 2.2.
+# Pero 2.2. no se puede correr si se quieren correr los del objetivo 5.
+# Por eso, tenemos que solucionar esto
+
+>>>>>>> master
 consensus_tree <- as.dendrogram(consensus_tree2)
 
 plot(consensus_tree)
