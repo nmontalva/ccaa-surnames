@@ -1,9 +1,5 @@
 #NEXUS
-<<<<<<< HEAD
-[R-package APE, Fri May 02 12:43:00 2025]
-=======
-[R-package APE, Wed Jun 11 09:40:25 2025]
->>>>>>> master
+[R-package APE, Wed Jun 11 17:04:15 2025]
 
 BEGIN TAXA;
 	DIMENSIONS NTAX = 15;
