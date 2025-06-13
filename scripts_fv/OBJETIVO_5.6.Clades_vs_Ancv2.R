@@ -49,7 +49,7 @@ paths
 S_anc_states <- svc$anc$ace
 S_anc_states
 #Extraer estados actuales
-S_trait_vector <- setNames(S_trait$S, rownames(S_trait))
+S_trait_vector <- setNames(S_logit$S_logit, rownames(S_logit))
 print(S_trait_vector)
 
 

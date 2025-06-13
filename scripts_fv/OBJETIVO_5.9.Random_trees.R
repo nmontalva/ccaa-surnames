@@ -19,15 +19,15 @@ library(ape)
 library(phangorn)
 
 # Trait data
-G_values <- GM_df %>%
-  dplyr::select(G)
-M_values <- GM_df %>%
-  dplyr::select(M)
+G_values <- GM_logit %>%
+  dplyr::select(G_logit)
+M_values <- GM_logit %>%
+  dplyr::select(M_logit)
 
-#11. Randomise tips (with their respective traits, G and M) keeping the underlying tree topology.
+# Randomise tips (with their respective traits, G and M) keeping the underlying tree topology.
 # Configuración de los datos
-trait_data_G <- setNames(G_values$G, row.names(G_values))
-trait_data_M <- setNames(M_values$M, row.names(M_values))
+trait_data_G <- setNames(G_values$G_logit, row.names(G_values))
+trait_data_M <- setNames(M_values$M_logit, row.names(M_values))
 tree_tips <- consensus_tree$tip.label
 total_tips <- y_total$tip.label
 # Randomize tip labels
@@ -36,6 +36,7 @@ howmanytrees(length(tree_tips)) #número de árboles filogenéticos posibles
 
 # Etiquetas aleatorizadas
 #consenso
+set.seed(150)
 random.trees <- lapply(1:1000, function(x) {
   tree_random <- consensus_tree  # Copia el árbol original
   tree_random$tip.label <- sample(tree_tips)  # Reordena las etiquetas
@@ -44,6 +45,7 @@ random.trees <- lapply(1:1000, function(x) {
 class(random.trees) <- "multiPhylo"
 
 #total
+set.seed(150)
 random.total <- lapply(1:1000, function(x) {
   tree_random <- y_total  # Copia el árbol original
   tree_random$tip.label <- sample(total_tips)  # Reordena las etiquetas
@@ -51,7 +53,7 @@ random.total <- lapply(1:1000, function(x) {
 })
 class(random.total) <- "multiPhylo"
 
-#12. Compare phylogenetic signal of real tree vs randomised tree.
+# Compare phylogenetic signal of real tree vs randomised tree.
 # Asegurar correspondencia entre rasgos y puntas
 phy_tree_s <- consensus_tree
 phy_tree <- y_total
@@ -79,8 +81,8 @@ p_value_G_lambda <- mean(lambda_values_G>= observed_G_lambda$lambda)
 cat("P-value random λ para G:", p_value_G_lambda)
 cat("P-value de λ observado =", round(observed_G_lambda$P, 3))
 
-K_values_G <- as.numeric(random_K_G ["K",])
-p_value_G_K <- mean(K_values_G  >= observed_G_K$K)
+#K_values_G <- as.numeric(random_K_G ["K",])
+p_value_G_K <- mean(random_K_G  >= observed_G_K$K)
 cat("P-value random K para G:", p_value_G_K)
 cat("p-valor K observado =", round(observed_G_K$P, 3))
 
@@ -89,28 +91,10 @@ abline(v = observed_G_lambda$lambda, col = "red", lwd = 2)
 legend("topright", legend = paste("λ observado =", round(observed_G_lambda$lambda, 3)), 
        col = "red", lwd = 2)
 
-hist(K_values_G, main = "Distribución nula de Blomerg K para G", xlab = "K")
+hist(random_K_G, main = "Distribución nula de Blomerg K para G", xlab = "K")
 abline(v = observed_G_K$K, col = "red", lwd = 2)
 legend("topright", legend = paste("K observado =", round(observed_G_K$K, 3)), 
        col = "red", lwd = 2)
-
-#Distribución nula (no funcionará hasta que esté lo de BM)
-#null_signals_G_bm <- apply(simulated_traits_G, 2, function(trait) {
-#  phylosig(phy_tree, trait, method = "lambda")$lambda
-#})
-#p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
-#cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
-
-#null_signals_G_bm <- apply(trait_data_G, 2, function(trait) {
-#  phylosig(phy_tree, trait, method = "lambda")$lambda
-#})
-#p_value_G_bm <- mean(null_signals_G_bm >= G_physignal$lambda)
-
-#cat("P-valor G (Brownian motion):", p_value_G_bm, "\n")
-
-
-#hist(random_signals_G, main = "Distribución nula para G", xlab = "Lambda")
-#abline(v = G_physignal, col = "red", lwd = 2)
 
 #M
 random_lambdas_M <- sapply(random.total, function(tree) {
@@ -139,16 +123,6 @@ abline(v = observed_M_K$K, col = "red", lwd = 2)
 legend("topright", legend = paste("K observado =", round(observed_M_K$K, 3)), 
        col = "red", lwd = 2)
 
-#Distribución nula (no funcionará hasta que esté lo de BM)
-#null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
-#  phylosig(phy_tree, trait, method = "lambda")$lambda
-#})
-#p_value_M_bm <- mean(null_signals_M_bm >= M_physignal)
-#cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
-
-#hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
-#abline(v = M_physignal, col = "red", lwd = 2)
-
 ##Árbol de consenso
 # Señal filogenética observada (Pagel lambda)
 G_physignal_s_pagel <- phylosig(phy_tree_s, trait_data_G_s, method = "lambda",test = T)
@@ -175,16 +149,6 @@ p_value_random.trees_G_sample  <- mean(K_values_G_sample >= G_physignal_s_K$K)
 cat("P-valor G usando random.trees sample Blomberg K:", p_value_random.trees_G_sample, "\n")
 cat("P-value de λ observado para M =", round(G_physignal_s_K$P, 3))
 
-#Distribución nula (no funcionará hasta que esté lo de BM)
-#null_signals_G_bm_sample <- apply(simulated_traits_G, 2, function(trait) {
-#  phylosig(phy_tree_s, trait, method = "lambda")$lambda
-#})
-#p_value_G_bm_sample  <- mean(null_signals_G_bm_sample  >= G_physignal$lambda)
-#cat("P-valor G (Brownian motion):", p_value_G_bm_sample , "\n")
-
-#hist(random_G, main = "Distribución nula para G", xlab = "Lambda")
-#abline(v = G_physignal, col = "red", lwd = 2)
-
 #M Paglel lambda
 random_signals_M <- sapply(random.trees, function(tree) {
   phylosig(tree, trait_data_M_s, method = "lambda")$lambda
@@ -200,23 +164,4 @@ random_signals_M_sample_K <- sapply(random.trees, function(tree) {
 p_value_random.trees_M_sample  <- mean(random_signals_M_sample_K >= M_physignal_s_K$K)
 cat("P-valor M usando random.trees sample Blomberg K:", p_value_random.trees_M_sample, "\n")
 cat("P-valor M usando random.trees sample Blomberg K:", M_physignal_s_K$K, "\n")
-
-#null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
-#  phylosig(phy_tree_s, trait, method = "lambda")$lambda
-#})
-#p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
-#cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
-
-#hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
-#abline(v = M_physignal, col = "red", lwd = 2)
-
-#null_signals_M_bm <- apply(simulated_traits_M, 2, function(trait) {
-#  phylosig(phy_tree_s, trait, method = "lambda")$lambda
-#})
-
-#p_value_M_bm <- mean(null_signals_M_bm >= M_physignal$lambda)
-#cat("P-valor M (Brownian motion):", p_value_M_bm, "\n")
-
-#hist(random_M, main = "Distribución nula para M", xlab = "Lambda")
-#abline(v = M_physignal, col = "red", lwd = 2)
 

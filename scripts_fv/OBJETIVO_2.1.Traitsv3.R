@@ -108,3 +108,7 @@ result <- result %>%
 # Verificación
 head(result[, c("community", "A", "A_logit", "S", "S_logit", "G", "G_logit", "M", "M_logit")])
 
+#### G y M DATA TOTAL ####
+GM_logit <- as.data.frame(dplyr::select(result,community, G_logit,M_logit))
+rownames(GM_logit) <- GM_logit$community
+GM_logit <- GM_logit[, -1]

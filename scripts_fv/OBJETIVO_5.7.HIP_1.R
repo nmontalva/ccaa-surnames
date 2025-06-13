@@ -86,7 +86,7 @@ incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz =
   existing_cols <- intersect(exclude_cols, colnames(w))
   w <- colMeans(w[, !(colnames(w) %in% existing_cols)])
   # Agregar valor tip.labels
-  trait_name <- paste0(label, "_trait2")
+  trait_name <- paste0(label, "_logit2")
   tip.community <- paste0 (mcmc_tree$tip.label)
   name <- get(trait_name)[tip.community,]
   
@@ -153,7 +153,7 @@ incorporacion_fosil2 <- function(fosil,valor,tree, label, filename)
   existing_cols <- intersect(exclude_cols, colnames(w))
   w <- colMeans(w[, !(colnames(w) %in% existing_cols)])
   # Agregar valor tip.labels
-  trait_name <- paste0(label, "_trait2")
+  trait_name <- paste0(label, "_logit2")
   tip.community <- paste0 (mcmc_tree$tip.label)
   name <- get(trait_name)[tip.community,]
   

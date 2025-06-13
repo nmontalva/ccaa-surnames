@@ -20,20 +20,20 @@ colnames(coordenadas)<- c("community","lon","lat","org_name")
 coordenadas<-select(coordenadas,community,lon,lat)
 
 #Data community
-#View(GM_df)
+#View(GM_logit)
 # Ajustar el modelo de regresión de G ~ M
-modelo <- lm(G ~ M, data = GM_df)
+modelo <- lm(G_logit ~ M_logit, data = GM_logit)
 G.reg.M <- predict(modelo)
 
 #Crear df
 # Combinar tablas por una clave común (por ejemplo, "community")
-GM_df$community <- row.names(GM_df)
-community_data <- GM_df %>%
+GM_logit$community <- row.names(GM_logit)
+community_data <- GM_logit %>%
   left_join(coordenadas, by = "community" ) %>%
   mutate(
-    G.reg.M = predict(lm(M ~ G, data = .))  # Calcular valores ajustados (G~M)
+    G.reg.M = predict(lm(M_logit ~ G_logit, data = .))  # Calcular valores ajustados (G~M)
   ) %>%
-  select(community, G, M, lon, lat, G.reg.M)
+  select(community, G_logit, M_logit, lon, lat, G.reg.M)
 community_data <- na.omit(community_data)
 # Verificar el resultado
 colnames(community_data)
@@ -59,20 +59,15 @@ k_est_2 <- n^(1/2)
 #neighbors_knn <- knn2nb(knearneigh(coords, k = k_est_2)) #Or k_est_2 ## NO FUNCIONA
 # Convert to spatial weights
 #weights_knn <- nb2listw(neighbors_knn, style = "W")
-#TODO Warning message:
-#In matrix(z$nn, np, k, byrow = TRUE) :
-#  data length [2177] is not a sub-multiple or multiple of the number of rows [168]
-
-
 
 # Moran's I for G,M
-moran_G <- moran.test(community_data$G, weights)
+moran_G <- moran.test(community_data$G_logit, weights)
 print(moran_G)
 # I>0, Positive autocorrelation (similar values cluster).
 # I=0, Random distribution.
 # I<0, Negative autocorrelation (dissimilar values cluster). *** ESTE ES EL CASO
 
-moran_M <- moran.test(community_data$M, weights)
+moran_M <- moran.test(community_data$M_logit, weights)
 print(moran_M)
 # I>0, Positive autocorrelation (similar values cluster).
 # I=0, Random distribution.
@@ -83,4 +78,3 @@ print(moran_GM)
 # I>0, Positive autocorrelation (similar values cluster).
 # I=0, Random distribution.
 # I<0, Negative autocorrelation (dissimilar values cluster). *** ESTE ES EL CASO
-
