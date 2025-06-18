@@ -61,30 +61,45 @@ select_variable <- function(result, selected_communities = NULL, variable) {
   return(df)
 }
 
-
 # S
-S_trait <- select_variable(result, selected_communities, "S")
-S_trait2 <- select_variable(result, NULL, "S")
-S_trait$community <- NULL
-S_trait2$community <- NULL
-N_trait2 <- select_variable(result, selected_communities, "N")
+#S_trait <- select_variable(result, selected_communities, "S")
+#S_trait2 <- select_variable(result, NULL, "S")
+#S_trait$community <- NULL
+#S_trait2$community <- NULL
+S_logit <- select_variable(result, selected_communities, "S_logit")
+S_logit2 <- select_variable(result, NULL, "S_logit")
+S_logit$community <- NULL
+S_logit2$community <- NULL
+
+#N_trait2 <- select_variable(result, selected_communities, "N")
 
 # G
-G_trait <- select_variable(result, selected_communities, "G")
-G_trait2 <- select_variable(result, NULL, "G")
-G_trait$community <- NULL
-G_trait2$community <- NULL
+#G_trait <- select_variable(result, selected_communities, "G")
+#G_trait2 <- select_variable(result, NULL, "G")
+#G_trait$community <- NULL
+#G_trait2$community <- NULL
+G_logit <- select_variable(result, selected_communities, "G_logit")
+G_logit2 <- select_variable(result, NULL, "G_logit")
+G_logit$community <- NULL
+G_logit2$community <- NULL
 # A
-A_trait <- select_variable(result, selected_communities, "A")
-A_trait2 <- select_variable(result, NULL, "A")
-A_trait$community <- NULL
-A_trait2$community <- NULL
+#A_trait <- select_variable(result, selected_communities, "A")
+#A_trait2 <- select_variable(result, NULL, "A")
+#A_trait$community <- NULL
+#A_trait2$community <- NULL
+A_logit <- select_variable(result, selected_communities, "A_logit")
+A_logit2 <- select_variable(result, NULL, "A_logit")
+A_logit$community <- NULL
+A_logit2$community <- NULL
 # M
-M_trait <- select_variable(result, selected_communities, "M")
-M_trait2 <- select_variable(result, NULL, "M")
-M_trait$community <- NULL
-M_trait2$community <- NULL
-
+#M_trait <- select_variable(result, selected_communities, "M")
+#M_trait2 <- select_variable(result, NULL, "M")
+#M_trait$community <- NULL
+#M_trait2$community <- NULL
+M_logit <- select_variable(result, selected_communities, "M_logit")
+M_logit2 <- select_variable(result, NULL, "M_logit")
+M_logit$community <- NULL
+M_logit2$community <- NULL
 #Cluster
 #C_trait <- select_variable(result_traits, selected_communities, "cluster")
 #C_trait2 <- select_variable(result_traits, NULL, "cluster")
@@ -103,20 +118,20 @@ plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
 ###Estimar estados ancestrales
 # S
-sv1 <- as.matrix(S_trait)[,1]
-sv2 <- as.matrix(S_trait2)[,1]
+sv1 <- as.matrix(S_logit)[,1]
+sv2 <- as.matrix(S_logit2)[,1]
 
 # G
-gv1 <- as.matrix(G_trait)[,1]
-gv2 <- as.matrix(G_trait2)[,1]
+gv1 <- as.matrix(G_logit)[,1]
+gv2 <- as.matrix(G_logit2)[,1]
 
 # A
-av1 <- as.matrix(A_trait)[,1]
-av2 <- as.matrix(A_trait2)[,1]
+av1 <- as.matrix(A_logit)[,1]
+av2 <- as.matrix(A_logit2)[,1]
 
 # M
-mv1 <- as.matrix(M_trait)[,1]
-mv2 <- as.matrix(M_trait2)[,1]
+mv1 <- as.matrix(M_logit)[,1]
+mv2 <- as.matrix(M_logit2)[,1]
 
 # Cluster
 #cv1 <- as.matrix(C_trait)[,1]
@@ -173,7 +188,6 @@ writeAncestors(consensus_tree, Anc=mvc$anc, file="Figures/M_nodos_muestra.phy", 
 #add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
 #                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
 
-
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
   anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
@@ -209,7 +223,6 @@ dev.off()
 #plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
 #add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
 #                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
-
 
 ###Comparaciones
 ##Comunidades muestreadas
@@ -339,48 +352,6 @@ png("Figures/Phylosignal_muestra2.png", width = 400, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
-#GM_df_cluster <- GM_df[rownames(GM_df) %in% tree_tips, ]
-#GM_df_cluster$cluster<-as.numeric(GM_df_cluster$cluster)
-#GM_df_cluster <- GM_df_cluster %>%
-#  select(cluster)
-# Example with your tree and cluster assignments
-#fit_lambda <- fitDiscrete(
-#  phy = consensus_tree,
-#  dat = GM_df_cluster,
-#  model = "ER",  # Equal rates model
-#  transform = "lambda"
-#)
-#fit_lambda <- fitContinuous(
- # phy = consensus_tree,
- # dat = GM_df_cluster,
- #  model = "lambda",  # Equal rates model
-#)
-# View results
-#print(fit_lambda)
-#fit_lambda$opt$lambda ## la evolución del rasgo está ligada al árbol filogenético
-#fit_lambda$opt$lnL 
-
-#fit null model
-#fit_null <- fitDiscrete(
-#  phy = consensus_tree,
-#  dat = GM_df_cluster,
-#  model = "ER", 
-#  transform = "none"  # No λ transformation
-#)
-#fit_null <- fitContinuous(
-#  phy = consensus_tree,
-#  dat = GM_df_cluster,
-#  model = "lambda"
-#)
-#fit_null$opt$lambda
-#fit_null$opt$lnL
-
-# LRT between models
-#LRT_stat <- 2 * (fit_lambda$opt$lnL - fit_null$opt$lnL)
-#p_value <- pchisq(LRT_stat, df = 1, lower.tail = FALSE)
-#print(LRT_stat)
-#print(p_value)
-
 ##Total
 calculate_phylosignal <- function(tree, trait_vector, trait_name = "") {
   # Verificar y ajustar nombres
@@ -453,12 +424,11 @@ C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft2
 x <- write.tree(consensus_tree)
-tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools' Also defined by ‘tidytree’
-G <- setNames(obj[,"G"],rownames(obj))
-M <- setNames(obj[,"M"],rownames(obj))
-S <- setNames(obj[,"S"],rownames(obj))
-A <- setNames(obj[,"A"],rownames(obj))
-#R <- setNames(obj[,"R"],rownames(obj))
+tree_consensus.tree <- read.tree(text=x)
+G <- setNames(obj[,"G_logit"],rownames(obj))
+M <- setNames(obj[,"M_logit"],rownames(obj))
+S <- setNames(obj[,"S_logit"],rownames(obj))
+A <- setNames(obj[,"A_logit"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
 # Verifica que N, M, A, S, y G sean vectores numéricos
@@ -500,12 +470,11 @@ C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft
 x <- write.tree(y_total)
-tree_consensus.tree <- read.tree(text=x) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’ # REVISION: No me aparece este error.
-G <- setNames(obj[,"G"],rownames(obj))
-M <- setNames(obj[,"M"],rownames(obj))
-S <- setNames(obj[,"S"],rownames(obj))
-A <- setNames(obj[,"A"],rownames(obj))
-#R <- setNames(obj[,"R"],rownames(obj))
+tree_consensus.tree <- read.tree(text=x)
+G <- setNames(obj[,"G_logit"],rownames(obj))
+M <- setNames(obj[,"M_logit"],rownames(obj))
+S <- setNames(obj[,"S_logit"],rownames(obj))
+A <- setNames(obj[,"A_logit"],rownames(obj))
 N <- setNames(obj[,"N"],rownames(obj))
 
 #model with N ( efecto del N en el ?ndice)
@@ -530,15 +499,14 @@ publish(bm_glsM)
 
 ##Generate PICs and test while conditioning on phylogeny
 #Prepare the tree
-consensus_tree_rooted <- midpoint.root(consensus_tree) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'. Also defined by ‘tidytree’ #REVISION: Tampoco me aparece error
+consensus_tree_rooted <- midpoint.root(consensus_tree) 
 # Resuelve las politomías
-consensus_tree_dicotomous <- multi2di(consensus_tree_rooted) #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
-#Also defined by ‘tidytree’ #REVISION:Tampoco me aparece este error
+consensus_tree_dicotomous <- multi2di(consensus_tree_rooted) 
 #Sampled communities
-S_pic1<-pic(x = ft2$S, phy = consensus_tree_dicotomous)
-A_pic1<-pic(x = ft2$A, phy = consensus_tree_dicotomous)
-G_pic1<-pic(x=ft2$G, phy = consensus_tree_dicotomous)
-M_pic1<-pic(x=ft2$M, phy = consensus_tree_dicotomous)
+S_pic1<-pic(x = ft2$S_logit, phy = consensus_tree_dicotomous)
+A_pic1<-pic(x = ft2$A_logit, phy = consensus_tree_dicotomous)
+G_pic1<-pic(x=ft2$G_logit, phy = consensus_tree_dicotomous)
+M_pic1<-pic(x=ft2$M_logit, phy = consensus_tree_dicotomous)
 
 calc_r <- function(x, y) {
   r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
@@ -549,10 +517,10 @@ calc_r <- function(x, y) {
 data1 <- data.frame(S_pic1,A_pic1,G_pic1,M_pic1)
 
 #Total communities
-S_pic<-pic(x = ft$S, phy = y_total)
-A_pic<-pic(x = ft$A, phy = y_total)
-G_pic<-pic(x=ft$G, phy = y_total)
-M_pic<-pic(x=ft$M, phy = y_total)
+S_pic<-pic(x = ft$S_logit, phy = y_total)
+A_pic<-pic(x = ft$A_logit, phy = y_total)
+G_pic<-pic(x=ft$G_logit, phy = y_total)
+M_pic<-pic(x=ft$M_logit, phy = y_total)
 
 calc_r <- function(x, y) {
   r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson

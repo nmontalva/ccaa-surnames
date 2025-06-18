@@ -33,7 +33,7 @@ cluster_symbols <- c(21, 22,24)
 
 ############# S #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        S_trait = S_trait$S, 
+                        S_trait = S_logit$S_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 
@@ -122,7 +122,7 @@ dev.off()
 
 ############# A #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        A_trait = A_trait$A, 
+                        A_trait = A_logit$A_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
@@ -163,7 +163,7 @@ dev.off()
 
 ############# G #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        G_trait = G_trait$G, 
+                        G_trait = G_logit$G_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
@@ -205,7 +205,7 @@ dev.off()
 
 ############# M #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        M_trait = M_trait$M, 
+                        M_trait = M_logit$M_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
@@ -262,7 +262,7 @@ estimacion_estados_ancestrales <- function(tree, trait_vector) {
 cluster_symbols <- c(21, 22) 
 ############# S #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        S_trait = S_trait2$S, 
+                        S_trait = S_logit2$S_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 # Estimación de estados ancestrales para el árbol filogenético + colores
@@ -338,7 +338,7 @@ dev.off()
 #dev.off()
 ############# A #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        A_trait = A_trait2$A, 
+                        A_trait = A_logit2$A_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 obj.a <- estimacion_estados_ancestrales(y_total, av2)
@@ -375,7 +375,7 @@ dev.off()
 
 ############# G #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        G_trait = G_trait2$G, 
+                        G_trait = G_logit2$G_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 obj.g <- estimacion_estados_ancestrales(y_total, gv2)
@@ -411,7 +411,7 @@ plot(obj.g, type = "phylogram", legend = 0.5 * max(nodeHeights(y_total)), ftype 
 dev.off()
 ############# M #############
 plot_data <- data.frame(df_tree_scaled_numeric, 
-                        M_trait = M_trait2$M, 
+                        M_trait = M_logit2$M_logit, 
                         cluster = as.factor(kmeans_result$cluster))
 plot_data <- cbind(plot_data, pca_data)#Reducir a 2D
 obj.m <- estimacion_estados_ancestrales(y_total, mv2)

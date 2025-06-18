@@ -1,3 +1,1767 @@
+<<<<<<< HEAD
+=== Project run started at: 2025-05-02 12:06:48 ===
+
+### [Step 1/18] Running: scripts_fv/packages.R ###
+
+
+> # =====================================
+> # Install missing R packages safely
+> # =====================================
+> 
+> # ----- 1. Normal CRAN packages -----
+> 
+> packages <- c(
++   "dplyr", "ade4", "tidyr", "adegenet", "readr", "tidyverse", "reldist", "ape",
++   "ggdendro", "ggpubr", "phylogram", "phytools", "dendextend", "geosphere", "vegan", "e1071",
++   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
++   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "geomorph",
++   "cowplot", "GGally", "png", "grid", "factoextra", "cluster", "NbClust", "fpc", "PlotTools",
++   "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface"
++ )
+
+> # Excluded manually:
+> # - "surface" → Special/archived install.
+> # - "BiocManager" → Installer utility.
+> 
+> # Log files
+> log_skipped <- "skipped_packages.log"
+
+> log_installed <- "installed_packages.log"
+
+> log_failed <- "failed_packages.log"
+
+> log_errors <- "error_messages.log"
+
+> # Safely clear old logs
+> safe_remove <- function(file) if (file.exists(file)) file.remove(file)
+
+> invisible(lapply(c(log_skipped, log_installed, log_failed, log_errors), safe_remove))
+
+> # Installed packages snapshot
+> installed <- rownames(installed.packages())
+
+> # Helper function to install missing packages only
+> install_if_needed <- function(pkg) {
++   if (pkg %in% installed) {
++     write(pkg, file = log_skipped, append = TRUE)
++   } else {
++     message("Installing: ", pkg)
++     tryCatch({
++       install.packages(pkg) # Force binary where available
++       installed <<- rownames(installed.packages()) # Refresh full list
++       if (pkg %in% installed) {
++         write(pkg, file = log_installed, append = TRUE)
++       } else {
++         write(pkg, file = log_failed, append = TRUE)
++       }
++     }, error = function(e) {
++       write(pkg, file = log_failed, append = TRUE)
++       write(paste(pkg, ":", e$message), file = log_errors, append = TRUE)
++     })
++   }
++ }
+
+> # Install missing CRAN packages
+> invisible(lapply(packages, install_if_needed))
+
+> # Test if packages load
+> invisible(lapply(packages, function(pkg) {
++   message("Trying to load: ", pkg)
++   tryCatch({
++     library(pkg, character.only = TRUE)
++   }, error = function(e) {
++     message("❌ Failed to load ", pkg, ": ", e$message)
++   })
++ }))
+Trying to load: dplyr
+Trying to load: ade4
+Trying to load: tidyr
+Trying to load: adegenet
+Trying to load: readr
+Trying to load: tidyverse
+Trying to load: reldist
+Trying to load: ape
+Trying to load: ggdendro
+Trying to load: ggpubr
+Trying to load: phylogram
+Trying to load: phytools
+Trying to load: dendextend
+Trying to load: geosphere
+Warning in script: scripts_fv/packages.R
+
+### [Step 2/18] Running: scripts_fv/1.1.SurAdmin_de_datos.R ###
+
+
+> ######################Limpieza de la base de datos########################
+> ##########################################################################
+> 
+> #Instalación de paquetes
+> library(dplyr)
+
+> library(ade4)
+
+> library(tidyr)
+
+> #Abrir y explorar bases de datos
+> primera<- read.csv("scripts_fv/Datos/all_tabulated.csv", sep=",", header=TRUE, fill = T)
+
+> segunda<- read.csv("scripts_fv/Datos/Muestras Fondecyt 11160402 Alelos - RACK 1.csv", sep =",", header = TRUE, fill = TRUE)
+
+> # Renombrar la primera columna y crear variable de alelos
+> primera <- primera %>%
++   rename(Sample.Name = X) %>% 
++   mutate(Alleles = rep(1:2, length.out = nrow(primera)))
+
+> # Eliminar columna X.1 y reemplazar -9 y datos vacíos por NA
+> primera <- primera %>%
++   dplyr::select(-X.1) %>%
++   mutate(across(c(D3S1358, TH01, D21S11, D18S51, Penta.E, D5S818, D13S317, D7S820, D16S539, CSF1PO, Penta.D, vWA, D8S1179, TPOX, FGA), ~ na_if(., -9)))
+
+> segunda <- segunda %>%
++   mutate(across(c(Allele.1, Allele.2), ~ na_if(., "")))
+
+> ################Unificar las bases de datos######################
+> #Transformar columnas en filas
+> 
+> X <- segunda %>%
++   pivot_wider(names_from = Marker, values_from = c(Allele.1, Allele.2))
+
+> x1 <- X[1:17] %>% mutate(Alleles = 1)
+
+> x2 <- X[18:33]
+
+> x3 <- X[1]
+
+> x4 <- cbind(x2, x3) %>% mutate(Alleles = 2)
+
+> # Renombrar columnas de alelos de manera eficiente
+> new_names <- c("D3S1358", "TH01", "D21S11", "D18S51", "Penta.E", "D5S818", "D13S317", "D7S820", 
++                "D16S539", "CSF1PO", "Penta.D", "AMEL", "vWA", "D8S1179", "TPOX", "FGA")
+
+> colnames(x1)[2:17] <- new_names
+
+> colnames(x4)[1:16] <- new_names
+
+> # Unir las bases de datos x1 y x4
+> union_df <- bind_rows(x1, x4)
+
+> colnames(union_df)
+ [1] "Sample.Name" "D3S1358"     "TH01"        "D21S11"      "D18S51"      "Penta.E"     "D5S818"     
+ [8] "D13S317"     "D7S820"      "D16S539"     "CSF1PO"      "Penta.D"     "AMEL"        "vWA"        
+[15] "D8S1179"     "TPOX"        "FGA"         "Alleles"    
+
+> # Valores raros (OL)
+> # Cambiar "OL" a NA en todas las columnas de marcadores
+> union_df <- union_df %>%
++   mutate(across(c("D3S1358", "TH01", "D21S11", "D18S51", "Penta.E", 
++                   "D5S818", "D13S317", "D7S820", "D16S539", "CSF1PO", 
++                   "Penta.D", "vWA", "D8S1179", "TPOX", "FGA"), ~ ifelse(. == "OL", NA, .)))
+
+> # Cambiar tipos de datos a factor y numérico donde corresponda
+> union_df <- union_df %>%
++   mutate(across(c("D3S1358", "TH01", "D21S11", "D18S51", "Penta.E", 
++                   "D5S818", "D13S317", "D7S820", "D16S539", "CSF1PO", 
++                   "Penta.D", "vWA", "D8S1179", "TPOX", "FGA"), ~ as.numeric(as.character(.))))
+
+> #TODO: REVISAR. Me salen 2 warnings al correr la línea 50:
+> ## RESOLUCION: Para evitar esto, mejor generar los NA que corresponan antes. CORREGIDO
+> 
+> # Fusionar ambas bases de datos
+> mi.final <- merge(union_df, primera, all = TRUE)
+
+> # Eliminar columna AMEL
+> mi.final <- mi.final %>%
++   dplyr::select(-AMEL)
+
+> #Borrar otras bases 
+> primera <- NULL
+
+> segunda <- NULL 
+
+> X <- NULL 
+
+> x1 <- NULL 
+
+> x2 <- NULL
+
+> x3 <- NULL
+
+> x4 <- NULL
+
+> union_df <- NULL
+
+> rm(primera, segunda, union_df, X, x1, x2, x3, x4)
+
+> # Convertir columnas a clase numérica, excepto "Sample.Name" y "Alleles"
+> mi.final[ , 2:16] <- lapply(mi.final[ , 2:16], function(x) as.numeric(as.character(x)))
+
+> # Agregar variable 'community' basado en los patrones de 'Sample.Name'
+> mi.final <- mi.final %>%
++   mutate(community = case_when(
++     grepl("^DV", Sample.Name) ~ "EL_Divisadero",
++     grepl("^BZ", Sample.Name) ~ "BARRAZA",
++     grepl("^EA", Sample.Name) ~ "EL_ALTAR",
++     grepl("^MQ", Sample.Name) ~ "MANQUEHUA",
++     grepl("^PQ", Sample.Name) ~ "PUNITAQUI",
++     grepl("^RP", Sample.Name) ~ "RINCONADA_DE_PUNITAQUI",
++     grepl("^CA", Sample.Name) ~ "CANELILLA_OVALLE",
++     grepl("^CB", Sample.Name) ~ "CANELA_BAJA",
++     grepl("^(CL|CR)", Sample.Name) ~ "LA_CALERA",
++     grepl("^ES", Sample.Name) ~ "EL_ESPINAL",
++     grepl("^GG", Sample.Name) ~ "GUALLIGUAICA",
++     grepl("^HT", Sample.Name) ~ "HUENTELAUQUEN",
++     grepl("^LG", Sample.Name) ~ "CASTILLO_MAL_PASO",
++     grepl("^MP", Sample.Name) ~ "MONTE_PATRIA",
++     grepl("^VP", Sample.Name) ~ "LA_POLVADA",
++     TRUE ~ "OTHER"
++   ))
+
+> # Filtrar los casos donde 'community' no es 'OTHER' ni NA
+> mi.final <- mi.final %>%
++   dplyr::filter(!community %in% c('OTHER', NA))
+
+> # Renombrar 'Sample.Name' a 'Ind' y 'community' a 'Pop'
+> mi.final <- mi.final %>%
++   rename(Ind = Sample.Name, Pop = community)
+
+> mi.final<-data.frame(mi.final)
+
+> # Verificar el resultado final
+> View(mi.final)
+
+> # Transformación de datos
+> mi.final_wide <- mi.final %>%
++   mutate(row_num = Alleles) %>%
++   pivot_wider(
++     names_from = row_num,
++     values_from = -c(Ind, Pop),
++     names_sep = "_"
++   )
+
+> colnames(mi.final_wide)
+ [1] "Ind"       "Pop"       "D3S1358_1" "D3S1358_2" "TH01_1"    "TH01_2"    "D21S11_1"  "D21S11_2" 
+ [9] "D18S51_1"  "D18S51_2"  "Penta.E_1" "Penta.E_2" "D5S818_1"  "D5S818_2"  "D13S317_1" "D13S317_2"
+[17] "D7S820_1"  "D7S820_2"  "D16S539_1" "D16S539_2" "CSF1PO_1"  "CSF1PO_2"  "Penta.D_1" "Penta.D_2"
+[25] "vWA_1"     "vWA_2"     "D8S1179_1" "D8S1179_2" "TPOX_1"    "TPOX_2"    "FGA_1"     "FGA_2"    
+[33] "Alleles_1" "Alleles_2" "row_num_1" "row_num_2"
+
+> #Quitar las últimas 4 columnas
+> STRv2 <-data.frame(mi.final_wide%>% dplyr::select(-tail(names(.), 4)))
+
+> colnames(STRv2)
+ [1] "Ind"       "Pop"       "D3S1358_1" "D3S1358_2" "TH01_1"    "TH01_2"    "D21S11_1"  "D21S11_2" 
+ [9] "D18S51_1"  "D18S51_2"  "Penta.E_1" "Penta.E_2" "D5S818_1"  "D5S818_2"  "D13S317_1" "D13S317_2"
+[17] "D7S820_1"  "D7S820_2"  "D16S539_1" "D16S539_2" "CSF1PO_1"  "CSF1PO_2"  "Penta.D_1" "Penta.D_2"
+[25] "vWA_1"     "vWA_2"     "D8S1179_1" "D8S1179_2" "TPOX_1"    "TPOX_2"    "FGA_1"     "FGA_2"    
+
+> STRv2
+      Ind              Pop D3S1358_1 D3S1358_2 TH01_1 TH01_2 D21S11_1 D21S11_2 D18S51_1 D18S51_2 Penta.E_1
+1   BZ001          BARRAZA        15        16    9.3    9.3     32.2     33.2       14       15         7
+2   BZ002          BARRAZA        15        17    6.0    8.0     29.0     29.0       14       14        10
+3   BZ004          BARRAZA        15        16    7.0    9.0     29.0     30.0       12       21        17
+4   BZ005          BARRAZA        15        16    7.0    7.0     28.0     29.0       13       16        17
+5   BZ006          BARRAZA        16        17    6.0    7.0     29.0     33.2       15       19        11
+6   BZ008          BARRAZA        15        16    6.0    7.0     28.0     31.2       14       15        13
+7   BZ011          BARRAZA        15        18    7.0    8.0     29.0     30.0       13       15        11
+8   BZ013          BARRAZA        15        18    8.0    9.0     29.0     32.2       18       18        12
+9   BZ015          BARRAZA        15        15    8.0    9.3     29.0     31.0       12       14         8
+10  BZ016          BARRAZA        17        18    7.0    7.0     28.0     29.0       13       15        11
+11  BZ017          BARRAZA        15        18    6.0    7.0     29.0     33.2       13       14        17
+12 BZ018b          BARRAZA        15        15    7.0    9.3     30.0     30.0       14       16         7
+13  BZ020          BARRAZA        15        18    7.0    8.0     30.0     32.2       12       22        12
+14  BZ021          BARRAZA        15        17    7.0    9.3     29.0     30.0       13       17        14
+15  BZ023          BARRAZA        NA        NA     NA     NA       NA       NA       NA       NA        NA
+16  BZ024          BARRAZA        15        16    9.3    9.3     27.0     32.2       14       16        13
+17  BZ025          BARRAZA        15        16    6.0    7.0     29.0     30.0       15       15        11
+18  BZ026          BARRAZA        14        15    9.3    9.3     30.0     31.0       12       14        11
+19  BZ027          BARRAZA        15        18    7.0    9.3     30.0     31.0       13       15        18
+20  BZ028          BARRAZA        14        18    6.0    7.0     30.0     30.0       14       19         7
+21  BZ030          BARRAZA        14        16    6.0    9.3     30.0     32.2       14       15        12
+22  BZ032          BARRAZA        14        15    7.0    7.0     29.0     32.2       12       15        13
+23  BZ033          BARRAZA        15        17    6.0    9.3     28.0     32.2       11       14         7
+24  BZ034          BARRAZA        15        16    7.0    9.3     29.0     32.2       15       17         7
+25  BZ035          BARRAZA        15        16    6.0    7.0     31.0     31.2       18       18        15
+26  BZ036          BARRAZA        16        18    7.0    9.3     29.0     32.2       13       17         7
+27  BZ037          BARRAZA        15        18    6.0    9.3     30.0     30.0       14       18        11
+28  BZ040          BARRAZA        16        16    6.0    9.3     30.0     30.0       14       20        15
+29  BZ041          BARRAZA        15        17    6.0    9.3     28.0     30.0       10       13        11
+30  CA002 CANELILLA_OVALLE        16        18    6.0    9.3     31.2     31.2       13       17        13
+31  CA005 CANELILLA_OVALLE        15        15    7.0    9.0     30.0     32.2       13       15        12
+   Penta.E_2 D5S818_1 D5S818_2 D13S317_1 D13S317_2 D7S820_1 D7S820_2 D16S539_1 D16S539_2 CSF1PO_1 CSF1PO_2
+1         20        9        9        10        13        8       11         9        12       10       11
+2         14       11       11        13        14       11       11        10        12       11       12
+3         19        9       11        11        13       10       12         9        12       12       12
+4         18       11       11         8        13       11       14        10        11       12       12
+5         12       10       11         9        12       11       12         9        12       12       12
+6         17       11       11        12        13       10       12        10        12       12       13
+7         20       12       13         9        12       10       11        10        10       10       11
+8         22       12       12        11        11       10       12         9         9       12       12
+9         11       11       13         8        14       12       13        10        10       12       12
+10        12       11       12         9        12       11       12         9        10       11       11
+11        17       12       12         9        12       10       12        10        12       11       12
+12        19        7       10        10        12       11       12         9        13       11       11
+13        12       10       11         9        11       11       12         9        11       10       12
+14        15        9       11        11        11        7       11         9         9       10       11
+15        NA       NA       NA        NA        NA       NA       NA        NA        NA       NA       NA
+16        18       11       12         9        12       10       10        12        13       11       12
+17        19       11       11        12        13        9       10        10        12       11       12
+18        13       11       11        11        14       10       12        10        11       10       12
+19        21       11       13        10        13       11       11        10        11       10       11
+20        15        7       11         8        13       11       11        12        13       12       12
+21        12        7       10        12        14        8        9        11        12       10       12
+22        18       11       12        11        14        9       11        10        12       10       12
+23        13        9       11         9        12        9       10         9        12       11       12
+24        12       12       12        10        14        9       11        10        13       10       12
+25        17        9       11        11        13       11       12         9        11       12       12
+26        17       11       11        12        13       11       12        12        12       11       11
+27        16        9       13         9        11       10       10        10        11       10       11
+28        18       11       12         9        12        8       10         9        10       10       11
+29        16       12       12        11        13       11       11         9         9       10       11
+30        15       11       12        13        14       10       11        12        12       11       12
+31        14       11       12        10        12       11       11        12        13       11       11
+   Penta.D_1 Penta.D_2 vWA_1 vWA_2 D8S1179_1 D8S1179_2 TPOX_1 TPOX_2 FGA_1 FGA_2
+1         12        13    16    19        11        11     11     12    22  24.0
+2         12        13    17    18        12        13      8     11    22  22.0
+3         13        14    16    16        12        15      8     12    26  26.0
+4          7         9    17    17        13        13      8     11    19  24.0
+5         10        12    18    19        10        14      8      8    24  24.0
+6         10        13    17    17        10        15      8     11    21  23.0
+7         10        13    15    15        10        15     11     12    20  26.0
+8         10        10    16    17        13        13      8     11    21  27.0
+9         10        11    16    19        11        13      8      8    21  22.0
+10         9        10    15    18        13        15     11     12    23  26.0
+11        11        13    15    15        13        14      8     12    20  23.0
+12        10        12    16    17        13        13      8     11    24  24.0
+13         7         9    16    17        10        15      8      8    18  25.0
+14        10        12    15    19        12        12      9     11    21  26.0
+15        NA        NA    NA    NA        NA        NA     NA     NA    NA    NA
+16        10        11    16    19        12        13      8      8    24  25.0
+17         9        13    17    17        11        13     11     12    20  21.0
+18        10        15    16    19        15        15      8     11    22  26.0
+19         9        12    16    19        13        14     10     11    21  24.0
+20        10        13    15    17        12        13      8      8    20  24.0
+21        12        13    16    17        14        15      8      9    20  23.0
+22         9        10    17    17        12        15      8      8    20  25.0
+23         9        10    16    19        12        13      8     11    25  26.0
+24         9        11    16    17        13        13     11     11    21  26.0
+25         9         9    18    19        13        13      9     11    21  27.0
+26        13        13    17    17        12        14      8     11    24  24.0
+27         9        10    15    18        13        13      8     11    21  25.0
+28        10        12    17    17        12        14      8      9    24  25.0
+29        12        13    16    16        14        16      8     12    23  23.2
+30        10        11    14    16        13        13      8     11    26  27.0
+31        10        11    17    19        11        12      8      8    22  29.0
+ [ reached 'max' / getOption("max.print") -- omitted 439 rows ]
+
+> #Guardar en STRv.2
+> names(STRv2) <- gsub("_1|_2", "", names(STRv2))
+
+> write.csv(STRv2, "scripts_fv/Datos/STRV2.csv", row.names = FALSE)
+
+### [Step 3/18] Running: scripts_fv/1.2.Formatos_FV.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> 
+> #### OBJETIVO 3 ####
+> ### To build a phylogenetic tree showing relationships between communities based on the distributions of genetic microsatellite markers within and between communities.###
+> 
+> ## Cargar paquetes y librerias
+> library(adegenet)
+
+> library(readr)
+
+> library(tidyverse)
+
+> ## Cargar bases de datos ##
+> STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
+
+> STR <- STR[STR$ind != "BZ023", ]
+
+> STR$pop <- gsub(" ", "_", STR$pop)
+
+> colnames(STR) <- gsub("\\.1$", " ", colnames(STR))
+
+> write.table(STR, file = "scripts_fv/Datos/STR1.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
+
+> STR [, 3:ncol(STR)] <- lapply(STR[, 3:ncol(STR)], function(x) sprintf("%02d", x))
+
+> locis <- colnames(STR[,3:32])
+
+> locis_unicos <- unique(trimws(locis))
+
+> pop<-STR$pop
+
+> STR_alelos_slash  <- read_delim("scripts_fv/Datos/STR_ceros.csv",";", escape_double = FALSE, trim_ws = TRUE)
+[1mindexing[0m [34mSTR_ceros.csv[0m [======================================================================] [32m?[0m, eta: [36m 0s[0m                                                                                                                                              Rows: 478 Columns: 31
+-- Column specification -----------------------------------------------------------------------------------
+Delimiter: ";"
+chr (31): ID, D3S1358.1, D3S1358.2, TH01.1, TH01.2, D21S11.1, D21S11.2, D18S51.1, D18S51.2, Penta_E.1, ...
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+> STR_alelos_slash <- STR_alelos_slash[STR_alelos_slash$ID != "BZ023", ]
+
+> STR_alelos_slash <- STR_alelos_slash %>% 
++   unite( D3S1358, D3S1358.1, D3S1358.2, sep = "/", remove = TRUE) %>% 
++   unite(TH01, TH01.1, TH01.2, sep = "/", remove = TRUE) %>% 
++   unite(D21S11, D21S11.1, D21S11.2, sep = "/", remove = TRUE) %>% 
++   unite(D18S51, D18S51.1, D18S51.2, sep = "/", remove = TRUE) %>% 
++   unite(Penta_E, Penta_E.1, Penta_E.2, sep = "/", remove = TRUE) %>%
++   unite(D5S818, D5S818.1, D5S818.2, sep = "/", remove = TRUE) %>% 
++   unite(D13S317, D13S317.1, D13S317.2, sep = "/", remove = TRUE) %>% 
++   unite(D7S820, D7S820.1, D7S820.2, sep = "/", remove = TRUE) %>% 
++   unite(D16S539, D16S539.1, D16S539.2, sep = "/", remove = TRUE) %>% 
++   unite(CSF1PO, CSF1PO.1, CSF1PO.2, sep = "/", remove = TRUE) %>% 
++   unite(Penta_D, Penta_D.1, Penta_D.2, sep = "/", remove = TRUE) %>% 
++   unite(vWA, vWA.1, vWA.2, sep = "/", remove = TRUE) %>% 
++   unite(D8S1179, D8S1179.1, D8S1179.2, sep = "/", remove = TRUE) %>% 
++   unite(TPOX, TPOX.1, TPOX.2, sep = "/", remove = TRUE) %>% 
++   unite(FGA, FGA.1, FGA.2, sep = "/", remove = TRUE)
+
+> STR_alelos_slash <- STR_alelos_slash[ !(STR_alelos_slash$ID %in% c("AS", "DS", "JG", "MR", "NM", "VG", "WW182", "pos_ctrl")), ] # Quitar controles
+
+> STR_alelos_slash<-as.data.frame(STR_alelos_slash)
+
+> row.names(STR_alelos_slash) <- STR_alelos_slash$ID 
+
+> STR_alelos_slash[1] <- NULL
+
+> STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.names(STR_alelos_slash),loc.names = colnames(STR_alelos_slash),pop = pop,ploidy = 2,NA.char = "000")
+
+> #TODO: REVISAR. La última línea me arroja un Warning:
+> #Warning message:
+> #  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
+> #                 Individuals with no scored loci have been removed
+> # RESOLUCION: BZ023 tiene solo ceros. Fue removido con anterioridad.
+> 
+
+### [Step 4/18] Running: scripts_fv/OBJETIVO_1.1.Surnames.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 1 ####
+> ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
+> 
+> ## Cargar DATOS ##
+> comuneros <- read.csv("scripts_fv/Datos/commoners.csv")
+
+> comuneros$community <- gsub(" ", "_", comuneros$community)
+
+> comuneros$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , comuneros$community)] <- "RINCONADA_DE_PUNITAQUI"
+
+> ## Cargar paquetes y librerias ##
+> library(Biodem)
+
+> library(reldist)
+
+> library(dplyr)
+
+> library(ape)
+
+> library(ggdendro)
+
+> library(ggpubr)
+
+> library(phylogram)
+
+> library(phytools)
+
+> ##Metodo por cluster jerarquico de una matriz pairwise. Hedrick's standarized kinship coef.##
+> 
+> ##1. TODAS LAS COMUNIDADES
+> surname_distance_matrix <- function(comuneros,
++                                     group_by_col="community") {
++   # cross tabulate
++   surnames_freq <- table(comuneros$surname_father,
++                          comuneros[[group_by_col]])
++   # generates Hedrick (1971) kinship matrix
++   # there are other methods (i.e. lasker, uri)
++   hedkin <- hedrick(surnames_freq)
++   # hedrick returns values of similarity
++   # transform them into values of dissimilarity (distance)
++   as.dist(1-hedkin)
++   #as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
++   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
++ }
+
+> #TODO: REVISAR. Arriba hay una nota (muuuy antigua) que sugiere que el método es incorrecto.
+> # Deberíamos revisarlo
+> # RESOLUCION: NO CAMBIARLO AHORA, SI NO HASTA ARREGLAR TODOS LOS OTROS SCRIPTS
+> #=======
+> 
+> 
+> ## REVISIÓN: Me di cuenta que (1-hedkin)  no parece tener sentido, al menos teórico. ¿Qué se intenta hacer con este paso? ¿Para qué se está invirtiendo la escala?
+> # Alternativas: 
+> # (1)Usar simplemente as.dist(hedkin). ¿Por qué no se optó por esto?
+> # (2)Usar sqrt(1 - hedkin).
+> # (3)Si lo que se busca es normalizar hedkin_normalizado <- hedkin / max(hedkin) y luego distancia <- as.dist(hedkin_normalizado)
+> # (4) Si se quiere si o si invertir la escala: distancia <- as.dist(sqrt(1 - (hedkin / max(hedkin))) 
+> #(5) as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
+> surname_matrix <- surname_distance_matrix(comuneros)
+
+> hclust_default_method <- "average"
+
+> surname_clustering <- function(comuneros,
++                                hclust_method=hclust_default_method,
++                                group_by_col="community") {
++   comuneros %>%
++     surname_distance_matrix(group_by_col) %>%
++     # hierarchical clustering of the distance matrix
++     hclust(method=hclust_method)
++ }
+
+> hc_total <- surname_clustering(comuneros)
+
+> plot(hc_total)
+
+> y_total <- ape::as.phylo(hc_total) #Phylo format
+
+> #Personalizar ?rboles
+> 
+> plot(hc_total) #Dendrograma
+
+> ddata <- dendro_data(hc_total, type = "rectangle")
+
+> p <- ggplot(segment(ddata)) + 
++   geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) + 
++   coord_flip() +
++   scale_y_reverse(expand = c(0.2, 0))+
++   ggdendro::theme_dendro()
+
+> p
+
+> ##2. COOMUNIDADES MUESTREADAS
+> # Seleccionar los datos que se necesitan
+> STR <- read.csv("scripts_fv/Datos/STR.csv", sep = ",")
+
+> STR$pop <- gsub(" ", "_", STR$pop)
+
+> selected_communities <- unique(STR$pop)
+
+> STR2 <- STR
+
+> STR2$pop[STR2$pop %in% c("GUALLIGUAICA", "LA_POLVADA")] <- "PUCLARO"
+
+> selected_communities2<- unique(STR2$pop)
+
+> comuneros2 <- comuneros
+
+> comuneros2$community[comuneros2$community %in% c("GUALLIGUAICA", "LA_POLVADA")] <- "PUCLARO"
+
+> # Funcion de creacion de matriz y arbol (SIN PUCLARO)
+> surnames <- comuneros %>% dplyr::filter(community %in% selected_communities)
+
+> surnames$community <- factor(surnames$community, levels = selected_communities)
+
+> surname_distance_muestra <- function(surnames,
++                                     group_by_col="community") {
++   # cross tabulate
++   surnames_freq <- table(surnames$surname_father,
++                          surnames[[group_by_col]])
++   # generates Hedrick (1971) kinship matrix
++   # there are other methods (i.e. lasker, uri)
++   hedkin <- hedrick(surnames_freq)
++   # hedrick returns values of similarity
++   # transform them into values of dissimilarity (distance)
++   as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
++   #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
++ }
+
+> #=======
+> #TODO: REVISAR. Es la misma nota que hay arriba respecto al método de conversión de matriz de similitud a matriz de distnacia.
+> # Deberíamos revisarlo
+> #=======
+> 
+> surname_matrix_muestra <- surname_distance_muestra(surnames)
+
+> hc <-hclust(surname_matrix_muestra,method = "average")
+
+> hd <- as.dendrogram(hc)
+
+> hy <- ape::as.phylo(hc) #Phylo format
+
+> is.rooted(hy)
+[1] TRUE
+
+> plotTree(hy)
+
+> #### Guardar dendrogramas
+> write.dendrogram(as.dendrogram(hc_total), file = "Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy
+
+> write.nexus(y_total, file = "Figures/Apellidos.nex", translate = TRUE) #Guardar archivo nexus desde phy
+
+> write.dendrogram(hd,file = "Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
+
+> write.nexus(hy, file = "Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
+
+### [Step 5/18] Running: scripts_fv/OBJETIVO_1.2.Manteltest.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 1 ####
+> ###  To build a phylogenetic tree showing relationships between communities based on the distributions of surnames within and between communities. ###
+> 
+> ## Cargar paquetes y librerias ##
+> library(dendextend)
+
+> library(dplyr)
+
+> library(geosphere)
+Warning in script: scripts_fv/OBJETIVO_1.2.Manteltest.R
+
+### [Step 6/18] Running: scripts_fv/OBJETIVO_2.1.Traitsv3.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 2 ####
+> ### To estimate the traits of surnames' diversity, concentration of commoners' rights and inheritance's agnatic bias for each community based on the distributions of surnames within communities ###
+> 
+> ## Cargar paquetes y librerias ##
+> library(cluster)
+
+> library(dplyr)
+
+> library(e1071)
+
+> library(factoextra)
+
+> library(fpc)
+
+> library(ggplot2)
+
+> library(Hmisc)
+
+> library(NbClust)
+
+> library(phytools)
+
+> library(REAT)
+
+> ##Calcular traits
+> # Definir la funcion gini
+> gini <- function (x, weights = rep(1, length = length(x))) {
++   ox <- order(x)
++   x <- x[ox]
++   weights <- weights[ox] / sum(weights)
++   p <- cumsum(weights)
++   nu <- cumsum(weights * x)
++   n <- length(nu)
++   nu <- nu / nu[n]
++   sum(nu[-1] * p[-n]) - sum(nu[-n] * p[-1])
++ }
+
+> # Definir la funcion principal traits
+> traits <- function(comuneros, group_by_cols = c("community","commune")) {
++   # Asegurarse de que group_by_cols es un vector
++   if (!is.vector(group_by_cols)) {
++     group_by_cols <- as.vector(group_by_cols)
++   }
++   
++   # Calcular los indices
++   result <- comuneros %>%
++     group_by(across(all_of(group_by_cols))) %>%
++     summarise(
++       N = n(),
++       S = n_distinct(surname_father) / N,
++       R = mean(rights, na.rm = TRUE),
++       G = gini(shares),
++       A = mean(sex == "M", na.rm = TRUE),
++       M = sum(rights < 1, na.rm = TRUE) / N,
++     )
++   
++   return(result)
++ }
+
+> result <-traits(comuneros) 
+`summarise()` has grouped output by 'community'. You can override using the `.groups` argument.
+
+> #Editar tabla
+> result[is.na(result)] <- 0
+
+> result <- as.data.frame(result)
+
+> head(result)
+               community commune   N         S         R           G         A          M
+1         AGUA_FRIA_ALTA  CANELA  71 0.4225352 0.9859155 0.041448692 0.6619718 0.04225352
+2         AGUA_FRIA_BAJA  CANELA 180 0.2833333 1.0055556 0.005494168 0.6777778 0.00000000
+3                ALCONES  OVALLE 248 0.2096774 0.7903226 0.296222710 0.4395161 0.31048387
+4  ALGARROBAL_Y_DESPENSA VICUÑA  14 0.5714286 1.0000000 0.000000000 0.5714286 0.00000000
+5 ALGARROBO_DE_HORNILLOS  OVALLE  40 0.3750000 1.0000000 0.000000000 0.7250000 0.00000000
+6  ALHUEMILLA_LAS_PALMAS  CANELA  46 0.3043478 1.0000000 0.000000000 0.8043478 0.00000000
+
+> #Descripciones estadisticas de traits
+> Hmisc::describe(result) #Descripciones generales
+result 
+
+ 8  Variables      170  Observations
+-----------------------------------------------------------------------------------------------------------
+community 
+       n  missing distinct 
+     170        0      170 
+
+lowest : AGUA_FRIA_ALTA         AGUA_FRIA_BAJA         ALCONES                ALGARROBAL_Y_DESPENSA  ALGARROBO_DE_HORNILLOS
+highest: VALDIVIA_DE_PUNILLA    VALLECITO_Y_RIO_SECO   VARILLAR               VIVANCO                YERBA_LOCA            
+-----------------------------------------------------------------------------------------------------------
+commune 
+       n  missing distinct 
+     170        0       17 
+
+lowest : ALTO DEL CARMEN ANDACOLLO       CANELA          COMBARBALA      COPIAPO        
+highest: PAIHUANO        PUNITAQUI       RIO HURTADO     SALAMANCA       VICUÑA        
+-----------------------------------------------------------------------------------------------------------
+N 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0       97        1    100.6    122.1    12.45    17.00    24.25    47.00    89.50 
+     .90      .95 
+  174.60   350.45 
+
+lowest :    6   10   11   12   13, highest:  590  727  951 1062 1712
+-----------------------------------------------------------------------------------------------------------
+S 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0      142        1   0.4329   0.1918   0.1697   0.2230   0.3150   0.4146   0.5257 
+     .90      .95 
+  0.6667   0.7474 
+
+lowest : 0.09859155 0.10000000 0.10689252 0.14237288 0.14705882
+highest: 0.81818182 0.82352941 0.83333333 0.91666667 1.00000000
+-----------------------------------------------------------------------------------------------------------
+R 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0      110    0.962   0.9376   0.1821   0.5794   0.6895   0.8906   1.0000   1.0000 
+     .90      .95 
+  1.0526   1.1371 
+
+lowest : 0.2677259 0.3000000 0.3034483 0.3509804 0.3636364, highest: 1.3461538 1.3888889 1.4166667 1.4833333 1.5714286
+-----------------------------------------------------------------------------------------------------------
+G 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0      112    0.968   0.1278   0.1569  0.00000  0.00000  0.00000  0.05991  0.23015 
+     .90      .95 
+ 0.34042  0.41157 
+
+lowest : 0.000000e+00 4.440892e-16 7.105427e-15 3.816681e-03 5.494168e-03
+highest: 5.039138e-01 5.239689e-01 5.364205e-01 5.364409e-01 5.996988e-01
+-----------------------------------------------------------------------------------------------------------
+A 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0      136        1   0.6019   0.1173   0.4486   0.4864   0.5335   0.5882   0.6667 
+     .90      .95 
+  0.7333   0.7604 
+
+lowest : 0.2727273 0.3181818 0.3793103 0.4000000 0.4117647, highest: 0.8333333 0.8571429 0.8750000 0.9000000 1.0000000
+-----------------------------------------------------------------------------------------------------------
+M 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75 
+     170        0       83    0.884   0.1313   0.1845  0.00000  0.00000  0.00000  0.02346  0.20886 
+     .90      .95 
+ 0.40054  0.49100 
+
+lowest : 0.00000000 0.01666667 0.02161215 0.02531646 0.03053435
+highest: 0.73270440 0.81176471 0.82068966 0.82258065 1.00000000
+-----------------------------------------------------------------------------------------------------------
+
+> summary(result) #Mediana, rango
+  community           commune                N                 S                 R         
+ Length:170         Length:170         Min.   :   6.00   Min.   :0.09859   Min.   :0.2677  
+ Class :character   Class :character   1st Qu.:  24.25   1st Qu.:0.31498   1st Qu.:0.8906  
+ Mode  :character   Mode  :character   Median :  47.00   Median :0.41463   Median :1.0000  
+                                       Mean   : 100.60   Mean   :0.43295   Mean   :0.9376  
+                                       3rd Qu.:  89.50   3rd Qu.:0.52569   3rd Qu.:1.0000  
+                                       Max.   :1712.00   Max.   :1.00000   Max.   :1.5714  
+       G                 A                M          
+ Min.   :0.00000   Min.   :0.2727   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:0.5335   1st Qu.:0.00000  
+ Median :0.05991   Median :0.5882   Median :0.02346  
+ Mean   :0.12779   Mean   :0.6019   Mean   :0.13126  
+ 3rd Qu.:0.23015   3rd Qu.:0.6667   3rd Qu.:0.20886  
+ Max.   :0.59970   Max.   :1.0000   Max.   :1.00000  
+
+> var(result$N) #Varianza
+[1] 36139.91
+
+> skewness(result$N) #Asimetria
+[1] 5.329991
+
+> #Normalidad
+> #histogramas
+> png(filename = "Figures/Traits_hist.png")
+
+> par(mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
+
+> par(mfrow = c(2, 3)) 
+
+> exclude_cols <- c("community", "commune", "R")
+
+> include_cols <- setdiff(colnames(result), exclude_cols)
+
+> for (col in include_cols) {
++   hist(result[[col]], breaks = 100, main = col, xlab = col)
++ }
+
+> dev.off()
+png 
+  4 
+
+> par(mfrow=c(1,1))
+
+> par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
+
+> shapiro.test(result$N)
+
+	Shapiro-Wilk normality test
+
+data:  result$N
+W = 0.42667, p-value < 2.2e-16
+
+
+> shapiro.test(result$S)
+
+	Shapiro-Wilk normality test
+
+data:  result$S
+W = 0.9733, p-value = 0.002311
+
+
+> shapiro.test(result$R)
+
+	Shapiro-Wilk normality test
+
+data:  result$R
+W = 0.8331, p-value = 1.156e-12
+
+
+> shapiro.test(result$G)
+
+	Shapiro-Wilk normality test
+
+data:  result$G
+W = 0.83139, p-value = 9.79e-13
+
+
+> shapiro.test(result$A)
+
+	Shapiro-Wilk normality test
+
+data:  result$A
+W = 0.97904, p-value = 0.01132
+
+
+> shapiro.test(result$M)
+
+	Shapiro-Wilk normality test
+
+data:  result$M
+W = 0.72, p-value < 2.2e-16
+
+
+> #Ningún índice se distribuye de manera normal
+> 
+> #### G y M DATA TOTAL ####
+> GM_df <- as.data.frame(dplyr::select(result,community, G,M))
+
+> rownames(GM_df) <- GM_df$community
+
+> GM_df <- GM_df[, -1]
+
+> # Escalar los datos (opcional)
+> GM_scaled <- scale(GM_df)
+
+### [Step 7/18] Running: scripts_fv/OBJETIVO_2.2.Dendroplot.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> 
+> ## ADVERTENCIA: NO CORRER LO SIGUIENTE SI QUIERE CORRER LOS SCRIPTS DEL OBJETIVO_5 ##
+> 
+> 
+> #### OBJETIVO 2 ####
+> ### To estimate the traits of surnames' diversity, concentration of commoners' rights and inheritance's agnatic bias for each community based on the distributions of surnames within communities ###
+> 
+> ## Cargar paquetes y librerias ##
+> library(dendextend)
+
+> library(ggplot2)
+
+> library(gridExtra)
+Warning in script: scripts_fv/OBJETIVO_2.2.Dendroplot.R
+
+### [Step 8/18] Running: scripts_fv/OBJETIVO_3.1.STR.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 3 ####
+> ### To build a phylogenetic tree showing relationships between communities based on the distributions of genetic microsatellite markers within and between communities.###
+> 
+> ## Cargar paquetes y librerias
+> library(ape)
+
+> library(conflicted)
+
+> library(graph4lg)
+
+> library(phylogram)
+
+> library(phytools)
+
+> ##Conflict preference
+> conflict_prefer("as.phylo","ape")
+[conflicted] Removing existing preference.
+[conflicted] Will prefer ape::as.phylo over any other package.
+
+> #Dps
+> DPS<-mat_pw_dps(STR_genind)
+
+ Converting data from a genind to a genpop object... 
+
+...done.
+
+
+ Finding allelic frequencies from a genpop object... 
+
+...done.
+
+
+> DPS<-as.dist(DPS)
+
+> #Arbol con UPGMA
+> dend.DPS<-as.dendrogram(hclust(DPS,method = "complete"))
+
+> phyDPS <- as.phylo(dend.DPS)
+
+> is.rooted(phyDPS)
+[1] TRUE
+
+> plot.phylo(phyDPS)
+
+> write.dendrogram(dend.DPS, file = "Figures/treeDPS.phy", edges = FALSE)
+
+> write.nexus(phyDPS, file = "Figures/treeDPS.nex", translate = TRUE)
+
+### [Step 9/18] Running: scripts_fv/OBJETIVO_3.2.Manteltest.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 3 ####
+> ### To build a phylogenetic tree showing relationships between communities based on the distributions of genetic microsatellite markers within and between communities.###
+> 
+> ### Cargar paquetes y librerias ###
+> library(dendextend)
+
+> library(dplyr)
+
+> library(geosphere)
+Warning in script: scripts_fv/OBJETIVO_3.2.Manteltest.R
+
+### [Step 10/18] Running: scripts_fv/OBJETIVO_4.1.Comparev2.R ###
+
+
+> ################################################################################
+> ################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth#### ##########inheritance and land tenure norms in agropastoralist communities######
+> ################################################################################
+> ################################################################################
+> #### OBJETIVO 4 ################################################################
+> ### To compare trees builds with different data and their deviations from the consensus tree #################################################################
+> 
+> ##########IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 1 Y 3 #################
+> 
+> ###LIBRERIAS
+> library(ape)
+
+> library(dendextend)
+
+> library(geiger)
+
+> library(phangorn)
+
+> library(phytools)
+
+> library(stringr)
+
+> ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
+> # Etiquetas están en el mismo orden
+> hy <- reorder(hy, "postorder")
+
+> plotTree(hy)
+
+> phyDPS <- reorder(phyDPS,"postorder")
+
+> plotTree(phyDPS)
+
+> # Escalonar las ramas en el mismo sentido (izquierda o derecha)
+> hy <- ape::ladderize(hy)
+
+> phyDPS <- ape::ladderize(phyDPS)
+
+> ## Tanglegrama
+> # Hacer dos árboles en dónde las poblaciones sean números
+> hy_num <- hy
+
+> hy_num$tip.label <- seq_along(hy$tip.label)
+
+> phyDPS_num <- phyDPS
+
+> phyDPS_num$tip.label <- seq_along(phyDPS$tip.label)
+
+> # Crear correspondencia entre número y comunidad
+> comunidades <- hy$tip.label 
+
+> # Crear leyenda como un vector de caracteres
+> leyenda <- paste(seq_along(comunidades), "  ", comunidades)
+
+> #Entanglement
+> e <- dendlist(as.dendrogram(hy_num), as.dendrogram(phyDPS_num)) %>%
++   dendextend::untangle(method = "step1side") %>% # Find the best alignment layout
++   entanglement()                     # Alignment
+
+> dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step1side") %>% entanglement # lower is better
+[1] 0.3182715
+
+> dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step1side") %>% 
++   tanglegram(common_subtrees_color_lines = FALSE, highlight_distinct_edges  = FALSE)
+
+> x <- dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step2side") 
+
+> #PNG DPS
+> png("Figures/Tanglegram_DPS.png",width = 800, height = 400, units = "px", pointsize = 12,bg = "white")
+
+> x %>% plot(main = paste("entanglement =", round(entanglement(x), 2)),common_subtrees_color_branches = T, highlight_distinct_edges  = FALSE,
++   main_left = "Surnames",
++   main_right = "STR",
++   sort = F,
++   edge.lwd = T,
++   color_lines = T,
++   intersecting = T,
++   rank_branches = T,
++ )
+
+> legend(x = 5.8, y = 7.5,legend = leyenda, cex = 0.3, pt.cex = 0.5,inset=c(0.05,0.05),text.width = 0.8,box.lty = 2)
+
+> dev.off()
+png 
+  4 
+
+> ################ BAKER GAMMA:COMPARACION APELLIDOS/STR #########################
+> # Encontrar p-valor
+> set.seed(10000)
+
+> the_cor <- cor_bakers_gamma(hy,hy)
+
+> the_cor2 <- cor_bakers_gamma(as.dendrogram(phyDPS), as.dendrogram(hy))
+
+> R <- 1000
+
+> cor_bakers_gamma_results <- numeric(R)
+
+> dend_mixed <- hd
+
+> for(i in 1:R) {
++   dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
++   cor_bakers_gamma_results[i] <- cor_bakers_gamma(hd, dend_mixed)
++ }
+
+> plot(density(cor_bakers_gamma_results),
++      main = "Baker's gamma distribution under H0",
++      xlim = c(-1,1))
+
+> abline(v = 0, lty = 2)
+
+> abline(v = the_cor, lty = 2, col = 2)
+
+> abline(v = the_cor2, lty = 2, col = 4)
+
+> legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+
+> sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
+[1] 0.013
+
+> the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+[1] 0.5660764
+
+> set.seed(NULL)
+
+> ###################### ARBOL DE CONSENSO #######################################
+> # Combina los árboles en una lista de clase "multiPhylo"
+> combined_trees1 <- as.multiPhylo(hy,phyDPS)
+
+> combined_trees2 <- as.multiPhylo(phyDPS,hy)
+
+> # Genera el árbol de consenso
+> consensus_tree1 <- consensus(combined_trees1,p=0.5,check.labels = TRUE, rooted =F)
+
+> consensus_tree1 <- reorder(consensus_tree1, "postorder")
+
+> consensus_tree2 <- consensus(combined_trees2,p=0.5,check.labels = TRUE, rooted =F)
+
+> consensus_tree2 <- reorder(consensus_tree2, "postorder")
+
+> plotTree(consensus_tree1)
+
+> plotTree(consensus_tree2)
+
+> par(mfrow=c(1,2))
+
+> plot(consensus_tree1, main="Apellidos primero")
+
+> plot(consensus_tree2, main="DPS primero")
+
+> par(mfrow=c(1,1))
+
+> dev.off()
+png 
+  5 
+
+> png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
+
+> plot.phylo(consensus_tree2)
+
+> dev.off()
+png 
+  5 
+
+> #Preparacion de árbol con largo de ramas (Todavía está por verse)
+> is.binary(consensus_tree2)
+[1] TRUE
+
+> consensus_tree2$root.edge <- 0
+
+> # Promediar longitudes de ambos árboles (si topologías son compatibles)
+> consensus_tree2$edge.length <- (hy$edge.length + phyDPS$edge.length) / 2
+
+> consensus_tree2$edge.length[consensus_tree2$edge.length == 0] <- 1e-6  # Reemplazar ceros para evitar la división por 0
+
+> consensus_tree2 <- nnls.tree(cophenetic(consensus_tree2), consensus_tree2, rooted = TRUE)
+
+> consensus_tree2 <- multi2di(consensus_tree2)
+
+> plot.phylo(consensus_tree2)
+
+> is.rooted(consensus_tree2)
+[1] TRUE
+
+> is.ultrametric(consensus_tree2)
+[1] TRUE
+
+> consensus_tree<-(consensus_tree2)
+
+> ###################### DENDROPLOT CONSENSO & TRAITS ############################
+> ## Generar dendroplot con el ?rbol de consenso y los traits anotados
+> # Asegúrate de que la columna 'commune' esté en UTF-8
+> comuneros$commune <- iconv(comuneros$commune, from = "latin1", to = "UTF-8")
+
+> comuneros$commune[comuneros$commune == "VICUÑA"] <- "VICUNA"
+
+> ###################### DENDROPLOT CONSENSO & TRAITS ############################
+> ## Generar dendroplot con el ?rbol de consenso y los traits anotados
+> traits <- function(comuneros, group_by_cols = c("community","commune")) {
++   # Asegurarse de que group_by_cols es un vector
++   if (!is.vector(group_by_cols)) {
++     group_by_cols <- as.vector(group_by_cols)
++   }
++   
++   # Calcular los indices
++   result <- comuneros %>%
++     group_by(across(all_of(group_by_cols))) %>%
++     summarise(
++       N = n(),
++       S = n_distinct(surname_father) / N,
++       R = mean(rights, na.rm = TRUE),
++       G = gini(shares),
++       A = mean(sex == "M", na.rm = TRUE),
++       M = sum(rights < 1, na.rm = TRUE) / N,
++     )
++   
++   return(result)
++ }
+
+> result <-traits(comuneros) 
+`summarise()` has grouped output by 'community'. You can override using the `.groups` argument.
+
+> consensus_tree <- as.dendrogram(consensus_tree2)
+
+> plot(consensus_tree)
+
+> comuneros$commune[comuneros$commune == "VICUÃ‘A"] <-"VICUÑA"
+
+> select_comuneros <- comuneros %>% dplyr::filter(comuneros$community %in% selected_communities)
+
+> dendroplot <- function(consensus_tree, save_as = NULL, group_by_col = "community") {
++   library(ggdendro)
++   library(ggplot2)
++   
++   # Comprobar si el objeto es un dendrograma
++   if (!inherits(consensus_tree, "dendrogram")) {
++     stop("consensus_tree debe ser un objeto de tipo dendrogram")
++   }
++   
++   # Generar los datos del dendrograma
++   hcd <- dendro_data(consensus_tree, type = "rectangle")
++   # Obtener las etiquetas como caracteres
++   hcd$labels$label <- as.character(hcd$labels$label)
++   stringi::stri_enc_mark(hcd$labels$label[which(hcd$labels$label == "VICUÑA")])
++   hcd$labels$label <- gsub("VICUÑA", "VICUNA", hcd$labels$label)
++   # Definir el container
++   container <- if (group_by_col == "community") "commune"
++   else if (group_by_col == "commune") "province"
++   else if (group_by_col == "province") "region"
++   else NULL
++   
++   if (is.null(container)) {
++     stop("Container is NULL")
++   }
++   
++   # Calcular traits
++   tc <- result
++   
++   # Funci?n auxiliar para obtener vectores
++   vector_of <- function(target_col) {
++     if (!target_col %in% colnames(tc)) {
++       stop(paste("Column", target_col, "is not found in traits data"))
++     }
++     v <- tc[[target_col]]
++     if (is.null(v)) {
++       stop(paste("Column", target_col, "is NULL in traits data"))
++     }
++     names(v) <- tc[[group_by_col]]
++     v
++   }
++   
++   location <- if (!is.null(container)) vector_of(container) else NULL
++   N <- vector_of("N")
++   S <- vector_of("S")
++   A <- vector_of("A")
++   G <- vector_of("G")
++   M <- vector_of("M")
++ #  cluster <- vector_of("cluster")
++   
++   # Coordenadas ?tiles
++   lastrow <- nrow(hcd$labels)
++   x0 <- hcd$labels$x[[lastrow]]
++   y0 <- hcd$labels$y[[lastrow]]
++   x1 <- x0 + 1 + 0.5 * lastrow / 170
++   ydiff <- if (is.null(container)) 0.4 else 0
++   
++   # Verificar y crear el directorio si no existe
++   if (!is.null(save_as)) {
++     dir_path <- dirname(save_as)
++     if (!dir.exists(dir_path)) {
++       dir.create(dir_path, recursive = TRUE)
++     }
++     png(filename = save_as, width = 10 + 4 * lastrow / 170, height = 1 + 40 * lastrow / 170, units = "in", res = 300)
++   }
++   
++   size <- function(xs) {
++     xs * 1.3 / max(xs) + (1.7 + lastrow / 170)
++   }
++   #Ajustar tama?o de las ramas
++   scale_factor <- 0.5  # Ajusta este valor para cambiar el tama?o de las ramas
++   hcd$segments$y <- hcd$segments$y * scale_factor
++   hcd$segments$yend <- hcd$segments$yend * scale_factor
++   
++   # Graficar
++   p <- ggplot() +
++     geom_segment(data = segment(hcd), aes(x = x, y = y, xend = xend, yend = yend)) +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = label, hjust = 0), nudge_y = 0.01, nudge_x = 0.05, size = 2) +
++     annotate("text", x = x1, y = y0 - 0.215, label = str_to_title(group_by_col), fontface = "bold", size = 4) +
++     annotate("text", x = x1, y = y0 - 1.84 + ydiff, label = "#", fontface = "bold", size = 4) +
++     annotate("text", x = x1, y = y0 - 2.06 + ydiff, label = "S", fontface = "bold", size = 4) +
++     annotate("text", x = x1, y = y0 - 2.26 + ydiff, label = "A", fontface = "bold", size = 4) +
++     annotate("text", x = x1, y = y0 - 2.46 + ydiff, label = "G", fontface = "bold", size = 4) +
++     annotate("text", x = x1, y = y0 - 2.66 + ydiff, label = "M", fontface = "bold", size = 4) +
++  #   annotate("text", x = x1, y = y0 - 2.90 + ydiff, label = "Cluster", fontface = "bold", size = 4) +
++     scale_size_identity() +
++     coord_flip() +
++     scale_y_reverse(expand = c(0.2, 0)) +
++     theme_dendro()
++   
++   # Agregar condicionalmente el container
++   if (!is.null(container)) {
++     p <- p +
++       annotate("text", x = x1, y = y0 - 1.265, label = str_to_title(container), fontface = "bold", size = 4) +
++       geom_text(data = label(hcd), aes(x = x, y = y, hjust = 0, label = location[label], colour = location[label]), nudge_y = 1.1, size = 3, show.legend = FALSE)
++   }
++   
++   # Agregar el resto de las anotaciones
++   p <- p +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = N[label]), nudge_y = 1.8 - ydiff, hjust = 0, size = 3) +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(S[label], format = "f", digits = 3)), nudge_y = 2.0 - ydiff, hjust = 0, size = 3) +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(A[label], format = "f", digits = 3)), nudge_y = 2.2 - ydiff, hjust = 0, size = 3) +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(G[label], format = "f", digits = 3)), nudge_y = 2.4 - ydiff, hjust = 0, size = 3) +
++     geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(M[label], format = "f", digits = 3)), nudge_y = 2.6 - ydiff, hjust = 0, size = 3)
++   #  geom_text(data = label(hcd), aes(x = x, y = y, label = formatC(cluster[label], format = "f", digits = 0)), nudge_y = 2.85 - ydiff, hjust = 0, size = 3)
++   
++   # Guardar el gr?fico
++   if (!is.null(save_as)) {
++     print(p)
++     dev.off()
++   } else {
++     p
++   }
++ }
+
+> # Llamar a la funci?n consensus_dendrogram
+> library(conflicted)
+
+> conflict_prefer("theme_dendro","ggdendro")
+[conflicted] Removing existing preference.
+[conflicted] Will prefer ggdendro::theme_dendro over any other package.
+
+> conflict_prefer("label", "ggdendro")
+[conflicted] Removing existing preference.
+[conflicted] Will prefer ggdendro::label over any other package.
+
+> consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="community") {
++   raised_tree <- raise.dendrogram(as.dendrogram(consensus_tree2), max(consensus_tree2$edge.length))
++   dendroplot(raised_tree, save_as, group_by_col)
++ }
+
+> consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+png 
+  5 
+
+> consensus_tree<-(consensus_tree2)
+
+### [Step 11/18] Running: scripts_fv/OBJETIVO_4.2.Manteltest.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 4 ####
+> ### To compare trees builds with different data and their deviations from the consensus tree ###
+> 
+> ## Cargar paquetes y librerias ##
+> library(dendextend)
+
+> library(dplyr)
+
+> library(geosphere)
+Warning in script: scripts_fv/OBJETIVO_4.2.Manteltest.R
+
+### [Step 12/18] Running: scripts_fv/OBJETIVO_5.1.Tree&traits.R ###
+
+
+> ################################################################################
+> ################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth####
+> ######inheritance and land tenure norms in agropastoralist communities##########
+> ################################################################################
+> ################################################################################
+> 
+> #### OBJETIVO 5 ####
+> ### Part 1 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 2 y 4 ##
+> 
+> 
+> #### CARGAR E INSTALLAR LIBRERIAS ####
+> library(tidyverse)
+
+> library(ape)
+
+> library(car)
+Loading required package: carData
+Warning in script: scripts_fv/OBJETIVO_5.1.Tree&traits.R
+
+### [Step 13/18] Running: scripts_fv/OBJETIVO_5.2.Visualizacion.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 5 ####
+> ### Part 2 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> 
+> ## CARGAR LIBRERIAS ##
+> library(cowplot)
+
+> library(GGally)
+
+> library(png)
+Warning in script: scripts_fv/OBJETIVO_5.2.Visualizacion.R
+
+### [Step 14/18] Running: scripts_fv/OBJETIVO_5.5.Gr�ficoG_M.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### OBJETIVO 5 ####
+> ### Part 5 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 2 y 4 ##
+> 
+> #### Cargar paquetes y librerias ####
+> library(ape)
+
+> library(dplyr)
+
+> library(dendextend)
+
+> library(phytools)
+
+> library(ggplot2)
+
+> ################################################################################
+> ######################## Comunidades muestreadas ###############################
+> ################################################################################
+> # Cluster
+> df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
+
+> #=======
+> #TODO: REVISAR. Error in compute.brlen(x, 1) : object "phy" is not of class "phylo"
+> #In addition: Warning message:
+> #  In dist.nodes(x) : the tree has no branch length: fixing them to one.
+> # AL PARECER ESTE ES UN PROBLEMA RECURRENTE EN VARIAS PARTES
+> #=======
+> 
+> df_tree <- na.omit(df_tree)
+
+> df_tree <- as.data.frame(lapply(df_tree, as.numeric))
+
+> df_tree_scaled <- scale(df_tree)
+
+> df_tree_scaled_numeric <- as.data.frame(df_tree_scaled)  # Asegúrate de que sea un data frame de valores numéricos
+
+> kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
+
+> Cluster <- as.factor(c(kmeans_result$cluster))
+
+> names(Cluster) <- colnames(kmeans_result$centers)
+
+> # Crear una tabla de clusters
+> clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
+
+> ## Necesito que en el eje x estén los clados promediados ##
+> ## En el eje y1 deben estar los valores de G y en ele eje y2 los valores de M ##
+> ################################## G ###########################################
+> # Cluster
+> clusters_table
+                                    tip.label cluster
+EL_DIVISADERO                   EL_DIVISADERO       2
+EL_ALTAR                             EL_ALTAR       2
+MANQUEHUA                           MANQUEHUA       1
+PUNITAQUI                           PUNITAQUI       3
+RINCONADA_DE_PUNITAQUI RINCONADA_DE_PUNITAQUI       2
+BARRAZA                               BARRAZA       3
+CANELILLA_OVALLE             CANELILLA_OVALLE       1
+CANELA_BAJA                       CANELA_BAJA       3
+LA_CALERA                           LA_CALERA       3
+EL_ESPINAL                         EL_ESPINAL       1
+GUALLIGUAICA                     GUALLIGUAICA       2
+HUENTELAUQUEN                   HUENTELAUQUEN       3
+CASTILLO_MAL_PASO           CASTILLO_MAL_PASO       3
+MONTE_PATRIA                     MONTE_PATRIA       3
+LA_POLVADA                         LA_POLVADA       2
+
+> # Tree
+> G_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={-0.0521,0.128952},ancstate={0.038426}]:0.123261,EL_DIVISADERO:0.251235)[&CI={-0.000347,0.225242},ancstate={0.112448}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.054363,0.308255},ancstate={0.181309}]:0.077413,EL_ALTAR:0.471233)[&CI={0.057315,0.325597},ancstate={0.191456}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.1019,0.402365},ancstate={0.252132}]:0.084733,MANQUEHUA:0.719062)[&CI={0.092656,0.411103},ancstate={0.251879}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.138494,0.305502},ancstate={0.221998}]:0.011386,PUNITAQUI:0.180663)[&CI={0.144077,0.31042},ancstate={0.227248}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.154424,0.33238},ancstate={0.243402}]:0.125087,BARRAZA:0.328789)[&CI={0.181639,0.41432},ancstate={0.29798}]:0.069566,LA_CALERA:0.398355)[&CI={0.190979,0.44785},ancstate={0.319415}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.111258,0.43888},ancstate={0.275069}]:0.385711,EL_ESPINAL:1)[&CI={0.080061,0.448753},ancstate={0.264407}];")
+
+> #TODO: Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+> #Also defined by ‘tidytree’
+> 
+> terminal_nodes <-G_tree$tip.label
+
+> terminal_nodes
+ [1] "GUALLIGUAICA"           "LA_POLVADA"             "EL_DIVISADERO"          "RINCONADA_DE_PUNITAQUI"
+ [5] "EL_ALTAR"               "CANELILLA_OVALLE"       "MANQUEHUA"              "CANELA_BAJA"           
+ [9] "CASTILLO_MAL_PASO"      "PUNITAQUI"              "MONTE_PATRIA"           "BARRAZA"               
+[13] "LA_CALERA"              "HUENTELAUQUEN"          "EL_ESPINAL"            
+
+> #Path
+> paths <- nodepath(G_tree,1:15)
+
+> paths
+[[1]]
+[1] 16 17 18 19 20 21 22  1
+
+[[2]]
+[1] 16 17 18 19 20 21 22  2
+
+[[3]]
+[1] 16 17 18 19 20 21  3
+
+[[4]]
+[1] 16 17 18 19 20  4
+
+[[5]]
+[1] 16 17 18 19  5
+
+[[6]]
+[1] 16 17 18  6
+
+[[7]]
+[1] 16 17  7
+
+[[8]]
+[1] 16 23 24 25 26 27 28  8
+
+[[9]]
+[1] 16 23 24 25 26 27 28  9
+
+[[10]]
+[1] 16 23 24 25 26 27 10
+
+[[11]]
+[1] 16 23 24 25 26 11
+
+[[12]]
+[1] 16 23 24 25 12
+
+[[13]]
+[1] 16 23 24 13
+
+[[14]]
+[1] 16 23 14
+
+[[15]]
+[1] 16 15
+
+
+> # Extraer los estados ancestrales
+> G_anc_states <- gvc$anc$ace
+Error in script: scripts_fv/OBJETIVO_5.5.Gr�ficoG_M.R
+
+### [Step 15/18] Running: scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> #### OBJETIVO 5 ####
+> ### Part 6 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> 
+> 
+> ### Extraer valores de estados ancestrales y numero de clados acumulados
+> #Librerías
+> library(ape)
+
+> library(dplyr)
+
+> library(ggplot2)
+
+> library(phytools)
+
+> ################################################################################
+> ######################## Comunidades muestreadas ###############################
+> ################################################################################
+> 
+> # Cluster
+> df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
+
+> df_tree <- na.omit(df_tree)
+
+> df_tree <- as.data.frame(lapply(df_tree, as.numeric))
+
+> df_tree_scaled <- scale(df_tree)
+
+> df_tree_scaled_numeric <- as.data.frame(df_tree_scaled)  # Asegúrate de que sea un data frame de valores numéricos
+
+> kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
+
+> Cluster <- as.factor(c(kmeans_result$cluster))
+
+> names(Cluster) <- colnames(kmeans_result$centers)
+
+> # Crear una tabla de clusters
+> clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
+
+> clusters_table
+                                    tip.label cluster
+EL_DIVISADERO                   EL_DIVISADERO       3
+EL_ALTAR                             EL_ALTAR       3
+MANQUEHUA                           MANQUEHUA       1
+PUNITAQUI                           PUNITAQUI       2
+RINCONADA_DE_PUNITAQUI RINCONADA_DE_PUNITAQUI       3
+BARRAZA                               BARRAZA       2
+CANELILLA_OVALLE             CANELILLA_OVALLE       1
+CANELA_BAJA                       CANELA_BAJA       2
+LA_CALERA                           LA_CALERA       2
+EL_ESPINAL                         EL_ESPINAL       1
+GUALLIGUAICA                     GUALLIGUAICA       3
+HUENTELAUQUEN                   HUENTELAUQUEN       2
+CASTILLO_MAL_PASO           CASTILLO_MAL_PASO       2
+MONTE_PATRIA                     MONTE_PATRIA       2
+LA_POLVADA                         LA_POLVADA       3
+
+> ################################## S ###########################################
+> # Tree
+> S_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={0.221892,0.387561},ancstate={0.304726}]:0.123261,EL_DIVISADERO:0.251235)[&CI={0.211899,0.418322},ancstate={0.315111}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.173239,0.40556},ancstate={0.289399}]:0.077413,EL_ALTAR:0.471233)[&CI={0.168678,0.414167},ancstate={0.291423}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.142831,0.417768},ancstate={0.280299}]:0.084733,MANQUEHUA:0.719062)[&CI={0.121324,0.412715},ancstate={0.26702}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.105892,0.25871},ancstate={0.182301}]:0.011386,PUNITAQUI:0.180663)[&CI={0.106218,0.258429},ancstate={0.182324}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.104629,0.267465},ancstate={0.186047}]:0.125087,BARRAZA:0.328789)[&CI={0.109971,0.322882},ancstate={0.216427}]:0.069566,LA_CALERA:0.398355)[&CI={0.101371,0.336418},ancstate={0.218895}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.086222,0.386008},ancstate={0.236115}]:0.385711,EL_ESPINAL:1)[&CI={0.099883,0.43725},ancstate={0.268567}];")
+
+> #TODO Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
+> #Also defined by ‘tidytree’
+> 
+> par(mar=c(1,1,1,1))
+
+> plot(S_tree,font=2); nodelabels(bg="white",cex =0.5)
+
+> terminal_nodes <-S_tree$tip.label
+
+> terminal_nodes
+ [1] "GUALLIGUAICA"           "LA_POLVADA"             "EL_DIVISADERO"          "RINCONADA_DE_PUNITAQUI"
+ [5] "EL_ALTAR"               "CANELILLA_OVALLE"       "MANQUEHUA"              "CANELA_BAJA"           
+ [9] "CASTILLO_MAL_PASO"      "PUNITAQUI"              "MONTE_PATRIA"           "BARRAZA"               
+[13] "LA_CALERA"              "HUENTELAUQUEN"          "EL_ESPINAL"            
+
+> #ancestral_nodes <- Ancestors(S_tree,1:15,"all")
+> paths <- nodepath(S_tree,1:15)
+
+> paths
+[[1]]
+[1] 16 17 18 19 20 21 22  1
+
+[[2]]
+[1] 16 17 18 19 20 21 22  2
+
+[[3]]
+[1] 16 17 18 19 20 21  3
+
+[[4]]
+[1] 16 17 18 19 20  4
+
+[[5]]
+[1] 16 17 18 19  5
+
+[[6]]
+[1] 16 17 18  6
+
+[[7]]
+[1] 16 17  7
+
+[[8]]
+[1] 16 23 24 25 26 27 28  8
+
+[[9]]
+[1] 16 23 24 25 26 27 28  9
+
+[[10]]
+[1] 16 23 24 25 26 27 10
+
+[[11]]
+[1] 16 23 24 25 26 11
+
+[[12]]
+[1] 16 23 24 25 12
+
+[[13]]
+[1] 16 23 24 13
+
+[[14]]
+[1] 16 23 14
+
+[[15]]
+[1] 16 15
+
+
+> # Extraer los estados ancestrales
+> S_anc_states <- svc$anc$ace
+Error in script: scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R
+
+### [Step 16/18] Running: scripts_fv/OBJETIVO_5.7.HIP_1.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> 
+> #### HIPOTESIS 1 ####
+> #### OBJETIVO 5 ####
+> ### Part 7 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> 
+> ###There was a change in wealth inheritance cultural norms, transiting from agnatic primogeniture
+> ###(Spanish majorat) to non partible multigeniture originating the common tenure norm of property of right.
+> ###Predictions of this hypothesis are high values of S and A, and low values for R at the basal internal
+> ###nodes of the tree if agnatic primogeniture is the ancestral state. If that is followed by an early stage of
+> ###non-partible multigeniture, R and S should be both low at the following internal nodes of the tree.
+> 
+> ### Estados basales sampled communities###
+> 
+> crear_grafico <- function(vc,v1, label,filename) {
++   png(filename,width = 1400, height = 1000, res = 200)
++   # Ajustar margen y tama?o de texto para evitar colapso
++   par(mar = c(1, 1, 4, 1) + 0.1)
++   
++   # Ajustar la separacion entre nodos y otros parametros
++   plot(vc$obj, type = "phylogram",offset = 3, legend = 0.7 * max(nodeHeights(vc$obj$tree)), ftype = "reg", leg.txt = label, no.margin = F)
++   title(main = paste(label, "ancestral tree"), line = 2)
++   nodelabels(text = round(vc$anc$ace, 4), cex = 0.5, bg = "lightblue")
++   tip_values <- v1[consensus_tree$tip.label] 
++   tiplabels(text = round(tip_values, 4), cex = 0.6, bg = "lightpink", offset = 0.06)
++   dev.off()
++ }
+
+> # Llamar a la funci?n para cada comunidad muestreada
+> crear_grafico(svc,sv1, "S", "Figures/S_ancestral_tree_muestra.png")
+Error in script: scripts_fv/OBJETIVO_5.7.HIP_1.R
+
+### [Step 17/18] Running: scripts_fv/OBJETIVO_5.8.I_de_Moran.R ###
+
+
+> ##########################################################################################################################################################
+> #########Project 111160402: Cultural phylogenetics and coevolution of wealth inheritance and land tenure norms in agropastoralist communities.############
+> ##########################################################################################################################################################
+> #### OBJETIVO 5 ####
+> ### Part 8 ###
+> ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
+> 
+> #### LIBRERÍAS
+> library(spdep)
+Warning in script: scripts_fv/OBJETIVO_5.8.I_de_Moran.R
+
+### [Step 18/18] Running: scripts_fv/OBJETIVO_5.9.Random_trees.R ###
+
+
+> ################################################################################
+> ################################################################################
+> ######### Project 111160402: Cultural phylogenetics and coevolution of wealth###
+> ###### inheritance and land tenure norms in agropastoralist communities ########
+> ################################################################################
+> ################################################################################
+> 
+> # OBJETIVO 5
+> # Fit models of trait evolution (e.g., Brownian motion, Ornstein-Uhlenbeck)
+> # to G and M. Compare AIC for model selection and perform simulations.
+> 
+> # Cargar las librerías
+> library(dplyr)
+
+> library(geiger)
+
+> library(phytools)
+
+> library(picante)
+Warning in script: scripts_fv/OBJETIVO_5.9.Random_trees.R
+=======
 === Project run started at: 2025-06-11 09:40:06 ===
 
 ### [Step 1/17] Running: scripts_fv/packages.R ###
@@ -8851,3 +10615,4 @@ repos='https://nowosad.github.io/drat/', type='source')`
   libgdal.so.36: cannot open shared object file: No such file or directory
 gG3;Error in script: scripts_fv/OBJETIVO_5.8.I_de_Moran.R
 g
+>>>>>>> master

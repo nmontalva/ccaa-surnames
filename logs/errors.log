@@ -1,3 +1,21 @@
+<<<<<<< HEAD
+=== Project run started at: 2025-05-02 12:06:48 ===
+
+[ERROR] in scripts_fv/OBJETIVO_5.5.Gr�ficoG_M.R:
+objeto 'gvc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)
+
+[ERROR] in scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R:
+objeto 'svc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)
+
+[ERROR] in scripts_fv/OBJETIVO_5.7.HIP_1.R:
+error in evaluating the argument 'x' in selecting a method for function 'plot': objeto 'svc' no encontrado
+1: source("C:/Users/Kibif/Desktop/Proyecto desigualdad agropastores/Directorio_proyecto/ccaa-surnames/wrapper/wrapper.R", 
+       encoding = "UTF-8", echo = TRUE)
+=======
 === Project run started at: 2025-06-11 09:40:06 ===
 
 [ERROR] in scripts_fv/OBJETIVO_4.2.Manteltest.R:
@@ -8,3 +26,4 @@ No traceback available
 [ERROR] in scripts_fv/OBJETIVO_5.8.I_de_Moran.R:
 package ‘sf’ could not be loaded
 No traceback available 
+>>>>>>> master

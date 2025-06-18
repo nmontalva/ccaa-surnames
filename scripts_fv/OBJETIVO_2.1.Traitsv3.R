@@ -62,8 +62,8 @@ head(result)
 #Descripciones estadisticas de traits
 Hmisc::describe(result) #Descripciones generales
 summary(result) #Mediana, rango
-var(result$N) #Varianza
-skewness(result$N) #Asimetria
+var(result$G) #Varianza
+skewness(result$G) #Asimetria
 #Normalidad
 #histogramas
 png(filename = "Figures/Traits_hist.png")
@@ -89,5 +89,26 @@ shapiro.test(result$M)
 GM_df <- as.data.frame(dplyr::select(result,community, G,M))
 rownames(GM_df) <- GM_df$community
 GM_df <- GM_df[, -1]
-# Escalar los datos (opcional)
-GM_scaled <- scale(GM_df)
+
+### Agregar datos logit (usamos una verión resumida y ajustada de prep_traits)
+# Función que agrega columna logit a result
+add_logit_column <- function(df, variable) {
+  n <- nrow(df)
+  adj <- (df[[variable]] * (n - 1) + 0.5) / n
+  logit <- log(adj / (1 - adj))
+  df[[paste0(variable, "_logit")]] <- logit
+  return(df)
+}
+# Aplicamos la función a result
+result <- result %>%
+  add_logit_column("A") %>%
+  add_logit_column("S") %>%
+  add_logit_column("G") %>%
+  add_logit_column("M")
+# Verificación
+head(result[, c("community", "A", "A_logit", "S", "S_logit", "G", "G_logit", "M", "M_logit")])
+
+#### G y M DATA TOTAL ####
+GM_logit <- as.data.frame(dplyr::select(result,community, G_logit,M_logit))
+rownames(GM_logit) <- GM_logit$community
+GM_logit <- GM_logit[, -1]

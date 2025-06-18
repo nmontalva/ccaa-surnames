@@ -21,9 +21,9 @@ annotate_r_squared <- function(data1, mapping, ...) {
   x <- eval_data_col(data1, mapping$x)
   y <- eval_data_col(data1, mapping$y)
   
-  result <- calc_r(x, y)
-  r_squared <- result$r_squared
-  p_value <- result$p_value
+  result_r <- calc_r(x, y)
+  r_squared <- result_r$r_squared
+  p_value <- result_r$p_value
   
   if (p_value < 0.001) {
     stars <- "***"
@@ -74,18 +74,14 @@ ggpairs(data1,
 )
 dev.off()
 
-#=======
-#TODO: REVISAR. Error: object 'data1' not found
-#=======
-
 # Grafico 2
 annotate_r_squared <- function(data1, mapping, ...) {
   x <- eval_data_col(data1, mapping$x)
   y <- eval_data_col(data1, mapping$y)
   
-  result <- calc_r(x, y)
-  r_squared <- result$r_squared
-  p_value <- result$p_value
+  result_r <- calc_r(x, y)
+  r_squared <- result_r$r_squared
+  p_value <- result_r$p_value
   
   if (p_value < 0.001) {
     stars <- "***"
@@ -117,20 +113,15 @@ ggpairs(data1,
 )
 dev.off()
 
-#=======
-#TODO: REVISAR. Error: object 'data1' not found
-#=======
-# REVISION: Si corre el objetivo 5.1 debería crearse el objeto data1
-
 ## Comunidades total
 #Grafico 1
 annotate_r_squared <- function(data, mapping, ...) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
   
-  result <- calc_r(x, y)
-  r_squared <- result$r_squared
-  p_value <- result$p_value
+  result_r <- calc_r(x, y)
+  r_squared <- result_r$r_squared
+  p_value <- result_r$p_value
   
   if (p_value < 0.001) {
     stars <- "***"
@@ -183,18 +174,14 @@ ggpairs(data,
 
 dev.off()
 
-#=======
-#TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
-#=======
-
 # Gr?fico 2 Correlaciones
 annotate_r_squared <- function(data, mapping, ...) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
   
-  result <- calc_r(x, y)
-  r_squared <- result$r_squared
-  p_value <- result$p_value
+  result_r <- calc_r(x, y)
+  r_squared <- result_r$r_squared
+  p_value <- result_r$p_value
   
   if (p_value < 0.001) {
     stars <- "***"
@@ -224,10 +211,3 @@ ggpairs(data,
         upper = list(continuous =wrap(annotate_r_squared))
         )
 dev.off()
-
-##TODO: 1: Package `magick` is required to draw images. Image not drawn.
-
-#=======
-#TODO: REVISAR. Error in 1:dim(data)[2] : argument of length 0
-#=======
-## REVISION: Deberian arreglarse todos los problemas si se corre completo el objetivo 5.1
