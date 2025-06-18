@@ -14,7 +14,6 @@ packages <- c(
 )
 
 # Excluded manually:
-# - "surface" → Special/archived install.
 # - "BiocManager" → Installer utility.
 
 # Log files
@@ -60,7 +59,7 @@ invisible(lapply(packages, function(pkg) {
   tryCatch({
     library(pkg, character.only = TRUE)
   }, error = function(e) {
-    message("❌ Failed to load ", pkg, ": ", e$message)
+    message("Failed to load ", pkg, ": ", e$message)
   })
 }))
 
@@ -81,7 +80,7 @@ message("Trying to load: treeio")
 tryCatch({
   library(treeio)
 }, error = function(e) {
-  message("❌ Failed to load treeio: ", e$message)
+  message("Failed to load treeio: ", e$message)
 })
 
 # ---- Install ggtree separately (requires BiocManager) ----
@@ -101,5 +100,5 @@ message("Trying to load: ggtree")
 tryCatch({
   library(ggtree)
 }, error = function(e) {
-  message("❌ Failed to load ggtree: ", e$message)
+  message("Failed to load ggtree: ", e$message)
 })
