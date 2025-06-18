@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+=== Project run started at: 2025-05-02 12:06:48 ===
+=======
 === Project run started at: 2025-06-11 09:40:06 ===
 
 Objects created by scripts_fv/packages.R:
@@ -44,3 +47,4 @@ expanded_df, expanded_df_extended, max_steps, result_df_S, S_anc_states, S_trait
 
 Objects created by scripts_fv/OBJETIVO_5.7.HIP_1.R:
 crear_grafico, crear_grafico2, incorporacion_fosil, incorporacion_fosil2
+>>>>>>> master

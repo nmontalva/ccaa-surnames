@@ -123,6 +123,8 @@ is.ultrametric(consensus_tree2)
 consensus_tree<-(consensus_tree2)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
+## Generar dendroplot con el ?rbol de consenso y los traits anotados
+result_dendro2
 ## Generar dendroplot con el árbol de consenso y los traits anotados
 #TODO
 # result_dendro2 no existe (!)
