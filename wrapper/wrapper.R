@@ -36,13 +36,8 @@ scripts <- c(
   "scripts_fv/OBJETIVO_5.5.GráficoG_M.R",
   "scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R",
   "scripts_fv/OBJETIVO_5.7.HIP_1.R",
-<<<<<<< HEAD
-  "scripts_fv/OBJETIVO_5.8.I_de_Moran.R",
-  "scripts_fv/OBJETIVO_5.9.Random_trees.R"
-=======
   "scripts_fv/OBJETIVO_5.8.I_de_Moran.R"#,
   # "scripts_fv/OBJETIVO_5.9.Random_trees.R" #Lo comenté por que se demora mucho
->>>>>>> master
 )
 
 log_dir <- "logs"
