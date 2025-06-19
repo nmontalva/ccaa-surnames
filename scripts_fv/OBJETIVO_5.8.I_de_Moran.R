@@ -29,6 +29,7 @@ GM_logit$G.reg.M <- predict(modelo)  # Guardar valores predichos
 #Crear df
 # Combinar tablas por una clave común (por ejemplo, "community")
 GM_logit$community <- row.names(GM_logit)
+
 # Crear dataframe combinado
 community_data <- GM_logit %>%
   mutate(community = row.names(.)) %>%  # Asegurar que tenemos nombres de comunidad
@@ -52,6 +53,7 @@ k <- 3 # Number of neighbors
 neighbors <- knn2nb(knearneigh(coords, k = k))
 
 # Convert to spatial weights
+
 weights <- nb2listw(neighbors, style = "W") # Estilo de estandarización por filas
 weights
 
@@ -80,4 +82,3 @@ print(MC)
 # I>0, Positive autocorrelation (similar values cluster). *** ESTE ES EL CASO
 # I=0, Random distribution.
 # I<0, Negative autocorrelation (dissimilar values cluster). 
-
