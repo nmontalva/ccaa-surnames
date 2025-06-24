@@ -15,5 +15,6 @@
 *.nex
 *.phy
 # Carpeta Figures y log
+outputs/
 Figures/
 logs/

@@ -40,7 +40,7 @@ scripts <- c(
   # "scripts_fv/OBJETIVO_5.9.Random_trees.R" #Lo comenté por que se demora mucho
 )
 
-log_dir <- "logs"
+log_dir <- "outputs/logs"
 dir.create(log_dir, showWarnings = FALSE)
 
 error_log <- file.path(log_dir, "errors.log")

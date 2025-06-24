@@ -41,12 +41,12 @@ annotate_r_squared <- function(data1, mapping, ...) {
 }
 
 image_paths1 <- c(
-  "Figures/S_A_muestra.png",
-  "Figures/S_G_muestra.png",
-  "Figures/A_G_muestra.png",
-  "Figures/S_M_muestra.png",
-  "Figures/A_M_muestra.png",
-  "Figures/G_M_muestra.png")
+  "outputs/Figures/S_A_muestra.png",
+  "outputs/Figures/S_G_muestra.png",
+  "outputs/Figures/A_G_muestra.png",
+  "outputs/Figures/S_M_muestra.png",
+  "outputs/Figures/A_M_muestra.png",
+  "outputs/Figures/G_M_muestra.png")
 
 plot_with_image <- function(image_path) {
   # Cargar la imagen usando cowplot
@@ -64,7 +64,7 @@ custom_image_plot <- function(data1, mapping) {
 }
 
 
-png("Figures/Scatterplot_muestra_1.png",width = 3000, height = 3000, res = 300)
+png("outputs/Figures/Scatterplot_muestra_1.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -99,7 +99,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
 }
 
 
-png("Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
+png("outputs/Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -139,12 +139,12 @@ annotate_r_squared <- function(data, mapping, ...) {
 }
 
 image_paths <- c(
-  "Figures/S_A_total.png",
-  "Figures/S_G_total.png",
-  "Figures/A_G_total.png",
-  "Figures/S_M_total.png",
-  "Figures/A_M_total.png",
-  "Figures/G_M_total.png"
+  "outputs/Figures/S_A_total.png",
+  "outputs/Figures/S_G_total.png",
+  "outputs/Figures/A_G_total.png",
+  "outputs/Figures/S_M_total.png",
+  "outputs/Figures/A_M_total.png",
+  "outputs/Figures/G_M_total.png"
 )
 
 plot_with_image <- function(image_path) {
@@ -163,7 +163,7 @@ custom_image_plot <- function(data, mapping) {
 }
 
 
-png("Figures/Scatterplot_total_1.png",width = 3000, height = 3000, res = 300)
+png("outputs/Figures/Scatterplot_total_1.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 
@@ -198,7 +198,7 @@ annotate_r_squared <- function(data, mapping, ...) {
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
 }
 
-png("Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)
+png("outputs/Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data,

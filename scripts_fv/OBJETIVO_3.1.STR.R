@@ -24,5 +24,5 @@ phyDPS <- as.phylo(dend.DPS)
 is.rooted(phyDPS)
 plot.phylo(phyDPS)
 
-write.dendrogram(dend.DPS, file = "Figures/treeDPS.phy", edges = FALSE)
-write.nexus(phyDPS, file = "Figures/treeDPS.nex", translate = TRUE)
+write.dendrogram(dend.DPS, file = "outputs/Figures/treeDPS.phy", edges = FALSE)
+write.nexus(phyDPS, file = "outputs/Figures/treeDPS.nex", translate = TRUE)

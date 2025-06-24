@@ -145,7 +145,7 @@ comparar_phylo_signal <- function(results, nombre = "", archivo = NULL) {
     dev.off()
   }
   }
-comparar_phylo_signal(results_G_complete, "G (Árbol completo)",archivo = "Figures/phylo_signal_G_total.png")
-comparar_phylo_signal(results_M_complete, "M (Árbol completo)",archivo = "Figures/phylo_signal_M_total.png")
-comparar_phylo_signal(results_G_consensus, "G (Árbol consenso)",archivo = "Figures/phylo_signal_G_consenso.png")
-comparar_phylo_signal(results_M_consensus, "M (Árbol consenso)",archivo = "Figures/phylo_signal_M_consenso.png")
+comparar_phylo_signal(results_G_complete, "G (Árbol completo)",archivo = "outputs/Figures/phylo_signal_G_total.png")
+comparar_phylo_signal(results_M_complete, "M (Árbol completo)",archivo = "outputs/Figures/phylo_signal_M_total.png")
+comparar_phylo_signal(results_G_consensus, "G (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_G_consenso.png")
+comparar_phylo_signal(results_M_consensus, "M (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_M_consenso.png")

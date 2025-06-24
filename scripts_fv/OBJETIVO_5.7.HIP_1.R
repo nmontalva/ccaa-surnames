@@ -29,11 +29,11 @@ crear_grafico <- function(vc,v1, label,filename) {
   dev.off()
 }
 # Llamar a la funci?n para cada comunidad muestreada
-crear_grafico(svc,sv1, "S", "Figures/S_ancestral_tree_muestra.png")
-crear_grafico(gvc,gv1,"G", "Figures/G_ancestral_tree_muestra.png")
-crear_grafico(avc,av1, "A", "Figures/A_ancestral_tree_muestra.png")
-#crear_grafico(rvc,rv1, "R", "Figures/R_ancestral_tree_muestra.png") #TODO rror in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvc' not found
-crear_grafico(mvc,mv1, "M", "Figures/M_ancestral_tree_muestra.png")
+crear_grafico(svc,sv1, "S", "outputs/Figures/S_ancestral_tree_muestra.png")
+crear_grafico(gvc,gv1,"G", "outputs/Figures/G_ancestral_tree_muestra.png")
+crear_grafico(avc,av1, "A", "outputs/Figures/A_ancestral_tree_muestra.png")
+#crear_grafico(rvc,rv1, "R", "outputs/Figures/R_ancestral_tree_muestra.png") #TODO rror in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvc' not found
+crear_grafico(mvc,mv1, "M", "outputs/Figures/M_ancestral_tree_muestra.png")
 
 
 ### Estados basales total communities###
@@ -53,11 +53,11 @@ crear_grafico2 <- function(vt,v2, label,filename) {
 }
 
 # Llamar a la funcion para el total de comunidades
-crear_grafico2(svt, sv2, "S", "Figures/S_ancestral_tree_total.pdf")
-crear_grafico2(gvt, gv2, "G", "Figures/G_ancestral_tree_total.pdf")
-crear_grafico2(avt, av2, "A", "Figures/A_ancestral_tree_total.pdf")
-#crear_grafico2(rvt, rv2, "R", "Figures/R_ancestral_tree_total.pdf") #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvt' not found
-crear_grafico2(mvt, mv2, "M", "Figures/M_ancestral_tree_total.pdf")
+crear_grafico2(svt, sv2, "S", "outputs/Figures/S_ancestral_tree_total.pdf")
+crear_grafico2(gvt, gv2, "G", "outputs/Figures/G_ancestral_tree_total.pdf")
+crear_grafico2(avt, av2, "A", "outputs/Figures/A_ancestral_tree_total.pdf")
+#crear_grafico2(rvt, rv2, "R", "outputs/Figures/R_ancestral_tree_total.pdf") #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvt' not found
+crear_grafico2(mvt, mv2, "M", "outputs/Figures/M_ancestral_tree_total.pdf")
 
 ################################################################################
 ### CREACION DE POBLACION EN LA BASE (FOSIL) ###
@@ -110,10 +110,10 @@ incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz =
   dev.off()
 }
 consensus_tree$edge.length <- consensus_tree$edge.length + 1e-8 # Se le agrega una distancia mínima
-incorporacion_fosil(0,sv1,consensus_tree,"S","Figures/S_fosil_muestra.png", valor_raiz = 0) #S
-incorporacion_fosil(1,av1,consensus_tree,"A", "Figures/A_fosil_muestra.png",valor_raiz = 1) #A
-incorporacion_fosil(0,gv1,consensus_tree, "G", "Figures/G_fosil_muestra.png",valor_raiz = 0) #G
-incorporacion_fosil(0,mv1,consensus_tree, "M", "Figures/M_fosil_muestra.png",valor_raiz = 0) #M
+incorporacion_fosil(0,sv1,consensus_tree,"S","outputs/Figures/S_fosil_muestra.png", valor_raiz = 0) #S
+incorporacion_fosil(1,av1,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.png",valor_raiz = 1) #A
+incorporacion_fosil(0,gv1,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.png",valor_raiz = 0) #G
+incorporacion_fosil(0,mv1,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
 
 ##COMUNIDADES TOTALES (y_total)
 incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
@@ -163,7 +163,7 @@ incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
   dev.off()
 }
 
-incorporacion_fosil2(0,sv2,y_total,"S", "Figures/S_fosil_total.pdf") #S: 1 apellido
-incorporacion_fosil2(1,av2,y_total,"A", "Figures/A_fosil_total.pdf") #A: 1 hombre
-incorporacion_fosil2(1,gv2,y_total,"G", "Figures/G_fosil_total.pdf") #G: 
-incorporacion_fosil2(0,mv2,y_total,"M", "Figures/M_fosil_total.pdf") #M
+incorporacion_fosil2(0,sv2,y_total,"S", "outputs/Figures/S_fosil_total.pdf") #S: 1 apellido
+incorporacion_fosil2(1,av2,y_total,"A", "outputs/Figures/A_fosil_total.pdf") #A: 1 hombre
+incorporacion_fosil2(1,gv2,y_total,"G", "outputs/Figures/G_fosil_total.pdf") #G: 
+incorporacion_fosil2(0,mv2,y_total,"M", "outputs/Figures/M_fosil_total.pdf") #M

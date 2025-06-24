@@ -119,8 +119,8 @@ is.rooted(hy)
 plotTree(hy)
 
 #### Guardar dendrogramas
-write.dendrogram(as.dendrogram(hc_total), file = "Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy
-write.nexus(y_total, file = "Figures/Apellidos.nex", translate = TRUE) #Guardar archivo nexus desde phy
-write.dendrogram(hd,file = "Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
-write.nexus(hy, file = "Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
+write.dendrogram(as.dendrogram(hc_total), file = "outputs/Figures/Apellidos.phy", edges = FALSE) #Guardar dendrograma archivo phy
+write.nexus(y_total, file = "outputs/Figures/Apellidos.nex", translate = TRUE) #Guardar archivo nexus desde phy
+write.dendrogram(hd,file = "outputs/Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
+write.nexus(hy, file = "outputs/Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
 

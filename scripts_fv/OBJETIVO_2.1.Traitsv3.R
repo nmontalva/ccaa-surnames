@@ -66,7 +66,7 @@ var(result$G) #Varianza
 skewness(result$G) #Asimetria
 #Normalidad
 #histogramas
-png(filename = "Figures/Traits_hist.png")
+png(filename = "outputs/Figures/Traits_hist.png")
 par(mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
 par(mfrow = c(2, 3)) 
 exclude_cols <- c("community", "commune", "R")

@@ -21,14 +21,14 @@ result_dendro<-as.data.frame(result, fileEncoding = "UTF-8-BOM")
 row.names(result_dendro) <-result_dendro$community
 #result_dendro$commune <- gsub("Ñ", "N", result_dendro$commune)
 result_dendro <- result_dendro%>%dplyr::select(-community)
-write.table(result_dendro, file='Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
+write.table(result_dendro, file='outputs/Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
 # Imprimir im?gen en png y en pdf
-png("Figures/Tabla_indices.png", height=4000, width=1500)
+png("outputs/Figures/Tabla_indices.png", height=4000, width=1500)
 p<-tableGrob(result_dendro)
 grid.arrange(p)
 dev.off()
 
-pdf("Figures/Tabla_indices.pdf", height=60, width=20)
+pdf("outputs/Figures/Tabla_indices.pdf", height=60, width=20)
 grid.table(result_dendro)
 dev.off()
 
@@ -40,13 +40,13 @@ result_dendro2 <- result_dendro %>% dplyr::filter(row.names(result_dendro) %in% 
 #result_dendro2$commune <- gsub("Ñ","N", result_dendro2$commune)
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
-write.table(result_dendro2, file='Figures/Tabla_indices_sample.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
+write.table(result_dendro2, file='outputs/Figures/Tabla_indices_sample.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
 # Imprimir im?gen en png y en pdf
-png("Figures/Tabla_indices_sample.png", height=800, width=800)
+png("outputs/Figures/Tabla_indices_sample.png", height=800, width=800)
 p<-tableGrob(result_dendro2)
 grid.arrange(p)
 dev.off()
-pdf("Figures/Tabla_indices_sample.pdf", height=60, width=20)
+pdf("outputs/Figures/Tabla_indices_sample.pdf", height=60, width=20)
 grid.table(result_dendro2)
 dev.off()
 
@@ -200,5 +200,5 @@ surname_dendrogram <- function(comuneros, save_as=NULL,
 }
 
 # Llamar a la funci?n surname_dendrogram
-surname_dendrogram(comuneros, save_as = "Figures/dendrograma_total.pdf")
+surname_dendrogram(comuneros, save_as = "outputs/Figures/dendrograma_total.pdf")
 
