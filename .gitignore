@@ -1,5 +1,19 @@
-.Rproj.user
-.Rhistory
+# Archivos generados por RStudio
+.Rproj.user/
 .RData
+.Rhistory
+.Rapp.history
+.Rproj.user
 .Ruserdata
 .RDataTmp
+.RDataTmp1
+.RDataTmp2
+# Archivos de output (resultados, gráficos)
+*.pdf
+*.png
+*.csv
+*.nex
+*.phy
+# Carpeta Figures y log
+Figures/
+logs/
