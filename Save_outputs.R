@@ -70,6 +70,7 @@ upload_folder_to_drive <- function(local_path, drive_folder_id) {
 upload_folder_to_drive(
   local_path = "outputs",  # Carpeta local a subir
   drive_folder_id = "1w79TvFv_yfsfseyYOFFLB9LpA_byhIbX" #Esto lo guarda en la carpeta de Drive: Análisis filogenético comparado CCAA 2024/2024
+  #NM path 1Xme26NbVnfTOuxugIb_yI9aNDHF5yCwP
 )
 
 # Listar archivos en la carpeta Google Drive

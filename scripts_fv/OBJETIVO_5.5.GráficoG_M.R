@@ -18,7 +18,7 @@ library(ggplot2)
 ######################## Comunidades muestreadas ###############################
 ################################################################################
 # Cluster
-#df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
+df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
 df_tree <- na.omit(df_tree)
 df_tree <- as.data.frame(lapply(df_tree, as.numeric))
 df_tree_scaled <- scale(df_tree)

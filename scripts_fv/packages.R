@@ -10,17 +10,20 @@ packages <- c(
   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "geomorph",
   "cowplot", "GGally", "png", "grid", "factoextra", "cluster", "NbClust", "fpc", "PlotTools",
-  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface", "RColorBrewer"
+  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface", "RColorBrewer", "sf", "fs", "googledrive"
 )
 
 # Excluded manually:
 # - "BiocManager" → Installer utility.
 
 # Log files
-log_skipped <- "skipped_packages.log"
-log_installed <- "installed_packages.log"
-log_failed <- "failed_packages.log"
-log_errors <- "error_messages.log"
+packages_log_dir <- "outputs/logs/packages_logs"
+dir.create(packages_log_dir, showWarnings = FALSE)
+
+log_skipped <- file.path(packages_log_dir, "skipped_packages.log")
+log_installed <- file.path(packages_log_dir, "installed_packages.log")
+log_failed <- file.path(packages_log_dir, "failed_packages.log")
+log_errors <- file.path(packages_log_dir, "error_messages.log")
 
 # Safely clear old logs
 safe_remove <- function(file) if (file.exists(file)) file.remove(file)
@@ -32,19 +35,19 @@ installed <- rownames(installed.packages())
 # Helper function to install missing packages only
 install_if_needed <- function(pkg) {
   if (pkg %in% installed) {
-    write(pkg, file = outputs/log_skipped, append = TRUE)
+    write(pkg, file = log_skipped, append = TRUE)
   } else {
     message("Installing: ", pkg)
     tryCatch({
       install.packages(pkg) # Force binary where available
       installed <<- rownames(installed.packages()) # Refresh full list
       if (pkg %in% installed) {
-        write(pkg, file = outputs/log_installed, append = TRUE)
+        write(pkg, file = log_installed, append = TRUE)
       } else {
-        write(pkg, file = outputs/log_failed, append = TRUE)
+        write(pkg, file = log_failed, append = TRUE)
       }
     }, error = function(e) {
-      write(pkg, file = outputs/log_failed, append = TRUE)
+      write(pkg, file = log_failed, append = TRUE)
       write(paste(pkg, ":", e$message), file = log_errors, append = TRUE)
     })
   }

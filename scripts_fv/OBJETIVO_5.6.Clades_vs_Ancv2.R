@@ -279,7 +279,7 @@ paths
 A_anc_states <- avc$anc$ace
 A_anc_states
 #Extraer estados actuales
-A_trait_vector <- setNames(A_trait$A, rownames(A_trait))
+A_trait_vector <- setNames(A_logit$A, rownames(A_logit))
 print(A_trait_vector)
 
 #Crear un data.frame
