@@ -48,7 +48,7 @@ dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangl
 x <- dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step2side") 
 
 #PNG DPS
-png("Figures/Tanglegram_DPS.png",width = 800, height = 400, units = "px", pointsize = 12,bg = "white")
+png("outputs/Figures/Tanglegram_DPS.png",width = 800, height = 400, units = "px", pointsize = 12,bg = "white")
 x %>% plot(main = paste("entanglement =", round(entanglement(x), 2)),common_subtrees_color_branches = T, highlight_distinct_edges  = FALSE,
   main_left = "Surnames",
   main_right = "STR",
@@ -105,7 +105,7 @@ plot(consensus_tree2, main="DPS primero")
 par(mfrow=c(1,1))
 dev.off()
 
-png("Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
+png("outputs/Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
 plot.phylo(consensus_tree2)
 dev.off()
 
@@ -260,7 +260,7 @@ consensus_dendrogram <- function(select_comuneros, save_as=NULL,group_by_col="co
   dendroplot(raised_tree, save_as, group_by_col)
 }
 
-consensus_dendrogram(select_comuneros, save_as = "Figures/dendrograma_consenso_DPS.png")
+consensus_dendrogram(select_comuneros, save_as = "outputs/Figures/dendrograma_consenso_DPS.png")
 
 consensus_tree<-(consensus_tree2)
 

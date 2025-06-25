@@ -29,11 +29,11 @@ crear_grafico <- function(vc,v1, label,filename) {
   dev.off()
 }
 # Llamar a la funci?n para cada comunidad muestreada
-crear_grafico(svc,sv1, "S", "Figures/S_ancestral_tree_muestra.png")
-crear_grafico(gvc,gv1,"G", "Figures/G_ancestral_tree_muestra.png")
-crear_grafico(avc,av1, "A", "Figures/A_ancestral_tree_muestra.png")
-#crear_grafico(rvc,rv1, "R", "Figures/R_ancestral_tree_muestra.png") #TODO rror in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvc' not found
-crear_grafico(mvc,mv1, "M", "Figures/M_ancestral_tree_muestra.png")
+crear_grafico(svc,sv1, "S", "outputs/Figures/S_ancestral_tree_muestra.png")
+crear_grafico(gvc,gv1,"G", "outputs/Figures/G_ancestral_tree_muestra.png")
+crear_grafico(avc,av1, "A", "outputs/Figures/A_ancestral_tree_muestra.png")
+#crear_grafico(rvc,rv1, "R", "outputs/Figures/R_ancestral_tree_muestra.png") #TODO rror in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvc' not found
+crear_grafico(mvc,mv1, "M", "outputs/Figures/M_ancestral_tree_muestra.png")
 
 
 ### Estados basales total communities###
@@ -53,17 +53,18 @@ crear_grafico2 <- function(vt,v2, label,filename) {
 }
 
 # Llamar a la funcion para el total de comunidades
-crear_grafico2(svt, sv2, "S", "Figures/S_ancestral_tree_total.pdf")
-crear_grafico2(gvt, gv2, "G", "Figures/G_ancestral_tree_total.pdf")
-crear_grafico2(avt, av2, "A", "Figures/A_ancestral_tree_total.pdf")
-#crear_grafico2(rvt, rv2, "R", "Figures/R_ancestral_tree_total.pdf") #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvt' not found
-crear_grafico2(mvt, mv2, "M", "Figures/M_ancestral_tree_total.pdf")
+crear_grafico2(svt, sv2, "S", "outputs/Figures/S_ancestral_tree_total.pdf")
+crear_grafico2(gvt, gv2, "G", "outputs/Figures/G_ancestral_tree_total.pdf")
+crear_grafico2(avt, av2, "A", "outputs/Figures/A_ancestral_tree_total.pdf")
+#crear_grafico2(rvt, rv2, "R", "outputs/Figures/R_ancestral_tree_total.pdf") #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvt' not found
+crear_grafico2(mvt, mv2, "M", "outputs/Figures/M_ancestral_tree_total.pdf")
 
+################################################################################
 ### CREACION DE POBLACION EN LA BASE (FOSIL) ###
+################################################################################
 ## Hombre,una sola persona, con un solo derecho, un apellido.
 
 ##COMUNIDADES MUESTREADAS (consensus_tree)
-
 incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz = 0)  {
   #incorporar fosil
   pm<-setNames(c(1000,rep(fosil,or_tree$Nnode)),
@@ -109,70 +110,60 @@ incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz =
   dev.off()
 }
 consensus_tree$edge.length <- consensus_tree$edge.length + 1e-8 # Se le agrega una distancia mínima
-incorporacion_fosil(0,sv1,consensus_tree,"S","Figures/S_fosil_muestra.png", valor_raiz = 0) #S
-#TODO Error in anc.Bayes(or_tree, valor, ngen = 1e+05, control = list(pr.mean = pm,  : some branch lengths are 0 or nearly zero
-
-#incorporacion_fosil(1,rv1,consensus_tree,"R", "Figures/R_fosil_muestra.png",valor_raiz = 1) #R
-
-incorporacion_fosil(1,av1,consensus_tree,"A", "Figures/A_fosil_muestra.png",valor_raiz = 1) #A
-#TODO Error in anc.Bayes(or_tree, valor, ngen = 1e+05, control = list(pr.mean = pm,  : some branch lengths are 0 or nearly zero
-
-incorporacion_fosil(0,gv1,consensus_tree, "G", "Figures/G_fosil_muestra.png",valor_raiz = 0) #G
-#TODO Error in anc.Bayes(or_tree, valor, ngen = 1e+05, control = list(pr.mean = pm,  : some branch lengths are 0 or nearly zero
-
-incorporacion_fosil(0,mv1,consensus_tree, "M", "Figures/M_fosil_muestra.png",valor_raiz = 0) #M
-#TODO Error in anc.Bayes(or_tree, valor, ngen = 1e+05, control = list(pr.mean = pm,  : some branch lengths are 0 or nearly zero
+incorporacion_fosil(0,sv1,consensus_tree,"S","outputs/Figures/S_fosil_muestra.png", valor_raiz = 0) #S
+incorporacion_fosil(1,av1,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.png",valor_raiz = 1) #A
+incorporacion_fosil(0,gv1,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.png",valor_raiz = 0) #G
+incorporacion_fosil(0,mv1,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
 
 ##COMUNIDADES TOTALES (y_total)
-incorporacion_fosil2 <- function(fosil,valor,tree, label, filename)
-{
-  # Verificar longitudes de ramas
-  branch_lengths <- tree$edge.length
-  # Ajustar ramas con longitud cero
-  min_branch_length <- 1e-6  # Define un valor m?nimo peque?o
-  branch_lengths[branch_lengths == 0] <- min_branch_length
-  tree$edge.length <- branch_lengths
-  #incorporar fosil
-  pm<-setNames(c(1000,rep(fosil,tree$Nnode)),
-               c("sig2",1:tree$Nnode+length(tree$tip.label)))
-  #incorporaci?n en la raiz
-  nn<-as.character((length(tree$tip.label)+1))
-  pm[nn]<-0
-  # Varianza previa
+incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
+  # Verificar y corregir ramas de longitud 0
+  tree$edge.length[tree$edge.length == 0] <- 1e-6
+  
+  # Preparar priors
+  pm <- setNames(c(1000, rep(fosil, tree$Nnode)),
+                 c("sig2", 1:tree$Nnode + length(tree$tip.label)))
+  nn <- as.character((length(tree$tip.label) + 1))
+  pm[nn] <- 0
   pv <- setNames(c(1000^2, rep(1000, length(pm) - 1)), names(pm))
   pv[as.character(nn)] <- 1e-100
+  
   # Ejecutar MCMC
   mcmc <- anc.Bayes(tree, valor, ngen = 100000,
                     control = list(pr.mean = pm, pr.var = pv,
                                    a = pm[nn],
                                    y = pm[as.character(2:tree$Nnode + length(tree$tip.label))]))
   mcmc_tree <- mcmc$tree
-  # Obtener valores ancestrales estimados
+  
+  # Obtener valores ancestrales
   w <- as.data.frame(mcmc$mcmc)
   exclude_cols <- c("gen", "sig2", "logLik")
   existing_cols <- intersect(exclude_cols, colnames(w))
   w <- colMeans(w[, !(colnames(w) %in% existing_cols)])
-  # Agregar valor tip.labels
-  trait_name <- paste0(label, "_logit2")
-  tip.community <- paste0 (mcmc_tree$tip.label)
-  name <- get(trait_name)[tip.community,]
   
-  # Guardar el gr?fico como una imagen PNG
-  pdf(filename,
-      width=200,
-      height=250)
-  # Ajustar la separaci?n entre nodos y otros par?metros
+  # Obtener valores para tips
+  trait_name <- paste0(label, "_logit2")
+  tip.community <- paste0(mcmc_tree$tip.label)
+  name <- get(trait_name)[tip.community, ]
+  
+  # Crear gráfico con gradiente de color
+  pdf(filename, width = 200, height = 250)
   par(mar = c(4, 4, 2, 2) + 0.1)
-  plot(mcmc_tree, show.tip.label =TRUE, cex = 2, edge.width = 2, label.offset = 0.001, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
-  title(main = paste(label, "fossil ancestral tree.",label,"in root =",fosil), line = -15, cex.main = 12)
+  
+  # Mapear valores sobre tips
+  sorted_trait_vector <- valor[sort(tree$tip.label)]
+  obj <- contMap(mcmc_tree, sorted_trait_vector, plot = FALSE)
+  plot(obj, type = "phylogram", offset = 3, legend = 0.7 * max(nodeHeights(obj$tree)), 
+       ftype = "reg", leg.txt = label, no.margin = FALSE)
+  
+  title(main = paste(label, "fossil ancestral tree. Root =", fosil), line = 2)
   nodelabels(text = round(w, 4), cex = 5, bg = "lightblue")
-  tiplabels(text = round(name, 4), cex = 5, bg = "lightpink", offset = 0.02)
+  tip_values <- valor[tree$tip.label]
+  tiplabels(text = round(tip_values, 4), cex = 5, bg = "lightpink", offset = 0.02)
   dev.off()
 }
 
-incorporacion_fosil2(0,sv2,y_total,"S", "Figures/S_fosil_total.pdf") #S
-#incorporacion_fosil2(1,rv2,y_total,"R", "Figures/R_fosil_total.pdf") #R
-
-incorporacion_fosil2(1,av2,y_total,"A", "Figures/A_fosil_total.pdf") #A
-incorporacion_fosil2(1,gv2,y_total,"G", "Figures/G_fosil_total.pdf") #G
-incorporacion_fosil2(0,mv2,y_total,"M", "Figures/M_fosil_total.pdf") #M
+incorporacion_fosil2(0,sv2,y_total,"S", "outputs/Figures/S_fosil_total.pdf") #S: 1 apellido
+incorporacion_fosil2(1,av2,y_total,"A", "outputs/Figures/A_fosil_total.pdf") #A: 1 hombre
+incorporacion_fosil2(1,gv2,y_total,"G", "outputs/Figures/G_fosil_total.pdf") #G: 
+incorporacion_fosil2(0,mv2,y_total,"M", "outputs/Figures/M_fosil_total.pdf") #M

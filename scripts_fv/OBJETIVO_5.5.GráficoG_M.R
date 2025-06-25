@@ -18,32 +18,24 @@ library(ggplot2)
 ######################## Comunidades muestreadas ###############################
 ################################################################################
 # Cluster
-df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
-
-#=======
-#TODO: REVISAR. Error in compute.brlen(x, 1) : object "phy" is not of class "phylo"
-#In addition: Warning message:
-#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
-# AL PARECER ESTE ES UN PROBLEMA RECURRENTE EN VARIAS PARTES
-#=======
-
+#df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
 df_tree <- na.omit(df_tree)
 df_tree <- as.data.frame(lapply(df_tree, as.numeric))
 df_tree_scaled <- scale(df_tree)
 df_tree_scaled_numeric <- as.data.frame(df_tree_scaled)  # Asegúrate de que sea un data frame de valores numéricos
-kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
-Cluster <- as.factor(c(kmeans_result$cluster))
-names(Cluster) <- colnames(kmeans_result$centers)
+#kmeans_result <-kmeans(df_tree_scaled_numeric, centers = 3, iter.max = 100, nstart = 100)
+#Cluster <- as.factor(c(kmeans_result$cluster))
+#names(Cluster) <- colnames(kmeans_result$centers)
 
 # Crear una tabla de clusters
-clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
+#clusters_table <- data.frame(tip.label = names(Cluster), cluster = Cluster)
 ## Necesito que en el eje x estén los clados promediados ##
 ## En el eje y1 deben estar los valores de G y en ele eje y2 los valores de M ##
 ################################## G ###########################################
 # Cluster
-clusters_table
+#clusters_table
 # Tree
-G_tree <- read.tree(text = "(((((((GUALLIGUAICA:0.127973,LA_POLVADA:0.127973)[&CI={-0.0521,0.128952},ancstate={0.038426}]:0.123261,EL_DIVISADERO:0.251235)[&CI={-0.000347,0.225242},ancstate={0.112448}]:0.142584,RINCONADA_DE_PUNITAQUI:0.393819)[&CI={0.054363,0.308255},ancstate={0.181309}]:0.077413,EL_ALTAR:0.471233)[&CI={0.057315,0.325597},ancstate={0.191456}]:0.163097,CANELILLA_OVALLE:0.634329)[&CI={0.1019,0.402365},ancstate={0.252132}]:0.084733,MANQUEHUA:0.719062)[&CI={0.092656,0.411103},ancstate={0.251879}]:0.280938,((((((CANELA_BAJA:0.169277,CASTILLO_MAL_PASO:0.169277)[&CI={0.138494,0.305502},ancstate={0.221998}]:0.011386,PUNITAQUI:0.180663)[&CI={0.144077,0.31042},ancstate={0.227248}]:0.02304,MONTE_PATRIA:0.203702)[&CI={0.154424,0.33238},ancstate={0.243402}]:0.125087,BARRAZA:0.328789)[&CI={0.181639,0.41432},ancstate={0.29798}]:0.069566,LA_CALERA:0.398355)[&CI={0.190979,0.44785},ancstate={0.319415}]:0.215934,HUENTELAUQUEN:0.614289)[&CI={0.111258,0.43888},ancstate={0.275069}]:0.385711,EL_ESPINAL:1)[&CI={0.080061,0.448753},ancstate={0.264407}];")
+G_tree <- read.tree(text = "((((((((CANELA_BAJA:0.050567,CASTILLO_MAL_PASO:0.050567)[&CI={-1.977033,-0.80864},ancstate={-1.392837}]:0,PUNITAQUI:0.050567)[&CI={-1.977033,-0.80864},ancstate={-1.392837}]:0.023153,MONTE_PATRIA:0.07372)[&CI={-1.940081,-0.466277},ancstate={-1.203179}]:0.072525,BARRAZA:0.146245)[&CI={-1.908374,0.003712},ancstate={-0.952331}]:0.019575,LA_CALERA:0.16582)[&CI={-1.90799,0.060094},ancstate={-0.923948}]:0.003173,HUENTELAUQUEN:0.168993)[&CI={-1.94025,0.062541},ancstate={-0.938855}]:0.525168,((((((GUALLIGUAICA:0.135245,LA_POLVADA:0.135245)[&CI={-6.06371,-3.74557},ancstate={-4.90464}]:0.140619,EL_DIVISADERO:0.275864)[&CI={-4.355463,-1.621931},ancstate={-2.988697}]:0.05442,RINCONADA_DE_PUNITAQUI:0.330285)[&CI={-3.892952,-1.077699},ancstate={-2.485325}]:0.079655,EL_ALTAR:0.40994)[&CI={-3.694608,-0.639758},ancstate={-2.167183}]:0.123426,CANELILLA_OVALLE:0.533365)[&CI={-3.256728,0.070739},ancstate={-1.592995}]:0.062803,MANQUEHUA:0.596168)[&CI={-3.216007,0.248556},ancstate={-1.483725}]:0.097993)[&CI={-3.248677,0.551817},ancstate={-1.34843}]:0,EL_ESPINAL:0.694161)[&CI={-3.248677,0.551817},ancstate={-1.34843}];")
 
 #TODO: Found more than one class "phylo" in cache; using the first, from namespace 'TreeTools'
 #Also defined by ‘tidytree’
@@ -58,7 +50,7 @@ paths
 G_anc_states <- gvc$anc$ace
 G_anc_states
 #Extraer estados actuales
-G_trait_vector <- setNames(G_trait$G, rownames(G_trait))
+G_trait_vector <- setNames(GM_logit$G_logit, rownames(GM_logit))
 print(G_trait_vector)
 
 #Crear un data.frame
@@ -70,7 +62,7 @@ for (i in seq_along(paths)) {
   path <- paths[[i]]
   
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
+  #cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
   # Obtener el valor de G para el nodo terminal desde G_trait
   G_value_terminal <- G_trait_vector[tip]
@@ -78,7 +70,7 @@ for (i in seq_along(paths)) {
   # Agregar el nodo terminal al dataframe con su valor de G y su cluster
   result_list <- append(result_list, list(data.frame(
     Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-    Cluster = cluster,
+    #Cluster = cluster,
     G_value = G_value_terminal
   )))
   
@@ -90,7 +82,7 @@ for (i in seq_along(paths)) {
     # Agregar el nodo ancestral, cluster y valor de G al resultado
     result_list <- append(result_list, list(data.frame(
       Node = node,
-      Cluster = cluster,  # Asignamos el mismo cluster del terminal
+      #Cluster = cluster,  # Asignamos el mismo cluster del terminal
       G_value = G_value
     )))
   }
@@ -111,7 +103,7 @@ paths
 M_anc_states <- mvc$anc$ace
 M_anc_states
 #Extraer estados actuales
-M_trait_vector <- setNames(M_trait$M, rownames(M_trait))
+M_trait_vector <- setNames(GM_logit$M_logit, rownames(GM_logit))
 print(M_trait_vector)
 
 #Crear un data.frame
@@ -122,7 +114,7 @@ for (i in seq_along(paths)) {
   tip <- terminal_nodes[i]
   path <- paths[[i]]
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
+  #cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
   # Obtener el valor de M para el nodo terminal desde M_trait
   M_value_terminal <- M_trait_vector[tip]
@@ -130,7 +122,7 @@ for (i in seq_along(paths)) {
   # Agregar el nodo terminal al dataframe con su valor de M y su cluster
   result_list <- append(result_list, list(data.frame(
     Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-    Cluster = cluster,
+    #Cluster = cluster,
     M_value = M_value_terminal
   )))
   
@@ -141,7 +133,7 @@ for (i in seq_along(paths)) {
     # Agregar el nodo ancestral, cluster y valor de M al resultado
     result_list <- append(result_list, list(data.frame(
       Node = node,
-      Cluster = cluster,
+      #Cluster = cluster,
       M_value = M_value
     )))
   }
@@ -161,7 +153,7 @@ row.names(result_df_M)<-NULL
 result_df_GM<-merge(result_df_G, 
                     result_df_M,
                     all.x = T,
-                    by = c("Node", "Cluster"))
+                    by = c("Node"))
 result_df_GM
 max_path_length<-max(sapply(paths,length))
 max_path_length
@@ -371,7 +363,7 @@ paths
 G_anc_states <- gvt$anc$ace
 G_anc_states
 #Extraer estados actuales
-G_trait_vector <- setNames(G_trait2$G, rownames(G_trait2))
+G_trait_vector <- setNames(GM_logit$G_logit, rownames(GM_logit))
 print(G_trait_vector)
 
 #Crear un data.frame
@@ -383,31 +375,30 @@ for (i in seq_along(paths)) {
   path <- paths[[i]]
   
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster_row <-clusters_table[clusters_table$tip.label==tip,]
-  cluster <- ifelse(nrow(cluster_row)>0,cluster_row$cluster,NA)
+  #cluster_row <-clusters_table[clusters_table$tip.label==tip,]
+  #cluster <- ifelse(nrow(cluster_row)>0,cluster_row$cluster,NA)
   # Obtener el valor de M para el nodo terminal desde M_trait
   M_value_terminal <- ifelse(tip %in% names(M_trait_vector),M_trait_vector[tip],NA)
-  if(!is.na(cluster)&&!is.na(G_value_terminal)){
+  #if(!is.na(cluster)&&!is.na(G_value_terminal))
+  {
     result_list[[i]] <- data.frame(
       Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-      Cluster = cluster,
+      #Cluster = cluster,
       G_value = G_value_terminal)
   for(node in head(path,-1)){
     G_value<-ifelse(as.character(node)%in% names(G_anc_states),
                     G_anc_states[as.character(node)],NA)
-    if(!is.na(cluster)&&!is.na(G_value)) {
+    #if(!is.na(cluster)&&!is.na(G_value)) 
+    {
       result_list[[length(result_list)+1]]<-data.frame(
         Node =node,
-        Cluster = cluster,
+        #Cluster = cluster,
         G_value = G_value
         )
       }
     }  
   }
 }
-
-
-  
   # Agregar cada nodo ancestral en el path (excluyendo el terminal)
   for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo terminal
     # Asignar el valor de G para el nodo ancestral
@@ -416,7 +407,7 @@ for (i in seq_along(paths)) {
     # Agregar el nodo ancestral, cluster y valor de G al resultado
     result_list <- append(result_list, list(data.frame(
       Node = node,
-      Cluster = cluster,  # Asignamos el mismo cluster del terminal
+      #Cluster = cluster,  # Asignamos el mismo cluster del terminal
       G_value = G_value
     )))
   }
@@ -437,7 +428,7 @@ paths
 M_anc_states <- mvt$anc$ace
 M_anc_states
 #Extraer estados actuales
-M_trait_vector <- setNames(M_trait2$M, rownames(M_trait2))
+M_trait_vector <- setNames(GM_logit$M_logit, rownames(GM_logit))
 print(M_trait_vector)
 
 #Crear un data.frame
@@ -449,22 +440,24 @@ for (i in seq_along(paths)) {
   path <- paths[[i]]
   
   # Obtener el cluster del nodo terminal desde clusters_table
-  cluster_row <-clusters_table[clusters_table$tip.label==tip,]
-  cluster <- ifelse(nrow(cluster_row)>0,cluster_row$cluster,NA)
+  #cluster_row <-clusters_table[clusters_table$tip.label==tip,]
+  #cluster <- ifelse(nrow(cluster_row)>0,cluster_row$cluster,NA)
   # Obtener el valor de M para el nodo terminal desde M_trait
   M_value_terminal <- ifelse(tip %in% names(M_trait_vector),M_trait_vector[tip],NA)
-  if(!is.na(cluster)&&!is.na(M_value_terminal)){
+  #if(!is.na(cluster)&&!is.na(M_value_terminal))
+  {
     result_list[[i]] <- data.frame(
       Node = path[length(path)],   # Último nodo en la ruta, que es el terminal
-      Cluster = cluster,
+      #Cluster = cluster,
       M_value = M_value_terminal)
     for(node in head(path,-1)){
       M_value<-ifelse(as.character(node)%in% names(M_anc_states),
                       M_anc_states[as.character(node)],NA)
-      if(!is.na(cluster)&&!is.na(M_value)) {
+      #if(!is.na(cluster)&&!is.na(M_value)) 
+      {
         result_list[[length(result_list)+1]]<-data.frame(
           Node =node,
-          Cluster = cluster,
+          #Cluster = cluster,
           M_value = M_value
         )
       }
@@ -482,7 +475,7 @@ for (node in head(path, -1)) {  # head(path, -1) excluye el último nodo termina
   # Agregar el nodo ancestral, cluster y valor de M al resultado
   result_list <- append(result_list, list(data.frame(
     Node = node,
-    Cluster = cluster,  # Asignamos el mismo cluster del terminal
+    #Cluster = cluster,  # Asignamos el mismo cluster del terminal
     M_value = M_value
   )))
 }
@@ -502,7 +495,7 @@ print(result_df_M)
 result_df_GM<-merge(result_df_G, 
                     result_df_M,
                     all.x = T,
-                    by = c("Node","Cluster"))
+                    by = c("Node"))
 result_df_GM
 max_path_length<-max(sapply(paths,length))
 max_path_length
