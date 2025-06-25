@@ -10,7 +10,7 @@ packages <- c(
   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "geomorph",
   "cowplot", "GGally", "png", "grid", "factoextra", "cluster", "NbClust", "fpc", "PlotTools",
-  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface"
+  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface", "RColorBrewer"
 )
 
 # Excluded manually:
@@ -32,19 +32,19 @@ installed <- rownames(installed.packages())
 # Helper function to install missing packages only
 install_if_needed <- function(pkg) {
   if (pkg %in% installed) {
-    write(pkg, file = log_skipped, append = TRUE)
+    write(pkg, file = outputs/log_skipped, append = TRUE)
   } else {
     message("Installing: ", pkg)
     tryCatch({
       install.packages(pkg) # Force binary where available
       installed <<- rownames(installed.packages()) # Refresh full list
       if (pkg %in% installed) {
-        write(pkg, file = log_installed, append = TRUE)
+        write(pkg, file = outputs/log_installed, append = TRUE)
       } else {
-        write(pkg, file = log_failed, append = TRUE)
+        write(pkg, file = outputs/log_failed, append = TRUE)
       }
     }, error = function(e) {
-      write(pkg, file = log_failed, append = TRUE)
+      write(pkg, file = outputs/log_failed, append = TRUE)
       write(paste(pkg, ":", e$message), file = log_errors, append = TRUE)
     })
   }
