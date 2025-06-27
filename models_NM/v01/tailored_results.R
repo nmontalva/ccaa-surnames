@@ -28,3 +28,9 @@
 # Curiously, it seems like ´$parameters´ is empty (return NAs)
 # Read surface documentation to figure out what are does values stored at n_regimes: k, kprime, deltak, etc.
 # Regimes dist (plot) is nice, but that should just go on a table (?)
+
+# What's next?
+# I need to list actual things to get and sort them.
+# Resulting number I need
+# Tables
+# Plots (includin tree(s))
