@@ -56,6 +56,22 @@ $ R
 > dendrogram(df)
 ```
 
+## Further analyses (scripts FV)
+
+### Prerequisites
+
+1. Various files with STR data. These are stored in `../scripts_fv/Datos/`
+2. Various csv based on commoners lists generated from previous steps.
+3. All these scripts can be run sequentially and in the required order by the wrapper script:
+
+``` r
+> source('wrapper/wrapper.R')
+```
+
+4. All R objects are generated after that, and relevant outpust will be available (locally) at `/outputs`.
+
+## Evolutionary models
+tbc...
 
 ## Abstract
 

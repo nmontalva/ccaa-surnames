@@ -10,18 +10,20 @@ packages <- c(
   "Hmisc", "REAT", "ggplot2", "gridExtra", "stringr", "conflicted", "graph4lg", "TreeDist",
   "corrplot", "geiger", "car", "caper", "nlme", "Publish", "geomorph",
   "cowplot", "GGally", "png", "grid", "factoextra", "cluster", "NbClust", "fpc", "PlotTools",
-  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface"
+  "wesanderson", "magick", "picante", "Biodem", "SDPDmod", "surface", "RColorBrewer", "sf", "fs", "googledrive"
 )
 
 # Excluded manually:
-# - "surface" → Special/archived install.
 # - "BiocManager" → Installer utility.
 
 # Log files
-log_skipped <- "skipped_packages.log"
-log_installed <- "installed_packages.log"
-log_failed <- "failed_packages.log"
-log_errors <- "error_messages.log"
+packages_log_dir <- "outputs/logs/packages_logs"
+dir.create(packages_log_dir, showWarnings = FALSE)
+
+log_skipped <- file.path(packages_log_dir, "skipped_packages.log")
+log_installed <- file.path(packages_log_dir, "installed_packages.log")
+log_failed <- file.path(packages_log_dir, "failed_packages.log")
+log_errors <- file.path(packages_log_dir, "error_messages.log")
 
 # Safely clear old logs
 safe_remove <- function(file) if (file.exists(file)) file.remove(file)
@@ -60,7 +62,7 @@ invisible(lapply(packages, function(pkg) {
   tryCatch({
     library(pkg, character.only = TRUE)
   }, error = function(e) {
-    message("❌ Failed to load ", pkg, ": ", e$message)
+    message("Failed to load ", pkg, ": ", e$message)
   })
 }))
 
@@ -81,7 +83,7 @@ message("Trying to load: treeio")
 tryCatch({
   library(treeio)
 }, error = function(e) {
-  message("❌ Failed to load treeio: ", e$message)
+  message("Failed to load treeio: ", e$message)
 })
 
 # ---- Install ggtree separately (requires BiocManager) ----
@@ -101,5 +103,5 @@ message("Trying to load: ggtree")
 tryCatch({
   library(ggtree)
 }, error = function(e) {
-  message("❌ Failed to load ggtree: ", e$message)
+  message("Failed to load ggtree: ", e$message)
 })
