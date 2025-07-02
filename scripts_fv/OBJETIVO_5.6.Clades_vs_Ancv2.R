@@ -64,7 +64,7 @@ for (i in seq_along(paths)) {
   # Obtener el cluster del nodo terminal desde clusters_table
   cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
-  # Obtener el valor de S para el nodo terminal desde S_trait
+  # Obtener el valor de S para el nodo terminal desde S_logit
   S_value_terminal <- S_trait_vector[tip]
   
   # Agregar el nodo terminal al dataframe con su valor de S y su cluster
@@ -279,7 +279,7 @@ paths
 A_anc_states <- avc$anc$ace
 A_anc_states
 #Extraer estados actuales
-A_trait_vector <- setNames(A_trait$A, rownames(A_trait))
+A_trait_vector <- setNames(A_logit$A, rownames(A_logit))
 print(A_trait_vector)
 
 #Crear un data.frame
@@ -293,7 +293,7 @@ for (i in seq_along(paths)) {
   # Obtener el cluster del nodo terminal desde clusters_table
   cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
-  # Obtener el valor de S para el nodo terminal desde S_trait
+  # Obtener el valor de S para el nodo terminal desde S_logit
   A_value_terminal <- A_trait_vector[tip]
   
   # Agregar el nodo terminal al dataframe con su valor de S y su cluster
@@ -397,7 +397,7 @@ paths
 G_anc_states <- gvc$anc$ace
 G_anc_states
 #Extraer estados actuales
-G_trait_vector <- setNames(G_trait$G, rownames(G_trait))
+G_trait_vector <- setNames(G_logit$G, rownames(G_logit))
 print(G_trait_vector)
 
 #Crear un data.frame
@@ -515,7 +515,7 @@ paths
 M_anc_states <- mvc$anc$ace
 M_anc_states
 #Extraer estados actuales
-M_trait_vector <- setNames(M_trait$M, rownames(M_trait))
+M_trait_vector <- setNames(M_logit$M, rownames(M_logit))
 print(M_trait_vector)
 
 #Crear un data.frame
@@ -529,7 +529,7 @@ for (i in seq_along(paths)) {
   # Obtener el cluster del nodo terminal desde clusters_table
   cluster <- clusters_table[clusters_table$tip.label == tip, "cluster"]
   
-  # Obtener el valor de S para el nodo terminal desde M_trait
+  # Obtener el valor de S para el nodo terminal desde M_logit
   M_value_terminal <- M_trait_vector[tip]
   
   # Agregar el nodo terminal al dataframe con su valor de M y su cluster
@@ -650,7 +650,7 @@ paths <- nodepath(svt$obj$tree, 1:169)
 S_anc_states <- svt$anc$ace
 
 # Extraer estados actuales
-S_trait_vector <- setNames(S_trait2$S, rownames(S_trait2))
+S_trait_vector <- setNames(S_logit2$S, rownames(S_logit2))
 print(S_trait_vector)
 
 # Crear un data.frame para almacenar resultados
@@ -666,7 +666,7 @@ for (i in seq_along(paths)) {
   cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
   cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
   
-  # Obtener el valor de S para el nodo terminal desde S_trait
+  # Obtener el valor de S para el nodo terminal desde S_logit
   S_value_terminal <- ifelse(tip %in% names(S_trait_vector), S_trait_vector[tip], NA)
   
   # Verificar si hay un cluster y un valor de S válido
@@ -920,7 +920,7 @@ paths <- nodepath(avt$obj$tree, 1:170)
 A_anc_states <- avt$anc$ace
 
 # Extraer estados actuales
-A_trait_vector <- setNames(A_trait2$A, rownames(A_trait2))
+A_trait_vector <- setNames(A_logit2$A, rownames(A_logit2))
 print(A_trait_vector)
 
 # Crear un data.frame para almacenar resultados
@@ -936,7 +936,7 @@ for (i in seq_along(paths)) {
   cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
   cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
   
-  # Obtener el valor de A para el nodo terminal desde A_trait
+  # Obtener el valor de A para el nodo terminal desde A_logit
   A_value_terminal <- ifelse(tip %in% names(A_trait_vector), A_trait_vector[tip], NA)
   
   # Verificar si hay un cluster y un valor de A válido
@@ -1055,7 +1055,7 @@ paths <- nodepath(gvt$obj$tree, 1:170)
 G_anc_states <- gvt$anc$ace
 
 # Extraer estados actuales
-G_trait_vector <- setNames(G_trait2$G, rownames(G_trait2))
+G_trait_vector <- setNames(G_logit2$G, rownames(G_logit2))
 print(G_trait_vector)
 
 # Crear un data.frame para almacenar resultados
@@ -1071,7 +1071,7 @@ for (i in seq_along(paths)) {
   cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
   cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
   
-  # Obtener el valor de G para el nodo terminal desde G_trait
+  # Obtener el valor de G para el nodo terminal desde G_logit
   G_value_terminal <- ifelse(tip %in% names(G_trait_vector), G_trait_vector[tip], NA)
   
   # Verificar si hay un cluster y un valor de G válido
@@ -1190,7 +1190,7 @@ paths <- nodepath(mvt$obj$tree, 1:170)
 M_anc_states <- mvt$anc$ace
 
 # Extraer estados actuales
-M_trait_vector <- setNames(M_trait2$M, rownames(M_trait2))
+M_trait_vector <- setNames(M_logit2$M, rownames(M_logit2))
 print(M_trait_vector)
 
 # Crear un data.frame para almacenar resultados
@@ -1206,7 +1206,7 @@ for (i in seq_along(paths)) {
   cluster_row <- clusters_table[clusters_table$tip.label == tip, ]
   cluster <- ifelse(nrow(cluster_row) > 0, cluster_row$cluster, NA)
   
-  # Obtener el valor de M para el nodo terminal desde M_trait
+  # Obtener el valor de M para el nodo terminal desde M_logit
   M_value_terminal <- ifelse(tip %in% names(M_trait_vector), M_trait_vector[tip], NA)
   
   # Verificar si hay un cluster y un valor de M válido

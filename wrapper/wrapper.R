@@ -23,13 +23,11 @@ scripts <- c(
   "scripts_fv/OBJETIVO_1.1.Surnames.R",
   "scripts_fv/OBJETIVO_1.2.Manteltest.R",
   "scripts_fv/OBJETIVO_2.1.Traitsv3.R",
-  "scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
+  #"scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
   "scripts_fv/OBJETIVO_3.1.STR.R",
-  #"scripts_fv/OBJETIVO_3_Correlaciones.R", #Ya no se usa en los analisis
   "scripts_fv/OBJETIVO_3.2.Manteltest.R",
   "scripts_fv/OBJETIVO_4.1.Comparev2.R",
   "scripts_fv/OBJETIVO_4.2.Manteltest.R",
-  #"scripts_fv/OBJETIVO_4_Otras_comparaciones.R",#Este script eran varias comparaciones posibles entre árboles y sólo se usó Bakers Gamma. Eliminé este script y lo que se usa está ahora en 4.1.
   "scripts_fv/OBJETIVO_5.1.Tree&traits.R",
   "scripts_fv/OBJETIVO_5.2.Visualizacion.R",
   # 5.3, 5.4 ya no van
