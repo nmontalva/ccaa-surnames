@@ -23,7 +23,7 @@ scripts <- c(
   "scripts_fv/OBJETIVO_1.1.Surnames.R",
   "scripts_fv/OBJETIVO_1.2.Manteltest.R",
   "scripts_fv/OBJETIVO_2.1.Traitsv3.R",
-  #"scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
+  "scripts_fv/OBJETIVO_2.2.Dendroplot.R", #Este es el que dice que no se debe correr si se quiere correr O5
   "scripts_fv/OBJETIVO_3.1.STR.R",
   "scripts_fv/OBJETIVO_3.2.Manteltest.R",
   "scripts_fv/OBJETIVO_4.1.Comparev2.R",

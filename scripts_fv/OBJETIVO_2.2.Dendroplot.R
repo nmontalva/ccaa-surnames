@@ -17,7 +17,7 @@ conflict_prefer("label","ggdendro")
 conflict_prefer("theme_dendro","ggdendro")
 
 # Mostrar y escribir la tabla final 
-result_dendro<-as.data.frame(result, fileEncoding = "UTF-8-BOM")
+result_dendro<-as.data.frame(result_traits, fileEncoding = "UTF-8-BOM")
 row.names(result_dendro) <-result_dendro$community
 #result_dendro$commune <- gsub("Ñ", "N", result_dendro$commune)
 result_dendro <- result_dendro%>%dplyr::select(-community)

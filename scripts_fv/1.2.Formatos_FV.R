@@ -49,9 +49,3 @@ STR_alelos_slash[1] <- NULL
 
 STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.names(STR_alelos_slash),loc.names = colnames(STR_alelos_slash),pop = pop,ploidy = 2,NA.char = "000")
 
-#TODO: REVISAR. La última línea me arroja un Warning:
-#Warning message:
-#  In df2genind(STR_alelos_slash, sep = "/", ncode = 3, ind.names = row.names(STR_alelos_slash),  :
-#                 Individuals with no scored loci have been removed
-# RESOLUCION: BZ023 tiene solo ceros. Fue removido con anterioridad.
-

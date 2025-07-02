@@ -45,9 +45,9 @@ selected_communities <- unique(STR$pop)
 plotTree(y_total,type="phylogram",ftype="off")
 
 ##Traits
-select_variable <- function(result, selected_communities = NULL, variable) {
-  df <- as.data.frame(result)
-  row.names(df) <- result$community
+select_variable <- function(result_traits, selected_communities = NULL, variable) {
+  df <- as.data.frame(result_traits)
+  row.names(df) <- result_traits$community
   if (!is.null(selected_communities)) {
     df <- df[df$community %in% selected_communities, ]
   }
@@ -57,42 +57,42 @@ select_variable <- function(result, selected_communities = NULL, variable) {
 }
 
 # S
-#S_trait <- select_variable(result, selected_communities, "S")
-#S_trait2 <- select_variable(result, NULL, "S")
+#S_trait <- select_variable(result_traits, selected_communities, "S")
+#S_trait2 <- select_variable(result_traits, NULL, "S")
 #S_trait$community <- NULL
 #S_trait2$community <- NULL
-S_logit <- select_variable(result, selected_communities, "S_logit")
-S_logit2 <- select_variable(result, NULL, "S_logit")
+S_logit <- select_variable(result_traits, selected_communities, "S_logit")
+S_logit2 <- select_variable(result_traits, NULL, "S_logit")
 S_logit$community <- NULL
 S_logit2$community <- NULL
 
-#N_trait2 <- select_variable(result, selected_communities, "N")
+#N_trait2 <- select_variable(result_traits, selected_communities, "N")
 
 # G
-#G_trait <- select_variable(result, selected_communities, "G")
-#G_trait2 <- select_variable(result, NULL, "G")
+#G_trait <- select_variable(result_traits, selected_communities, "G")
+#G_trait2 <- select_variable(result_traits, NULL, "G")
 #G_trait$community <- NULL
 #G_trait2$community <- NULL
-G_logit <- select_variable(result, selected_communities, "G_logit")
-G_logit2 <- select_variable(result, NULL, "G_logit")
+G_logit <- select_variable(result_traits, selected_communities, "G_logit")
+G_logit2 <- select_variable(result_traits, NULL, "G_logit")
 G_logit$community <- NULL
 G_logit2$community <- NULL
 # A
-#A_trait <- select_variable(result, selected_communities, "A")
-#A_trait2 <- select_variable(result, NULL, "A")
+#A_trait <- select_variable(result_traits, selected_communities, "A")
+#A_trait2 <- select_variable(result_traits, NULL, "A")
 #A_trait$community <- NULL
 #A_trait2$community <- NULL
-A_logit <- select_variable(result, selected_communities, "A_logit")
-A_logit2 <- select_variable(result, NULL, "A_logit")
+A_logit <- select_variable(result_traits, selected_communities, "A_logit")
+A_logit2 <- select_variable(result_traits, NULL, "A_logit")
 A_logit$community <- NULL
 A_logit2$community <- NULL
 # M
-#M_trait <- select_variable(result, selected_communities, "M")
-#M_trait2 <- select_variable(result, NULL, "M")
+#M_trait <- select_variable(result_traits, selected_communities, "M")
+#M_trait2 <- select_variable(result_traits, NULL, "M")
 #M_trait$community <- NULL
 #M_trait2$community <- NULL
-M_logit <- select_variable(result, selected_communities, "M_logit")
-M_logit2 <- select_variable(result, NULL, "M_logit")
+M_logit <- select_variable(result_traits, selected_communities, "M_logit")
+M_logit2 <- select_variable(result_traits, NULL, "M_logit")
 M_logit$community <- NULL
 M_logit2$community <- NULL
 #Cluster
@@ -102,9 +102,9 @@ M_logit2$community <- NULL
 #C_trait2$community <- NULL
 
 #Final_table
-ft <- result
+ft <- result_traits
 ft <- ft %>% column_to_rownames(var = "community")
-ft2 <- result %>% filter(community %in% selected_communities)
+ft2 <- result_traits %>% filter(community %in% selected_communities)
 ft2 <- ft2 %>% column_to_rownames(var = "community")
 
 ##Consensus##
