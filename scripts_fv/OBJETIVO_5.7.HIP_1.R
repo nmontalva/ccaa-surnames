@@ -16,25 +16,22 @@
 ### Estados basales sampled communities###
 
 crear_grafico <- function(vc,v1, label,filename) {
-  png(filename,width = 1400, height = 1000, res = 200)
+  png(filename,width = 2800, height = 1600, res = 300)
   # Ajustar margen y tama?o de texto para evitar colapso
-  par(mar = c(1, 1, 4, 1) + 0.1)
-  
+  par(mar = c(1, 10, 10, 1) + 0.1)
   # Ajustar la separacion entre nodos y otros parametros
-  plot(vc$obj, type = "phylogram",offset = 3, legend = 0.7 * max(nodeHeights(vc$obj$tree)), ftype = "reg", leg.txt = label, no.margin = F)
+  plot(vc$obj,lwd=10, type = "phylogram",offset = 3.2, legend = 0.7 * max(nodeHeights(vc$obj$tree)),outline=FALSE,fsize=0.8, ftype = "reg", leg.txt = label, no.margin = F)
   title(main = paste(label, "ancestral tree"), line = 2)
-  nodelabels(text = round(vc$anc$ace, 4), cex = 0.5, bg = "lightblue")
+  nodelabels(text = round(vc$anc$ace, 4), cex = 0.8, bg = "white")
   tip_values <- v1[consensus_tree$tip.label] 
-  tiplabels(text = round(tip_values, 4), cex = 0.6, bg = "lightpink", offset = 0.06)
+  tiplabels(text = round(tip_values, 4), cex = 0.8, bg = "white", offset = 0.03)
   dev.off()
 }
-# Llamar a la funci?n para cada comunidad muestreada
-crear_grafico(svc,sv1, "S", "outputs/Figures/S_ancestral_tree_muestra.png")
-crear_grafico(gvc,gv1,"G", "outputs/Figures/G_ancestral_tree_muestra.png")
-crear_grafico(avc,av1, "A", "outputs/Figures/A_ancestral_tree_muestra.png")
-#crear_grafico(rvc,rv1, "R", "outputs/Figures/R_ancestral_tree_muestra.png") #TODO rror in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvc' not found
-crear_grafico(mvc,mv1, "M", "outputs/Figures/M_ancestral_tree_muestra.png")
-
+# Llamar a la funcion para cada comunidad muestreada
+crear_grafico(svcp,sv1p, "S", "outputs/Figures/S_ancestral_tree_muestra.png")
+crear_grafico(gvcp,gv1p,"G", "outputs/Figures/G_ancestral_tree_muestra.png")
+crear_grafico(avcp,av1p, "A", "outputs/Figures/A_ancestral_tree_muestra.png")
+crear_grafico(mvcp,mv1p, "M", "outputs/Figures/M_ancestral_tree_muestra.png")
 
 ### Estados basales total communities###
 crear_grafico2 <- function(vt,v2, label,filename) {
@@ -53,11 +50,10 @@ crear_grafico2 <- function(vt,v2, label,filename) {
 }
 
 # Llamar a la funcion para el total de comunidades
-crear_grafico2(svt, sv2, "S", "outputs/Figures/S_ancestral_tree_total.pdf")
-crear_grafico2(gvt, gv2, "G", "outputs/Figures/G_ancestral_tree_total.pdf")
-crear_grafico2(avt, av2, "A", "outputs/Figures/A_ancestral_tree_total.pdf")
-#crear_grafico2(rvt, rv2, "R", "outputs/Figures/R_ancestral_tree_total.pdf") #TODO Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': object 'rvt' not found
-crear_grafico2(mvt, mv2, "M", "outputs/Figures/M_ancestral_tree_total.pdf")
+crear_grafico2(svtp, sv2p, "S", "outputs/Figures/S_ancestral_tree_total.pdf")
+crear_grafico2(gvtp, gv2p, "G", "outputs/Figures/G_ancestral_tree_total.pdf")
+crear_grafico2(avtp, av2p, "A", "outputs/Figures/A_ancestral_tree_total.pdf")
+crear_grafico2(mvtp, mv2p, "M", "outputs/Figures/M_ancestral_tree_total.pdf")
 
 ################################################################################
 ### CREACION DE POBLACION EN LA BASE (FOSIL) ###
@@ -93,27 +89,24 @@ incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz =
   
   # Guardar el grafico como una imagen PNG
 
-  png(filename,width = 1400, height = 1000, res = 200)
+  png(filename,width = 2600, height = 1600, res = 200)
   # Ajustar la separacion entre nodos y otros parametros
   par(mar = c(1, 1, 4, 1) + 0.1)
   sorted_trait_vector <- valor[sort(or_tree$tip.label)]
   obj <- contMap(mcmc_tree, sorted_trait_vector, plot = TRUE)
-  plot(obj, type = "phylogram",offset = 3, legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label, no.margin = F)
+  obj <- setMap(obj, viridisLite::viridis(n=30))
+  plot(obj,lwd=10, type = "phylogram",outline=FALSE,offset = 3.2, legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label, no.margin = F)
   title(main = paste(label, "ancestral tree"), line = 2)
-  nodelabels(text = round(w, 4), cex = 0.5, bg = "lightblue")
+  nodelabels(text = round(w, 4), cex = 1, bg = "white")
   tip_values <- valor[or_tree$tip.label] 
-  tiplabels(text = round(tip_values, 4), cex = 0.6, bg = "lightpink", offset = 0.06)
-  #plot(mcmc_tree, show.tip.label = TRUE, cex = 0.6, edge.width = 2, label.offset = 0.15, direction = "rightwards", mar = c(6, 6, 3, 3) + 0.1)
-  #title(main = paste(label, "fossil ancestral tree"), line = 2)
-  #nodelabels(text = round(w, 4), cex = 0.5, bg = "lightblue")
-  #tiplabels(text = round(name, 4), cex = 0.6, bg = "lightpink", offset = 0.005)
+  tiplabels(text = round(tip_values, 4), cex = 1, bg = "white", offset = 0.02)
   dev.off()
 }
 consensus_tree$edge.length <- consensus_tree$edge.length + 1e-8 # Se le agrega una distancia mínima
-incorporacion_fosil(0,sv1,consensus_tree,"S","outputs/Figures/S_fosil_muestra.png", valor_raiz = 0) #S
-incorporacion_fosil(1,av1,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.png",valor_raiz = 1) #A
-incorporacion_fosil(0,gv1,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.png",valor_raiz = 0) #G
-incorporacion_fosil(0,mv1,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
+incorporacion_fosil(0,sv1p,consensus_tree,"S","outputs/Figures/S_fosil_muestra.png", valor_raiz = 0) #S
+incorporacion_fosil(1,av1p,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.png",valor_raiz = 1) #A
+incorporacion_fosil(0,gv1p,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.png",valor_raiz = 0) #G
+incorporacion_fosil(0,mv1p,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
 
 ##COMUNIDADES TOTALES (y_total)
 incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
@@ -153,6 +146,7 @@ incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
   # Mapear valores sobre tips
   sorted_trait_vector <- valor[sort(tree$tip.label)]
   obj <- contMap(mcmc_tree, sorted_trait_vector, plot = FALSE)
+  obj <- setMap(obj, viridisLite::viridis(n=30))
   plot(obj, type = "phylogram", offset = 3, legend = 0.7 * max(nodeHeights(obj$tree)), 
        ftype = "reg", leg.txt = label, no.margin = FALSE)
   
@@ -163,7 +157,7 @@ incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
   dev.off()
 }
 
-incorporacion_fosil2(0,sv2,y_total,"S", "outputs/Figures/S_fosil_total.pdf") #S: 1 apellido
-incorporacion_fosil2(1,av2,y_total,"A", "outputs/Figures/A_fosil_total.pdf") #A: 1 hombre
-incorporacion_fosil2(1,gv2,y_total,"G", "outputs/Figures/G_fosil_total.pdf") #G: 
-incorporacion_fosil2(0,mv2,y_total,"M", "outputs/Figures/M_fosil_total.pdf") #M
+incorporacion_fosil2(0,sv2p,y_total,"S", "outputs/Figures/S_fosil_total.pdf") #S: 1 apellido
+incorporacion_fosil2(1,av2p,y_total,"A", "outputs/Figures/A_fosil_total.pdf") #A: 1 hombre
+incorporacion_fosil2(1,gv2p,y_total,"G", "outputs/Figures/G_fosil_total.pdf") #G: 
+incorporacion_fosil2(0,mv2p,y_total,"M", "outputs/Figures/M_fosil_total.pdf") #M

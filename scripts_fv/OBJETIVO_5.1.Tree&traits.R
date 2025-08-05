@@ -26,7 +26,7 @@ library(BiocManager) #esto se demora mucho en compilar cosas. No sé si se puede
 library("treeio") #Ver "packages.R" para instalar este paqute
 library(ggplot2)
 library(gridExtra)
-library(geomorph) #No lo puedo instalar
+library(viridisLite) #colores
 
 # Resolver conflictos de funciones
 conflict_prefer("select", "dplyr")
@@ -57,10 +57,10 @@ select_variable <- function(result_traits, selected_communities = NULL, variable
 }
 
 # S
-#S_trait <- select_variable(result_traits, selected_communities, "S")
-#S_trait2 <- select_variable(result_traits, NULL, "S")
-#S_trait$community <- NULL
-#S_trait2$community <- NULL
+S_trait <- select_variable(result_traits, selected_communities, "S")
+S_trait2 <- select_variable(result_traits, NULL, "S")
+S_trait$community <- NULL
+S_trait2$community <- NULL
 S_logit <- select_variable(result_traits, selected_communities, "S_logit")
 S_logit2 <- select_variable(result_traits, NULL, "S_logit")
 S_logit$community <- NULL
@@ -69,28 +69,28 @@ S_logit2$community <- NULL
 #N_trait2 <- select_variable(result_traits, selected_communities, "N")
 
 # G
-#G_trait <- select_variable(result_traits, selected_communities, "G")
-#G_trait2 <- select_variable(result_traits, NULL, "G")
-#G_trait$community <- NULL
-#G_trait2$community <- NULL
+G_trait <- select_variable(result_traits, selected_communities, "G")
+G_trait2 <- select_variable(result_traits, NULL, "G")
+G_trait$community <- NULL
+G_trait2$community <- NULL
 G_logit <- select_variable(result_traits, selected_communities, "G_logit")
 G_logit2 <- select_variable(result_traits, NULL, "G_logit")
 G_logit$community <- NULL
 G_logit2$community <- NULL
 # A
-#A_trait <- select_variable(result_traits, selected_communities, "A")
-#A_trait2 <- select_variable(result_traits, NULL, "A")
-#A_trait$community <- NULL
-#A_trait2$community <- NULL
+A_trait <- select_variable(result_traits, selected_communities, "A")
+A_trait2 <- select_variable(result_traits, NULL, "A")
+A_trait$community <- NULL
+A_trait2$community <- NULL
 A_logit <- select_variable(result_traits, selected_communities, "A_logit")
 A_logit2 <- select_variable(result_traits, NULL, "A_logit")
 A_logit$community <- NULL
 A_logit2$community <- NULL
 # M
-#M_trait <- select_variable(result_traits, selected_communities, "M")
-#M_trait2 <- select_variable(result_traits, NULL, "M")
-#M_trait$community <- NULL
-#M_trait2$community <- NULL
+M_trait <- select_variable(result_traits, selected_communities, "M")
+M_trait2 <- select_variable(result_traits, NULL, "M")
+M_trait$community <- NULL
+M_trait2$community <- NULL
 M_logit <- select_variable(result_traits, selected_communities, "M_logit")
 M_logit2 <- select_variable(result_traits, NULL, "M_logit")
 M_logit$community <- NULL
@@ -100,6 +100,21 @@ M_logit2$community <- NULL
 #C_trait2 <- select_variable(result_traits, NULL, "cluster")
 #C_trait$community <- NULL
 #C_trait2$community <- NULL
+
+#Exponenciar logit
+logit_to_prob <- function(logit) {
+  prob <- exp(logit) / (1 + exp(logit))
+  return(prob)
+}
+# Transformar los valores logit a probabilidades (exponencial)
+S_prob <- logit_to_prob(S_logit)
+S_prob2 <- logit_to_prob(S_logit2)
+G_prob <- logit_to_prob(G_logit)
+G_prob2 <- logit_to_prob(G_logit2)
+A_prob <- logit_to_prob(A_logit)
+A_prob2 <- logit_to_prob(A_logit2)
+M_prob <- logit_to_prob(M_logit)
+M_prob2 <- logit_to_prob(M_logit2)
 
 #Final_table
 ft <- result_traits
@@ -113,222 +128,166 @@ plotTree(consensus_tree,type="phylogram", ftype="i",lwd=1)
 
 ###Estimar estados ancestrales
 # S
-sv1 <- as.matrix(S_logit)[,1]
+sv1 <- as.matrix(S_logit)[,1] # con logit
 sv2 <- as.matrix(S_logit2)[,1]
+sv1p <- as.matrix(S_prob)[,1] # Con exponencial
+sv2p <- as.matrix(S_prob2)[,1]
 
 # G
 gv1 <- as.matrix(G_logit)[,1]
 gv2 <- as.matrix(G_logit2)[,1]
-
+gv1p <- as.matrix(G_prob)[,1]
+gv2p <- as.matrix(G_prob2)[,1]
 # A
 av1 <- as.matrix(A_logit)[,1]
 av2 <- as.matrix(A_logit2)[,1]
-
+av1p <- as.matrix(A_prob)[,1]
+av2p <- as.matrix(A_prob2)[,1]
 # M
 mv1 <- as.matrix(M_logit)[,1]
 mv2 <- as.matrix(M_logit2)[,1]
+mv1p <- as.matrix(M_prob)[,1]
+mv2p <- as.matrix(M_prob2)[,1]
 
-# Cluster
-#cv1 <- as.matrix(C_trait)[,1]
-#cv2 <- as.matrix(C_trait2)[,1]
-
-# Funci?n para estimar estados ancestrales y crear el ?rbol
+# Funcion para estimar estados ancestrales y crear el arbol
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
   anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
-  obj <- contMap(tree, sorted_trait_vector, plot = TRUE)
-  plot(obj, type = "phylogram", legend = 0.7 * max(nodeHeights(tree)), ftype = "i", leg.txt = leg_txt)
+  obj <- contMap(tree, sorted_trait_vector, plot = FALSE)
+  obj <- setMap(obj, viridisLite::viridis(n=30))
+  plot(obj,lwd = 10, type = "phylogram", legend = 0.7 * max(nodeHeights(tree)),outline=FALSE, ftype = "i", leg.txt = leg_txt)
   return(list(anc=anc, obj = obj))
 }
 
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
 png("outputs/Figures/S_muestra.png")
-svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
+svcp <- estimacion_estados_ancestrales(consensus_tree, sv1p, "S")
 dev.off()
 
-#png("outputs/Figures/R_muestra.png")
-#rvc <- estimacion_estados_ancestrales(consensus_tree, rv1, "R")
-#dev.off()
-
 png("outputs/Figures/G_muestra.png")
-gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
+gvcp <- estimacion_estados_ancestrales(consensus_tree, gv1p, "G")
 dev.off()
 
 png("outputs/Figures/A_muestra.png")
-avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
+avcp <- estimacion_estados_ancestrales(consensus_tree, av1p, "A")
 dev.off()
 
 png("outputs/Figures/M_muestra.png")
-mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
+mvcp <- estimacion_estados_ancestrales(consensus_tree, mv1p, "M")
 dev.off()
 
-#png("outputs/Figures/C_muestra.png")
-#cvc<- estimacion_estados_ancestrales(consensus_tree,cv1,"C")
-#dev.off()
-
-# COMO LO QUE VIENE DEPENDE DE LO ANTERIOR, NO LO SEGUÍ PROBANDO##
-
-writeAncestors(consensus_tree, Anc=svc$anc, file="outputs/Figures/S_nodos_muestra.phy", digits=6, format=c("phylip"))
-#writeAncestors(consensus_tree, Anc=rvc$anc, file="outputs/Figures/R_nodos_muestra.phy", digits=6, format=c("phylip"))
-writeAncestors(consensus_tree, Anc=gvc$anc, file="outputs/Figures/G_nodos_muestra.phy", digits=6, format=c("phylip"))
-writeAncestors(consensus_tree, Anc=avc$anc, file="outputs/Figures/A_nodos_muestra.phy", digits=6, format=c("phylip"))
-writeAncestors(consensus_tree, Anc=mvc$anc, file="outputs/Figures/M_nodos_muestra.phy", digits=6, format=c("phylip"))
-
-#Cluster discrete visualization
-#trees<-make.simmap(consensus_tree,cv1,nsim=100)
-#obj<-summary(trees,plot=FALSE)
-#cols<-setNames(palette()[1:400],mapped.states(trees))
-#cols<-cols[1:4]
-#plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
-#add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
-#                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
+svc <- estimacion_estados_ancestrales(consensus_tree, sv1, "S")
+gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
+avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
+mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
 
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
   anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
-  obj <- contMap(tree, sorted_trait_vector, plot = TRUE)
-  plot(obj, type = "phylogram", legend = 0.5 * max(nodeHeights(tree)), ftype = "off", leg.txt = leg_txt)
+  obj <- contMap(tree, sorted_trait_vector, plot = FALSE)
+  obj <- setMap(obj, viridisLite::viridis(n=30))
+  plot(obj,lwd=4, type = "phylogram", legend = 0.5 * max(nodeHeights(tree)),outline=FALSE, ftype = "off", leg.txt = leg_txt)
   return(list(anc=anc, obj = obj))
 }
 # Estimar estados ancestrales para los ?rboles de apellidos totales
 png("outputs/Figures/S_total.png")
-svt <- estimacion_estados_ancestrales(y_total, sv2, "S")
+svtp <- estimacion_estados_ancestrales(y_total, sv2p, "S")
 dev.off()
-#png("outputs/Figures/R_total.png")
-#rvt <- estimacion_estados_ancestrales(y_total, rv2, "R")
-#dev.off()
 png("outputs/Figures/G_total.png")
-gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
+gvtp <- estimacion_estados_ancestrales(y_total, gv2p, "G")
 dev.off()
 png("outputs/Figures/A_total.png")
-avt <- estimacion_estados_ancestrales(y_total, av2, "A")
+avtp <- estimacion_estados_ancestrales(y_total, av2p, "A")
 dev.off()
 png("outputs/Figures/M_total.png")
-mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
+mvtp <- estimacion_estados_ancestrales(y_total, mv2p, "M")
 dev.off()
-#png("outputs/Figures/C_total.png")
-#cvt <- estimacion_estados_ancestrales(y_total, cv2, "C")
-#dev.off()
 
-#Cluster discrete visualization
-#trees<-make.simmap(y_total,cv2,nsim=100)
-#obj<-summary(trees,plot=FALSE)
-#cols<-setNames(palette()[1:400],mapped.states(trees))
-#cols<-cols[1:4]
-#plot(obj,cols,type="phylogram",fsize=0.8,cex=c(0.5,0.3))
-#add.simmap.legend(colors=cols,x=0.9*par()$usr[1],
-#                  y=0.9*par()$usr[4],prompt=FALSE,fsize=0.9)
+
+svt <- estimacion_estados_ancestrales(y_total, sv2, "S")
+gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
+avt <- estimacion_estados_ancestrales(y_total, av2, "A")
+mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
 
 ###Comparaciones
 ##Comunidades muestreadas
 plot_comparison <- function(obj1, obj2, xlabel) {
-  par(mfrow = c(1, 2), mar = c(5, 4, 4, 4) + 1, oma = c(1, 1, 1, 1))
+  par(mfrow = c(1, 2), mar = c(5, 5, 5, 5) + 1, oma = c(1, 1, 1, 1))
   # First plot
-  plot(obj1, lwd = 5, ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), outline = TRUE, fsize = c(0.3), leg.txt = xlabel[1])
+  plot(obj1, lwd = 17, ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), outline = FALSE, fsize = c(0.62), leg.txt = xlabel[1])
   
   # Second plot
-  plot(obj2, lwd = 5, outline = TRUE, direction = "leftwards", ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), fsize = c(0.3), leg.txt = xlabel[2])
+  plot(obj2, lwd = 17, outline = FALSE, direction = "leftwards", ftype = "off", legend = 0.7 * max(nodeHeights(consensus_tree)), fsize = c(0.62), leg.txt = xlabel[2])
 }
 
 # Comparaciones
-#png("outputs/Figures/S_R_muestra.png",width = 1042, height = 534, res = 300)
-#plot_comparison(svc$obj, rvc$obj, c("S", "R"))
-#dev.off()
-png("outputs/Figures/S_A_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(svc$obj, avc$obj, c("S", "A"))
+png("outputs/Figures/S_A_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(svcp$obj, avcp$obj, c("S", "A"))
 dev.off()
-png("outputs/Figures/S_G_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(svc$obj, gvc$obj, c("S", "G"))
+png("outputs/Figures/S_G_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(svcp$obj, gvcp$obj, c("S", "G"))
 dev.off()
-png("outputs/Figures/S_M_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(svc$obj, mvc$obj, c("S", "M"))
+png("outputs/Figures/S_M_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(svcp$obj, mvcp$obj, c("S", "M"))
 dev.off()
-#png("outputs/Figures/R_A_muestra.png",width = 1042, height = 534, res = 300)
-#plot_comparison(rvc$obj, avc$obj, c("R", "A"))
-#dev.off()
-#png("outputs/Figures/R_G_muestra.png",width = 1042, height = 534, res = 300)
-#plot_comparison(rvc$obj, gvc$obj, c("R", "G"))
-#dev.off()
-#png("outputs/Figures/R_M_muestra.png",width = 1042, height = 534, res = 300)
-#plot_comparison(rvc$obj, mvc$obj, c("R", "M"))
-#dev.off()
-png("outputs/Figures/A_G_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(avc$obj, gvc$obj, c("G", "A"))
+png("outputs/Figures/A_G_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(avcp$obj, gvcp$obj, c("G", "A"))
 dev.off()
-png("outputs/Figures/A_M_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(avc$obj, mvc$obj, c("A", "M"))
+png("outputs/Figures/A_M_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(avcp$obj, mvcp$obj, c("A", "M"))
 dev.off()
-png("outputs/Figures/G_M_muestra.png",width = 1042, height = 534, res = 300)
-plot_comparison(gvc$obj, mvc$obj, c("G", "M"))
+png("outputs/Figures/G_M_muestra.png",width = 2200, height = 1900, res = 300)
+plot_comparison(gvcp$obj, mvcp$obj, c("G", "M"))
 dev.off()
-
 
 ##Comunidades totales
 plot_comparison2 <- function(obj1, obj2, xlabel) {
   par(pin=c(10, 10))
   par(mai = c(1.5, 4, 1.5, 4))
-  layout(matrix(1:3, 1, 3), widths=c(0.48, 0.04, 0.48)) 
-  plot(obj1, lwd=6, ftype="off", outline=TRUE,legend=0.4*max(nodeHeights(y_total)),fsize=c(0.3,1.2),leg.txt=xlabel[1])
+  layout(matrix(1:3, 1, 3), widths=c(0.48, 0.01, 0.48)) 
+  plot(obj1, lwd=4, ftype="off", outline=FALSE,legend=0.4*max(nodeHeights(y_total)),fsize=c(0.3,1.2),leg.txt=xlabel[1])
   plot.new()
   plot.window(xlim=c(1,2), ylim=get("last_plot.phylo", envir=.PlotPhyloEnv)$y.lim)
-  plot(obj2, lwd=6,outline=TRUE, direction="leftwards", legend=0.4*max(nodeHeights(y_total)),ftype="off",fsize=c(0.3,1.2),leg.txt=xlabel[2])
+  plot(obj2, lwd=4,outline=FALSE, direction="leftwards", legend=0.4*max(nodeHeights(y_total)),ftype="off",fsize=c(0.3,1.2),leg.txt=xlabel[2])
 }
-
 
 # Comparaciones
 dev.off()
-#png("outputs/Figures/S_R_total.png",width = 2084, height = 1068, res = 300)
-#plot_comparison2(svt$obj, rvt$obj, c("S", "R"))
-#dev.off()
-png("outputs/Figures/S_G_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(svt$obj, gvt$obj, c("S", "G"))
+png("outputs/Figures/S_G_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(svtp$obj, gvtp$obj, c("S", "G"))
 dev.off()
-png("outputs/Figures/S_A_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(svt$obj, avt$obj, c("S", "A"))
+png("outputs/Figures/S_A_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(svtp$obj, avtp$obj, c("S", "A"))
 dev.off()
-png("outputs/Figures/S_M_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(svt$obj, mvt$obj, c("S", "M"))
+png("outputs/Figures/S_M_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(svtp$obj, mvtp$obj, c("S", "M"))
 dev.off()
-#png("outputs/Figures/R_G_total.png",width = 2084, height = 1068, res = 300)
-#plot_comparison2(rvt$obj, gvt$obj, c("R", "G"))
-#dev.off()
-#png("outputs/Figures/R_A_total.png",width = 2084, height = 1068, res = 300)
-#plot_comparison2(rvt$obj, avt$obj, c("R", "A"))
-#dev.off()
-#png("outputs/Figures/R_M_total.png",width = 2084, height = 1068, res = 300)
-#plot_comparison2(rvt$obj, mvt$obj, c("R", "M"))
-#dev.off()
-png("outputs/Figures/A_G_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(avt$obj,gvt$obj, c("G", "A"))
+png("outputs/Figures/A_G_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(avtp$obj,gvtp$obj, c("G", "A"))
 dev.off()
-png("outputs/Figures/A_M_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(avt$obj, mvt$obj, c("A", "M"))
+png("outputs/Figures/A_M_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(avtp$obj, mvtp$obj, c("A", "M"))
 dev.off()
-png("outputs/Figures/G_M_total.png",width = 2084, height = 1068, res = 300)
-plot_comparison2(gvt$obj, mvt$obj, c("G", "M"))
+png("outputs/Figures/G_M_total.png",width = 2800, height = 2800, res = 300)
+plot_comparison2(gvtp$obj, mvtp$obj, c("G", "M"))
 dev.off()
 
 ###Phylogenetic signal
 ### Cambiar por physignal.z? 
 z<-phylosig(consensus_tree,sv1,method = "lambda",test=T)
 z
-
 ##Muestra
 analyze_phylosignal <- function(tree, trait) {
   # 1. Verificar correspondencia entre árbol y datos
   if(!all(names(trait) %in% tree$tip.label)) {
     stop("Los nombres en el trait no coinciden con las puntas del árbol")
   }
-  
   # 2. Asegurar que el trait es numérico
   trait_num <- setNames(as.numeric(trait), names(trait))
-  
   # 3. Calcular lambda de Pagel con más simulaciones
   res <- phylosig(tree, trait_num, method = "lambda", test = TRUE, nsim = 9999)
-  
   # 4. Calcular K de Blomberg como alternativa
   res_k <- phylosig(tree, trait_num, method = "K", test = TRUE, nsim = 9999)
-  
   list(Pagel_lambda = res, Blomberg_K = res_k)
 }
 
@@ -393,7 +352,6 @@ trait_list_total <- list(
 Phy_sig_t <- lapply(names(trait_list_total), function(trait_name) {
   calculate_phylosignal(y_total, trait_list_total[[trait_name]], trait_name)
 })
-
 # Crear tabla de resultados con redondeo a 5 decimales
 Phy_sig_total <- do.call(rbind, lapply(Phy_sig_t , function(x) {
   data.frame(

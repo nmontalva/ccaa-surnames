@@ -37,7 +37,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
   label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
-    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
+    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
 image_paths1 <- c(
@@ -95,7 +95,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
   label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
-    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
+    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
 
@@ -135,7 +135,7 @@ annotate_r_squared <- function(data, mapping, ...) {
   label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
-    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
+    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
 image_paths <- c(
@@ -195,7 +195,7 @@ annotate_r_squared <- function(data, mapping, ...) {
   label <- paste("Corr = ", round(r_squared, 4),stars)
   
   ggplot() +
-    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 4, color = "black")
+    annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
 png("outputs/Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)

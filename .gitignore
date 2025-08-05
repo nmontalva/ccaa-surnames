@@ -5,9 +5,7 @@
 .Rapp.history
 .Rproj.user
 .Ruserdata
-.RDataTmp
-.RDataTmp1
-.RDataTmp2
+.RDataTmp*
 # Archivos de output (resultados, gráficos)
 *.pdf
 *.png
