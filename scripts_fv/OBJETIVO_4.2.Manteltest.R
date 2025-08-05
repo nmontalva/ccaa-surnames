@@ -31,7 +31,7 @@ rownames(my_points_w)<-shape.data2$Name
 
 
 ##Test de Mantel##
-#3. Comunidades muestreadas: ?rbol de consenso #
+#3. Comunidades muestreadas: Arbol de consenso #
 #Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
 my_points_v <- my_points_v %>% dplyr::filter(row.names(shape.data) %in% selected_communities)
 coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
@@ -138,6 +138,4 @@ mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
-
-#TODO: REVISAR. Muchas líneas no van a correr por qué no existen los objetos con3, con4 (comunidades con Puclaro) y DSW y DSW2 que son matrices de distancia para la construcción del árbol de STR que ya no se ocupan. Los dejé comentados.
 

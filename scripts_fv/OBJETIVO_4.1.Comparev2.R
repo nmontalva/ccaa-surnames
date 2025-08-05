@@ -83,12 +83,73 @@ legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
 the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
 set.seed(NULL)
-
+################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
+### Cargar DATOS geograficos ###
+shape.data <- sf::st_read("scripts_fv/Datos/comunidades_reprojected.shx")
+shape.data$Name <-  gsub("\\s*\\(\\d+\\)", "", shape.data$Name)
+shape.data$Name <- toupper(shape.data$Name)
+shape.data$Name <- gsub(" ", "_", shape.data$Name)
+shape.data$Name[grepl("LA_RINCONADA_DE_PUNITAQUI" , shape.data$Name)] <- "RINCONADA_DE_PUNITAQUI"
+shape.data$Name[grepl("CASTILLO_MAL_PASO_Y_OTROS" , shape.data$Name)] <- "CASTILLO_MAL_PASO"
+rownames(shape.data) <- shape.data$Name
+my_points_v<- dplyr::select(shape.data,Name,geometry)
+rownames(my_points_v)<-shape.data$Name
+#Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
+my_points_v <- my_points_v %>% dplyr::filter(row.names(shape.data) %in% selected_communities)
+coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
+geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
+rownames(geo_muestra) <- as.factor(rownames(my_points_v))
+colnames(geo_muestra)<- as.factor(rownames(my_points_v))
+geo_muestra
+Geo_tree <- upgma(as.dist(geo_muestra),method="average")
+Geo_tree$root.edge <- 0
+plotTree(Geo_tree)
+# Encontrar p-valor
+set.seed(10000)
+the_cor3 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- hd
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(hd, dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor, lty = 2, col = 2)
+abline(v = the_cor3, lty = 2, col = 4)
+legend("topleft", legend = c("cor", "cor3"), fill = c(2,1))
+sum(the_cor3 < cor_bakers_gamma_results)/ R #p-valor = 0.003
+the_cor3 #Baker's gamma correlation coeff = 0.705656 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+################ BAKER GAMMA:COMPARACION STR/GEO #########################
+# Encontrar p-valor
+set.seed(10000)
+the_cor4 <- cor_bakers_gamma(phyDPS,phyDPS)
+the_cor5 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(phyDPS))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- as.dendrogram(phyDPS)
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(as.dendrogram(phyDPS), dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor4, lty = 2, col = 2)
+abline(v = the_cor5, lty = 2, col = 4)
+legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+sum(the_cor5 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor5 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)
 combined_trees2 <- as.multiPhylo(phyDPS,hy)
-
 
 # Genera el árbol de consenso
 consensus_tree1 <- consensus(combined_trees1,p=0.5,check.labels = TRUE, rooted =F)
@@ -121,7 +182,28 @@ plot.phylo(consensus_tree2)
 is.rooted(consensus_tree2)
 is.ultrametric(consensus_tree2)
 consensus_tree<-(consensus_tree2)
-
+################ BAKER GAMMA:COMPARACION CONSENSUS/GEO #########################
+# Encontrar p-valor
+set.seed(10000)
+the_cor6 <- cor_bakers_gamma(consensus_tree,consensus_tree)
+the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(consensus_tree))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- as.dendrogram(consensus_tree)
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(as.dendrogram(consensus_tree), dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor6, lty = 2, col = 2)
+abline(v = the_cor7, lty = 2, col = 4)
+legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor7 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
 result_dendro2

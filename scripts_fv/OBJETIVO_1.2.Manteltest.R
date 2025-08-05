@@ -29,7 +29,7 @@ library(vegan)
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
-
+coordenadas$community[grepl("CASTILLO_MAL_PASO_Y_OTROS" , shape.data$Name)] <- "CASTILLO_MAL_PASO"
 #=======
 #TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
 # Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
@@ -147,3 +147,4 @@ mantel.rtest(
   mat1_filtered, # La segunda matriz
   nrepet = iter
 )
+
