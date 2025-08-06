@@ -15,6 +15,7 @@ library(Hmisc)
 library(NbClust)
 library(phytools)
 library(REAT)
+library(stargazer)
 
 ##Calcular traits
 # Definir la funcion gini
@@ -59,10 +60,62 @@ result_traits <- as.data.frame(result_traits)
 head(result_traits)
 
 #Descripciones estadisticas de traits
-Hmisc::describe(result_traits) #Descripciones generales
-summary(result_traits) #Mediana, rango
-var(result_traits$G) #Varianza
-skewness(result_traits$G) #Asimetria
+get_stats_df <- function(data, vars) {
+  data %>%
+    select(all_of(vars)) %>%
+    sapply(function(x) {
+      c(
+        Mean = mean(x, na.rm = TRUE),
+        Median = median(x, na.rm = TRUE),
+        SD = sd(x, na.rm = TRUE),
+        Min = min(x, na.rm = TRUE),
+        Max = max(x, na.rm = TRUE),
+        Variance = var(x, na.rm = TRUE),
+        Skewness = skewness(x, na.rm = TRUE),
+        Kurtosis = kurtosis(x, na.rm = TRUE),
+        n = sum(!is.na(x))
+        )} )%>%
+        t() %>%
+        as.data.frame() %>%
+        round(4)
+}
+get_stats_ms <- function(data, vars,selected_communities) {
+  filtered_data <- data %>% 
+    filter(community %in% selected_communities)
+  stats <- filtered_data %>%
+    select(all_of(vars)) %>%
+    sapply(function(x) {
+      c(
+        Mean = mean(x, na.rm = TRUE),
+        Median = median(x, na.rm = TRUE),
+        SD = sd(x, na.rm = TRUE),
+        Min = min(x, na.rm = TRUE),
+        Max = max(x, na.rm = TRUE),
+        Variance = var(x, na.rm = TRUE),
+        Skewness = skewness(x, na.rm = TRUE),
+        Kurtosis = kurtosis(x, na.rm = TRUE),
+        n = sum(!is.na(x))
+      )} )%>%
+    t() %>%
+    as.data.frame() %>%
+    round(4)
+  return(stats)
+}
+original_stats <- get_stats_df(result_traits, c("N","S", "R", "G", "A", "M"))
+stargazer(original_stats,
+          type = "latex",
+          title = "Descriptive Statistics - Original Traits",
+          summary = FALSE,
+          rownames = TRUE,
+          out = "outputs/Figures/original_traits_stats.tex")
+#muestreadas
+muestred_stats <- get_stats_ms(result_traits, c("N","S", "R", "G", "A", "M"),selected_communities)
+stargazer(muestred_stats,
+          type = "latex",
+          title = "Descriptive Statistics - Original Muestred Traits",
+          summary = FALSE,
+          rownames = TRUE,
+          out = "outputs/Figures/original_muestred_stats.tex")
 #Normalidad
 #histogramas
 png(filename = "outputs/Figures/Traits_hist.png")
@@ -106,8 +159,24 @@ result_traits <- result_traits %>%
   add_logit_column("M")
 # Verificación
 head(result_traits[, c("community", "A", "A_logit", "S", "S_logit", "G", "G_logit", "M", "M_logit")])
-
+# Descripciones estadísticas logit
+logit_stats <- get_stats_df(result_traits, c("S_logit", "G_logit", "A_logit", "M_logit"))
+stargazer(logit_stats,
+          type = "latex",
+          title = "Descriptive Statistics - Logit Transformed Traits",
+          summary = FALSE,
+          rownames = TRUE,
+          out = "outputs/Figures/logit_traits_stats.tex")
+#muestreadas
+muestred_stats <- get_stats_ms(result_traits, c("S_logit", "G_logit", "A_logit", "M_logit"),selected_communities)
+stargazer(muestred_stats,
+          type = "latex",
+          title = "Descriptive Statistics - Original Muestred Traits",
+          summary = FALSE,
+          rownames = TRUE,
+          out = "outputs/Figures/original_muestred_stats.tex")
 #### G y M DATA TOTAL ####
 GM_logit <- as.data.frame(dplyr::select(result_traits,community, G_logit,M_logit))
 rownames(GM_logit) <- GM_logit$community
 GM_logit <- GM_logit[, -1]
+

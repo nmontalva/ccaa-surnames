@@ -11,32 +11,11 @@ library(dplyr)
 library(geosphere)
 library(vegan)
 
-### Cargar DATOS geogr?ficos ###
-
-#coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T)
-#coordenadas$community <- gsub(" ", "_", coordenadas$community)
-#coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
-
-#=======
-#TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
-# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
-# Vamos a tener que resolverlo, o seguirá pasando.
-# RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
-#=======
-
-##--##
+### Cargar DATOS geograficos ###
 
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
-coordenadas$community[grepl("CASTILLO_MAL_PASO_Y_OTROS" , shape.data$Name)] <- "CASTILLO_MAL_PASO"
-#=======
-#TODO: REVISAR. Las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
-# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
-# Vamos a tener que resolverlo, o seguirá pasando.
-# RESOLUCIÓN: SOLUCIONADO AL DECLARAR CODIFICACIÓN DE CARACTÉRES EXPLÍCITA UTF-8
-#=======
-## REVISION: Encontré el error! Era un problema de marca de orden de bytes (BOM) en sistemas Windows. Lo agregué a la lectura del archivo csv, no debería seguir ocurriendo.
 
 ##Test de Mantel##
 #1. Todas las comunidades # #Revisar la matriz de distancia de apellidos

@@ -85,21 +85,19 @@ the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa
 set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
 ### Cargar DATOS geograficos ###
-shape.data <- sf::st_read("scripts_fv/Datos/comunidades_reprojected.shx")
-shape.data$Name <-  gsub("\\s*\\(\\d+\\)", "", shape.data$Name)
-shape.data$Name <- toupper(shape.data$Name)
-shape.data$Name <- gsub(" ", "_", shape.data$Name)
-shape.data$Name[grepl("LA_RINCONADA_DE_PUNITAQUI" , shape.data$Name)] <- "RINCONADA_DE_PUNITAQUI"
-shape.data$Name[grepl("CASTILLO_MAL_PASO_Y_OTROS" , shape.data$Name)] <- "CASTILLO_MAL_PASO"
-rownames(shape.data) <- shape.data$Name
-my_points_v<- dplyr::select(shape.data,Name,geometry)
-rownames(my_points_v)<-shape.data$Name
-#Crear una matriz de distancia con datos de coordenadas de comunidades seleccionadas
-my_points_v <- my_points_v %>% dplyr::filter(row.names(shape.data) %in% selected_communities)
-coords <- sf::st_coordinates(my_points_v)# Estraer coordenadas
-geo_muestra <- sf::st_distance(my_points_v)# Calcular matriz de distancias
+coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
+coordenadas$community <- gsub(" ", "_", coordenadas$community)
+coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
+rownames(coordenadas) <- coordenadas$community
+colnames(coordenadas)<- c("community","lon","lat","org_name")
+my_points_t <- dplyr::select(coordenadas, lon, lat)
+rownames(my_points_t) <- coordenadas$community
+selected_communities <- unique(STR$pop)
+my_points_v <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
+geo_muestra <- distm (my_points_v, fun = distGeo )
 rownames(geo_muestra) <- as.factor(rownames(my_points_v))
-colnames(geo_muestra)<- as.factor(rownames(my_points_v))
+colnames(geo_muestra) <- as.factor(rownames(my_points_v))
+geo_muestra <- as.matrix(geo_muestra)
 geo_muestra
 Geo_tree <- upgma(as.dist(geo_muestra),method="average")
 Geo_tree$root.edge <- 0
@@ -204,6 +202,7 @@ legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor7 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
 set.seed(NULL)
+
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
 result_dendro2
