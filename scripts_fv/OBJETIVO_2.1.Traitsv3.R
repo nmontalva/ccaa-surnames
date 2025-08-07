@@ -174,7 +174,7 @@ stargazer(muestred_stats,
           title = "Descriptive Statistics - Original Muestred Traits",
           summary = FALSE,
           rownames = TRUE,
-          out = "outputs/Figures/original_muestred_stats.tex")
+          out = "outputs/Figures/logit_muestred_stats.tex")
 #### G y M DATA TOTAL ####
 GM_logit <- as.data.frame(dplyr::select(result_traits,community, G_logit,M_logit))
 rownames(GM_logit) <- GM_logit$community

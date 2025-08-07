@@ -10,7 +10,6 @@
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 ##IMPORTANTE: CORRER LOS SCRIPTS DE LOS OBJETIVOS 2 y 4 ##
 
-
 #### CARGAR E INSTALLAR LIBRERIAS ####
 library(tidyverse)
 library(ape)
@@ -449,7 +448,6 @@ publish(bm_glsN)
 publish(bm_glsG)
 publish(bm_glsM)
 
-
 ##Generate PICs and test while conditioning on phylogeny
 #Prepare the tree
 consensus_tree_rooted <- midpoint.root(consensus_tree) 
@@ -461,12 +459,6 @@ A_pic1<-pic(x = ft2$A_logit, phy = consensus_tree_dicotomous)
 G_pic1<-pic(x=ft2$G_logit, phy = consensus_tree_dicotomous)
 M_pic1<-pic(x=ft2$M_logit, phy = consensus_tree_dicotomous)
 
-calc_r <- function(x, y) {
-  r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
-  r_squared <- r$estimate
-  p_value<-r$p.value
-  return(list(r_squared = r_squared, p_value = p_value))
-}
 data1 <- data.frame(S_pic1,A_pic1,G_pic1,M_pic1)
 
 #Total communities
@@ -475,11 +467,4 @@ A_pic<-pic(x = ft$A_logit, phy = y_total)
 G_pic<-pic(x=ft$G_logit, phy = y_total)
 M_pic<-pic(x=ft$M_logit, phy = y_total)
 
-calc_r <- function(x, y) {
-  r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
-  r_squared <- r$estimate
-  p_value<-r$p.value
-  return(list(r_squared = r_squared, p_value = p_value))
-}
 data <- data.frame(S_pic,A_pic,G_pic,M_pic)
-

@@ -19,7 +19,7 @@ names(trait) <- rownames(GM_df)
 
 # Filtrar para que coincidan los tips
 common <- intersect(tree$tip.label, names(trait))
-tree <- drop.tip(tree, setdiff(tree$tip.label, common))
+tree <- ape::drop.tip(tree, setdiff(tree$tip.label, common))
 trait <- trait[common]
 
 # === Convertir el objeto phylo a hclust ===
@@ -46,7 +46,7 @@ for (h in heights) {
     # Calcular varianza intra-clado
     var_within <- df %>%
       group_by(group) %>%
-      summarize(var = var(value), .groups = "drop") %>%
+      dplyr::summarize(var = var(value), .groups = "drop") %>%
       pull(var) %>%
       mean(na.rm = TRUE)
     
@@ -87,7 +87,7 @@ library(tidyr)
 results_long <- results %>%
   select(height, var_within, var_between) %>%
   pivot_longer(cols = c(var_within, var_between), names_to = "type", values_to = "variance") %>%
-  mutate(type = recode(type, var_within = "Intra-clado", var_between = "Inter-clado")) %>%
+  mutate(type = dplyr::recode(type, var_within = "Intra-clado", var_between = "Inter-clado")) %>%
   drop_na()
 
 ggplot(results_long, aes(x = height, y = variance, fill = type)) +
@@ -108,4 +108,3 @@ ggplot(results, aes(x = height, y = var_ratio)) +
   labs(title = "Razón entre varianza intra e inter clado",
        x = "Altura del árbol", y = "Varianza intra / inter") +
   theme_minimal()
-

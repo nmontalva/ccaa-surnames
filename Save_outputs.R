@@ -7,7 +7,7 @@ library(fs)       # Manejo de archivos
 library(googledrive) #Googledrive
 
 # Autenticación (solo primera vez)
-if (!drive_has_token()) drive_auth() # Autentificacion: Sigue las instrucciones en el navegador para autorizar. Es necesario sólo la primera vez
+#if (!drive_has_token()) drive_auth() # Autentificacion: Sigue las instrucciones en el navegador para autorizar. Es necesario sólo la primera vez
 
 # Subir un archivo individual
 #drive_upload(

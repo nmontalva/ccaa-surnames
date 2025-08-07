@@ -12,9 +12,17 @@ library(GGally)
 library(png)
 library(grid)
 library(magick)
-
+library(stargazer)
 
 ## Matriz de graficos ##
+
+calc_r <- function(x, y) {
+  r <- cor.test(x, y)  # Calcular el coeficiente de correlaci?n de Pearson
+  r_squared <- r$estimate
+  p_value<-r$p.value
+  return(list(r_squared = r_squared, p_value = p_value))
+}
+
 ## Comunidades muestreadas
 # Grafico 1
 annotate_r_squared <- function(data1, mapping, ...) {
@@ -98,7 +106,6 @@ annotate_r_squared <- function(data1, mapping, ...) {
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
-
 png("outputs/Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
@@ -112,6 +119,41 @@ ggpairs(data1,
         upper = list(continuous =wrap(annotate_r_squared))
 )
 dev.off()
+# Extraer valores sin grafico
+extract_r_values <- function(data, mapping) {
+  x <- eval_data_col(data, mapping$x)
+  y <- eval_data_col(data, mapping$y)
+  calc_r(x, y)  # Devuelve lista con r_squared y p_value
+}
+
+# 3. Función para procesar todos los pares
+get_all_correlations <- function(data, vars) {
+  combinations <- combn(vars, 2, simplify = FALSE)
+  results <- list()
+  
+  for (i in seq_along(combinations)) {
+    pair <- combinations[[i]]
+    mapping <- aes_string(x = pair[1], y = pair[2])
+    results[[i]] <- list(
+      pair = paste(pair[1], "~", pair[2]),
+      values = extract_r_values(data, mapping)
+    )
+  }
+  
+  do.call(rbind, lapply(results, as.data.frame))
+}
+corr_table <- get_all_correlations(
+  data = data1,
+  vars = c("S_pic1", "G_pic1", "A_pic1", "M_pic1")
+)
+
+# Mostrar tabla ordenada por significancia
+corr_table[order(corr_table$values.p_value), ]
+# Convierte a markdown
+md_table <- corr_table %>%
+  knitr::kable(format = "markdown")
+# Copia al portapapeles
+clipr::write_clip(md_table) # Ahora pega (Ctrl+V) directamente en Notion
 
 ## Comunidades total
 #Grafico 1
@@ -211,3 +253,17 @@ ggpairs(data,
         upper = list(continuous =wrap(annotate_r_squared))
         )
 dev.off()
+
+#Tabla 
+corr_total <- get_all_correlations(
+  data = data,
+  vars = c("S_pic", "G_pic", "A_pic", "M_pic")
+)
+
+# Mostrar tabla ordenada por significancia
+corr_total[order(corr_total$values.p_value), ]
+# Convierte a markdown
+md_total <- corr_total %>%
+  knitr::kable(format = "markdown")
+# Copia al portapapeles
+clipr::write_clip(md_total) # Ahora pega (Ctrl+V) directamente en Notion

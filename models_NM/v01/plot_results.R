@@ -1,14 +1,17 @@
 plot_result <- function(results) {
   require(ggplot2)
   require(ggtree)
-  require(viridis)  # For better color scales
-  
+  require(paletteer)  # For better color scales
+
   plots <- list()
-  
+  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", 
+                 "#0072B2", "#D55E00", "#CC79A7", "#999999") # discrete color palette
   # 1. AIC Comparison Plot (always created)
   plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
     geom_col(width = 0.6, alpha = 0.8) +
     geom_text(aes(label = round(AIC, 1)), vjust = -0.5, size = 3.5) +
+    #scale_fill_viridis(discrete = TRUE, option = "D", begin = 0.2, end = 0.8)+
+    scale_fill_manual(values=okabe_ito[1:results$single_models$AIC])+
     labs(title = paste("Model Comparison for", results$prepped$original_var),
          subtitle = "Akaike Information Criterion",
          y = "AIC", x = "") +
@@ -21,7 +24,8 @@ plot_result <- function(results) {
   if (!is.null(results$surface$named_tree)) {
     # Create a color palette that works well for multiple regimes
     n_regimes <- length(unique(results$regimes$regime))
-    regime_colors <- viridis(n_regimes, option = "D")
+    #regime_colors <- viridis(n_regimes, option = "D",begin = 0.1, end = 0.9)
+    regime_colors <- setNames(okabe_ito[1:n_regimes], unique(results$regimes$regime))
     names(regime_colors) <- results$regimes$regime
     
     # Prepare tip labels with regime information
