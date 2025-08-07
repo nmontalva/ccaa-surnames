@@ -26,6 +26,7 @@ library("treeio") #Ver "packages.R" para instalar este paqute
 library(ggplot2)
 library(gridExtra)
 library(viridisLite) #colores
+library(rr2)
 
 # Resolver conflictos de funciones
 conflict_prefer("select", "dplyr")
@@ -371,7 +372,7 @@ dev.off()
 ##Phylo-regression for sampled data
 sampled_matched <- treedata(consensus_tree, ft2, sort=F, warnings=TRUE)
 spc <- sampled_matched$phy$tip.label
-V<-corBrownian(phy=sampled_matched$phy,form = ~spc)
+V<-corPagel(1,phy=sampled_matched$phy,form=~spc, fixed=FALSE)
 C <- vcv.phylo(phy = sampled_matched$phy)
 #Assign traits
 obj <- ft2
@@ -392,61 +393,74 @@ G <- as.vector(G)
 
 # Crea un dataframe con estos vectores
 vector.data <- data.frame(N = N, M = M, A = A, S = S, G = G)
+get_model_metrics <- function(model, model_name) {
+  require(rr2)
+  
+  lambda_val <- if(inherits(model$modelStruct$corStruct, "corPagel")) {
+    model$modelStruct$corStruct[[1]]
+  } else {
+    1 # Para corBrownian
+  }
+  
+  metrics <- list(
+    model_name = model_name,
+    formula = deparse(formula(model)),
+    coefficients = summary(model)$tTable,
+    anova = anova(model),
+    logLik = as.numeric(logLik(model)),
+    AIC = AIC(model),
+    AICc = AIC(model) + (2 * length(coef(model)) * (length(coef(model)) + 1)) / 
+      (nobs(model) - length(coef(model)) - 1),
+    BIC = BIC(model),
+    R2 = R2_lik(model),
+    lambda = lambda_val
+  )
+  
+  return(metrics)
+}
 
-#model with N ( efecto del N en el indice)
-bm_glsN<-gls(N~M+A+S+G,correlation = V, data= vector.data)
-summary(bm_glsN) 
-anova(bm_glsN)
+# Modelo N (ahora capturamos los resultados)
+bm_glsN <- gls(N~M+A+S+G, correlation = V, data=vector.data)
+metrics_N <- get_model_metrics(bm_glsN, "N ~ M + A + S + G")
 
-#model with G 
-bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsG) 
-anova(bm_glsG)
-
-#model with M 
-bm_glsM<-gls(M~G+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsM) 
-anova(bm_glsM)
-
-publish(bm_glsN)
+# Modelo G
+bm_glsG <- gls(G~M+A+S, correlation = V, data=vector.data)
+metrics_G <- get_model_metrics(bm_glsG, "G ~ M + A + S")
+print(metrics_G)
 publish(bm_glsG)
-publish(bm_glsM)
+# Modelo M
+bm_glsM <- gls(M~G+A+S, correlation = V, data=vector.data)
+metrics_M <- get_model_metrics(bm_glsM, "M ~ G + A + S")
 
 ##Phylo-regression for all communities
 sampled_matched <- treedata(y_total, ft, sort=FALSE, warnings=TRUE)
 spc <- sampled_matched$phy$tip.label
-V<-corBrownian(phy=sampled_matched$phy,form = ~spc)
+ft <- ft[spc, ]
+V<-corPagel(1,phy=sampled_matched$phy,form = ~spc,fixed=FALSE)
 C <- vcv.phylo(phy = sampled_matched$phy)
 
 #Now we run the analysis:
 #Assign traits
-obj <- ft
-x <- write.tree(y_total)
-tree_consensus.tree <- read.tree(text=x)
-G <- setNames(obj[,"G_logit"],rownames(obj))
-M <- setNames(obj[,"M_logit"],rownames(obj))
-S <- setNames(obj[,"S_logit"],rownames(obj))
-A <- setNames(obj[,"A_logit"],rownames(obj))
-N <- setNames(obj[,"N"],rownames(obj))
+trait_names <- c("G_logit", "M_logit", "S_logit", "A_logit", "N")
+traits <- lapply(trait_names, function(x) setNames(ft[,x], rownames(ft)))
+names(traits) <- substr(trait_names, 1, 1)  # G, M, S, A, N
+list2env(traits, envir = .GlobalEnv)
 
-#model with N ( efecto del N en el ?ndice)
-bm_glsN<-gls(N~M+A+S+G,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsN) 
-anova(bm_glsN)
+# Crear dataframe (asegurando orden)
+vector.data <- data.frame(N, M, A, S, G, row.names = spc)
 
-#model with G 
-bm_glsG<-gls(G~M+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsG) 
-anova(bm_glsG)
+# Modelo N (ahora capturamos los resultados)
+bm_glsNt <- gls(N~M+A+S+G, correlation = V, data=vector.data)
+metrics_Nt <- get_model_metrics(bm_glsNt, "N ~ M + A + S + G")
 
-#model with M 
-bm_glsM<-gls(M~G+A+S,correlation = V, data=data.frame(N, M, A, S, G))
-summary(bm_glsM) 
-anova(bm_glsM)
-
-publish(bm_glsN)
-publish(bm_glsG)
-publish(bm_glsM)
+# Modelo G
+bm_glsGt <- gls(G~M+A+S, correlation = V, data=vector.data)
+metrics_Gt <- get_model_metrics(bm_glsGt, "G ~ M + A + S")
+print(metrics_Gt)
+publish(bm_glsGt)
+# Modelo M
+bm_glsMt <- gls(M~G+A+S, correlation = V, data=vector.data)
+metrics_Mt <- get_model_metrics(bm_glsM, "M ~ G + A + S")
 
 ##Generate PICs and test while conditioning on phylogeny
 #Prepare the tree
