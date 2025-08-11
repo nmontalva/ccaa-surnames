@@ -13,8 +13,11 @@ rm(list = ls())
 # ¿Es correcto el orden en que deben ejecutarse?
 # ¿Podemos solucionar la incompatibilidad entre O2.2. y O.5.?
 
+## Agregué esto para tener consistencia en resultados aleatorios
+set.seed(9)
+
 ## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
-iter <- 10000 # set to 1000000 for actual analyses
+iter <- 1000 # set to 1000000 for actual analyses
 
 scripts <- c(
   "scripts_fv/packages.R",
