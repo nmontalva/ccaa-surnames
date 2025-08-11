@@ -49,3 +49,5 @@ STR_alelos_slash[1] <- NULL
 
 STR_genind <-df2genind(STR_alelos_slash,sep = "/",ncode = 3,ind.names = row.names(STR_alelos_slash),loc.names = colnames(STR_alelos_slash),pop = pop,ploidy = 2,NA.char = "000")
 
+#eliminar objetos que no volveran a usarse
+rm(mi.final, mi.final_wide,STR_alelos_slash)

@@ -124,3 +124,5 @@ write.nexus(y_total, file = "outputs/Figures/Apellidos.nex", translate = TRUE) #
 write.dendrogram(hd,file = "outputs/Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
 write.nexus(hy, file = "outputs/Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
 
+#Eliminar objetos que no se volveran a ocupar más adelante
+rm(ddata,p,selected_communities2,STR2,surnames, surname_matrix, surname_matrix_muestra)

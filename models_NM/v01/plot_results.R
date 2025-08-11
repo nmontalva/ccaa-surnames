@@ -4,22 +4,32 @@ plot_result <- function(results) {
   require(paletteer)  # For better color scales
 
   plots <- list()
-  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", 
-                 "#0072B2", "#D55E00", "#CC79A7", "#999999") # discrete color palette
+  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999") # discrete color palette
   # 1. AIC Comparison Plot (always created)
   plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
     geom_col(width = 0.6, alpha = 0.8) +
     geom_text(aes(label = round(AIC, 1)), vjust = -0.5, size = 3.5) +
     #scale_fill_viridis(discrete = TRUE, option = "D", begin = 0.2, end = 0.8)+
-    scale_fill_manual(values=okabe_ito[1:results$single_models$AIC])+
+    scale_fill_manual(values = okabe_ito[1:nrow(results$single_models$AIC)])+
     labs(title = paste("Model Comparison for", results$prepped$original_var),
-         subtitle = "Akaike Information Criterion",
+         subtitle = "Akaike Information Criterion (AIC)",
          y = "AIC", x = "") +
     theme_minimal(base_size = 11) +
     theme(legend.position = "none",
           plot.title = element_text(size = 12),
           plot.subtitle = element_text(size = 10))
-  
+  if (!is.null(results$surface$named_tree)) {
+    tip_data <- results$data %>%
+      left_join(results$regimes, by = "regime") %>%
+      filter(!is.na(regime)) %>%  # Remove "NA" from legend
+      mutate(
+        label = sprintf("%s (θ=%.2f, α=%.2f)",  # Include alpha and theta
+                        regime, 
+                        theta_original,
+                        ifelse(!is.na(alpha), alpha, NA))
+      )
+    n_tips <- length(results$data$community)
+    line_size <- ifelse(n_tips > 100, 0.5, 0.8)  # thicker lines
   # 2. Tree Plot (now without tip number restriction)
   if (!is.null(results$surface$named_tree)) {
     # Create a color palette that works well for multiple regimes
@@ -37,15 +47,16 @@ plot_result <- function(results) {
     })
     
     # Create the tree plot with optimized settings for large trees
-    plots$tree_plot <- ggtree(results$surface$named_tree, size = 0.4, layout = "rectangular") %<+% tip_data +
+    plots$tree_plot <- ggtree(results$surface$named_tree, size = line_size, layout = "rectangular") %<+% tip_data +
       geom_tree(aes(color = regime), size = 0.5) +
       scale_color_manual(values = regime_colors,
                         name = "Regime",
-                        labels = unique(tip_data$theta_label)) +
+                        labels = unique(tip_data$label)) +
       theme_tree2() +
       theme(legend.position = "right",
             legend.text = element_text(size = 8),
             legend.title = element_text(size = 9),
+            #plot.margin = unit(c(1,1,1,1), "cm"),  # Mejor manejo de espacios
             plot.title = element_text(size = 11)) +
       ggtitle(paste("Phylogenetic Regimes for", results$prepped$original_var)) +
       guides(color = guide_legend(override.aes = list(size = 3)))
@@ -56,7 +67,11 @@ plot_result <- function(results) {
         geom_tippoint(aes(color = regime), size = 1.5, alpha = 0.7)
     }
   }
-  
+    if (!interactive()) {
+      plots$tree_plot <- plots$tree_plot + 
+        theme(plot.background = element_rect(fill = "white", color = NA))
+    }
+  } # Better export visualization
   # 3. Regime Distribution Plot
   if (!is.null(results$data$regime)) {
     reg_summary <- as.data.frame(table(results$data$regime))

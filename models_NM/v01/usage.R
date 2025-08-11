@@ -23,6 +23,10 @@ results$M$plots$tree_plot +
 print(results$G$summary$regimes)
 print(results$M$summary$regimes)
 
-# View plots for a specific variable
+# Compare
+print(results$G$comparison)
+print(results$M$comparison)
+
+ # View plots for a specific variable
 print(results$G$plots$tree_plot)
 print(results$M$plots$tree_plot)
