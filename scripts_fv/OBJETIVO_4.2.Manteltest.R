@@ -49,6 +49,9 @@ geo_muestra2
 
 #Crar una matriz de distancia con arbol de consenso
 con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
+# La línea anterior también da un Warning que hay que revisar:
+# Warning message:
+#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
 
 #=======
 #TODO: REVISAR.

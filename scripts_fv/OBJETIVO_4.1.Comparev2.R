@@ -335,6 +335,11 @@ consensus_dendrogram <- function(result_dendro2, save_as=NULL,group_by_col="comm
 }
 
 consensus_dendrogram(result_dendro2, save_as = "outputs/Figures/dendrograma_consenso_DPS.png")
+# Esto da un warning que hay que mirar:
+# Warning message:
+#In max(consensus_tree$edge.length) :
+#  no non-missing arguments to max; returning -Inf
+
 
 consensus_tree<-(consensus_tree2)
 
