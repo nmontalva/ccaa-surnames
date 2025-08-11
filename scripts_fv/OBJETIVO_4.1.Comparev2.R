@@ -63,7 +63,6 @@ dev.off()
 
 ################ BAKER GAMMA:COMPARACION APELLIDOS/STR #########################
 # Encontrar p-valor
-set.seed(10000)
 the_cor <- cor_bakers_gamma(hy,hy)
 the_cor2 <- cor_bakers_gamma(as.dendrogram(phyDPS), as.dendrogram(hy))
 R <- 1000
@@ -82,7 +81,6 @@ abline(v = the_cor2, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
 the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
 ### Cargar DATOS geograficos ###
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
@@ -103,7 +101,6 @@ Geo_tree <- upgma(as.dist(geo_muestra),method="average")
 Geo_tree$root.edge <- 0
 plotTree(Geo_tree)
 # Encontrar p-valor
-set.seed(10000)
 the_cor3 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
@@ -121,10 +118,8 @@ abline(v = the_cor3, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor3"), fill = c(2,1))
 sum(the_cor3 < cor_bakers_gamma_results)/ R #p-valor = 0.003
 the_cor3 #Baker's gamma correlation coeff = 0.705656 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION STR/GEO #########################
 # Encontrar p-valor
-set.seed(10000)
 the_cor4 <- cor_bakers_gamma(phyDPS,phyDPS)
 the_cor5 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(phyDPS))
 R <- 1000
@@ -143,7 +138,6 @@ abline(v = the_cor5, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor5 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor5 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-set.seed(NULL)
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)
@@ -182,7 +176,6 @@ is.ultrametric(consensus_tree2)
 consensus_tree<-(consensus_tree2)
 ################ BAKER GAMMA:COMPARACION CONSENSUS/GEO #########################
 # Encontrar p-valor
-set.seed(10000)
 the_cor6 <- cor_bakers_gamma(consensus_tree,consensus_tree)
 the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(consensus_tree))
 R <- 1000
@@ -201,7 +194,6 @@ abline(v = the_cor7, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor7 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-set.seed(NULL)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados

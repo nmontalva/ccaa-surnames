@@ -75,7 +75,6 @@ mat2_filtered<-as.dist(mat2_filtered)
 mat1_filtered <- as.dist(mat1_filtered)
 
 #Generar mantel
-set.seed(152)
 mantel.rtest(
     mat2_filtered, # La primera de las dos matrices de disimilitud
     mat1_filtered, # La segunda matriz
@@ -119,7 +118,6 @@ print(mat2_outside)
 #configurar como matrices de Distancias
 mat2_filtered<-as.dist(mat2_filtered)
 mat1_filtered <- as.dist(mat1_filtered)
-set.seed(152)
 #Generar mantel
 mantel.rtest(
   mat2_filtered, # La primera de las dos matrices de disimilitud

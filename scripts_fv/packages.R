@@ -55,6 +55,7 @@ packages <- c(
   "surface",
   "tidyr",
   "tidyverse",
+  "treestats",
   "vegan",
   "wesanderson"
 )

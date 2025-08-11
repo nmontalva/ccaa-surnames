@@ -2,7 +2,7 @@
 
 # Names
 
-# Ta  <-  surnames tree (all tips, UPGMA, ultrametric)
+# Ta  <- y_total  surnames tree (all tips, UPGMA, ultrametric)
 # Ts  <-  surnames tree (16 tips subset, UPGMA)
 # Tg  <-  genetic tree (16 tips, UPGMA on Dps)  # final choice per Methods
 # Tc  <-  consensus tree (15/16 tips — verify)

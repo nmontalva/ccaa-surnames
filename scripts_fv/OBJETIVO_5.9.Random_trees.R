@@ -54,7 +54,6 @@ generate_random_trees <- function(phy, n=iter) {
   return(random_trees)
 }
 
-#set.seed(150)  # Para reproducibilidad
 random_trees_consensus <- generate_random_trees(consensus_tree, iter) #consenso
 random_trees_complete <- generate_random_trees(y_total, iter) #total
 
