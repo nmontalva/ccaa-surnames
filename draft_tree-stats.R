@@ -38,3 +38,9 @@ cat("Sackin's index (normalized):", sackin_index, "\n")
 #set.seed(123)
 #balanced_tree <- stree(n = length(consensus_tree$tip.label), type = "balanced")
 #cat("Colless index of perfectly balanced tree:", colless(balanced_tree, normalization = "pda"), "\n")
+
+# A simple Counter:
+sum(GM_df$G == 0)   # Number of communities with G = 0
+sum(GM_df$G == 1)   # Number of communities with G = 0
+sum(GM_df$M == 0)   # Number with M = 0
+sum(GM_df$M == 1)   # Number with M = 1
