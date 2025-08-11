@@ -1,10 +1,10 @@
 plot_result <- function(results) {
   require(ggplot2)
   require(ggtree)
-  require(paletteer)  # For better color scales
-
+  #require(paletteer)  # For better color scales
+  require(RColorBrewer)
   plots <- list()
-  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999") # discrete color palette
+  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442","#CC79A7", "#0072B2", "#D55E00", "#999999") # discrete color palette
   # 1. AIC Comparison Plot (always created)
   plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
     geom_col(width = 0.6, alpha = 0.8) +
@@ -21,25 +21,27 @@ plot_result <- function(results) {
   if (!is.null(results$surface$named_tree)) {
     tip_data <- results$data %>%
       left_join(results$regimes, by = "regime") %>%
-      filter(!is.na(regime)) %>%  # Remove "NA" from legend
       mutate(
         label = sprintf("%s (θ=%.2f, α=%.2f)",  # Include alpha and theta
                         regime, 
                         theta_original,
-                        ifelse(!is.na(alpha), alpha, NA))
+                        ifelse(!is.na(alpha), paste0(", α=", round(alpha, 2)), ""))
       )
     n_tips <- length(results$data$community)
     line_size <- ifelse(n_tips > 100, 0.5, 0.8)  # thicker lines
   # 2. Tree Plot (now without tip number restriction)
   if (!is.null(results$surface$named_tree)) {
     # Create a color palette that works well for multiple regimes
+    regimes_unique <- unique(results$regimes$regime)
+    regimes_unique <- regimes_unique[!is.na(regimes_unique)]  # Quitar NA
     n_regimes <- length(unique(results$regimes$regime))
     #regime_colors <- viridis(n_regimes, option = "D",begin = 0.1, end = 0.9)
     regime_colors <- setNames(okabe_ito[1:n_regimes], unique(results$regimes$regime))
     names(regime_colors) <- results$regimes$regime
     
     # Prepare tip labels with regime information
-    tip_data <- results$data
+    tip_data <- results$data %>% filter(!is.na(regime)) %>%
+      left_join(results$regimes, by = "regime")
     tip_data$theta_label <- sapply(1:nrow(tip_data), function(i) {
       r <- tip_data$regime[i]
       theta <- results$regimes$theta_original[results$regimes$regime == r]
@@ -56,7 +58,8 @@ plot_result <- function(results) {
       theme(legend.position = "right",
             legend.text = element_text(size = 8),
             legend.title = element_text(size = 9),
-            #plot.margin = unit(c(1,1,1,1), "cm"),  # Mejor manejo de espacios
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank(),
             plot.title = element_text(size = 11)) +
       ggtitle(paste("Phylogenetic Regimes for", results$prepped$original_var)) +
       guides(color = guide_legend(override.aes = list(size = 3)))

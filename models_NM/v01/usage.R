@@ -3,8 +3,9 @@ results <- evolutionary_analysis(
   data = GM_df,
   variables = c("G", "M"),
   tree = y_total,  # Your large tree
-  steps = 1:5
+  steps = 1:6
 )
+
 
 # View the tree plot (will work for 200+ tips)
 print(results$G$plots$tree_plot)
@@ -20,13 +21,6 @@ results$M$plots$tree_plot +
   scale_color_brewer(palette = "Set1")
 
 # Access results for each variable
-print(results$G$summary$regimes)
-print(results$M$summary$regimes)
 
-# Compare
-print(results$G$comparison)
-print(results$M$comparison)
 
- # View plots for a specific variable
-print(results$G$plots$tree_plot)
-print(results$M$plots$tree_plot)
+

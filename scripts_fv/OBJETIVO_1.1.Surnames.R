@@ -125,4 +125,4 @@ write.dendrogram(hd,file = "outputs/Figures/Apellidos_muestra.phy", edges = FALS
 write.nexus(hy, file = "outputs/Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
 
 #Eliminar objetos que no se volveran a ocupar más adelante
-rm(ddata,p,selected_communities2,STR2,surnames, surname_matrix, surname_matrix_muestra)
+rm(ddata,p,selected_communities2,STR2,surnames)
