@@ -79,3 +79,6 @@
 ## Tc (Consensus (Dps x Surnames) in sampled communities)
 # Tc_ori <- 
 # Tc_logit <- 
+
+## T_geo (Geographic distance matrix converted to tree)
+# T_geo <- 

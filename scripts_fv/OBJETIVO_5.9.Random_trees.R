@@ -44,7 +44,7 @@ trait_data_M_s <- trait_data_M[names(trait_data_M) %in% tree_tips]
 ## ---------------------------
 #howmanytrees(length(tree_tips)) #numero de arboles filogeneticos posibles
 # Generar arboles aleatorizados
-generate_random_trees <- function(phy, n=1000) {
+generate_random_trees <- function(phy, n=iter) {
   random_trees <- replicate(n, {
     rt <- phy
     rt$tip.label <- sample(phy$tip.label)  # Permutación de tips
@@ -54,9 +54,9 @@ generate_random_trees <- function(phy, n=1000) {
   return(random_trees)
 }
 
-set.seed(150)  # Para reproducibilidad
-random_trees_consensus <- generate_random_trees(consensus_tree, 1000) #consenso
-random_trees_complete <- generate_random_trees(y_total, 1000) #total
+#set.seed(150)  # Para reproducibilidad
+random_trees_consensus <- generate_random_trees(consensus_tree, iter) #consenso
+random_trees_complete <- generate_random_trees(y_total, iter) #total
 
 ## ---------------------------
 ## CALCULO DE SEÑAL FILOGENETICA
@@ -65,12 +65,12 @@ random_trees_complete <- generate_random_trees(y_total, 1000) #total
 phylo_signal_analysis <- function(phy, trait, tree_set, trait_name="Trait") {
   
   # Señal observada
-  obs_lambda <- phylosig(phy, trait, method="lambda", test=TRUE, nsim = 9999)
-  obs_K <- phylosig(phy, trait, method="K", test=TRUE, nsim = 9999)
+  obs_lambda <- phylosig(phy, trait, method="lambda", test=TRUE, nsim = iter)
+  obs_K <- phylosig(phy, trait, method="K", test=TRUE, nsim = iter)
   
   # Señal en árboles randomizados (solo cálculo, sin test para mayor velocidad)
-  rand_lambda <- sapply(tree_set, function(x) phylosig(x, trait, method="lambda",test=TRUE, nsim = 9999))
-  rand_K <- sapply(tree_set, function(x) phylosig(x, trait, method="K",test=TRUE, nsim = 9999))
+  rand_lambda <- sapply(tree_set, function(x) phylosig(x, trait, method="lambda",test=TRUE, nsim = iter))
+  rand_K <- sapply(tree_set, function(x) phylosig(x, trait, method="K",test=TRUE, nsim = iter))
                 
                 return(list(obs_lambda=obs_lambda, obs_K=obs_K, 
                             rand_lambda=rand_lambda, rand_K=rand_K))

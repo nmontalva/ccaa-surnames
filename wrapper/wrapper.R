@@ -17,7 +17,7 @@ rm(list = ls())
 set.seed(9)
 
 ## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
-iter <- 1000 # set to 1000000 for actual analyses
+iter <- 1000 # set to 10000 for actual analyses
 
 scripts <- c(
   "scripts_fv/packages.R",
@@ -37,8 +37,9 @@ scripts <- c(
   "scripts_fv/OBJETIVO_5.5.GráficoG_M.R",
   "scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R",
   "scripts_fv/OBJETIVO_5.7.HIP_1.R",
-  "scripts_fv/OBJETIVO_5.8.I_de_Moran.R"#,
-  # "scripts_fv/OBJETIVO_5.9.Random_trees.R" #Lo comenté por que se demora mucho
+  "scripts_fv/OBJETIVO_5.8.I_de_Moran.R",
+  "scripts_fv/OBJETIVO_5.9.Random_trees.R", #Lo comenté por que se demora mucho
+  "naming.R"
 )
 
 log_dir <- "outputs/logs"
@@ -150,4 +151,3 @@ if (num_errors == 0) {
 } else {
   writeLines("failure", con = status_flag)
 }
-
