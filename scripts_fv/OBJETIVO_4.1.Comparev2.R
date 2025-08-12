@@ -81,13 +81,9 @@ abline(v = the_cor2, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
 the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-<<<<<<< HEAD
 ################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
-=======
-set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION T_a/GEO #########################
->>>>>>> origin/VasEstay
-### Cargar DATOS geograficos ###
+## Cargar DATOS geograficos ###
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -143,12 +139,8 @@ abline(v = the_cor5, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor5 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor5 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-<<<<<<< HEAD
-=======
-set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION T_s/GEO #########################
 # Encontrar p-valor
-set.seed(10000)
 the_cor6 <- cor_bakers_gamma(hy,hy)
 the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
 R <- 1000
@@ -167,8 +159,6 @@ abline(v = the_cor7, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor7 #Baker's gamma correlation coeff = 0.7056561 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-set.seed(NULL)
->>>>>>> origin/VasEstay
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)

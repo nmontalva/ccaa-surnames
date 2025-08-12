@@ -101,14 +101,10 @@ print("Filas/columnas que quedaron fuera de mat2:")
 print(geo_muestra_outside)
 
 #configurar como matrices de Distancias
-<<<<<<< HEAD
 mat2_filtered<-as.dist(mat2_filtered)
 mat1_filtered <- as.dist(mat1_filtered)
-=======
 surname_muestra<-as.dist(surname_muestra)
 geo_muestra <- as.dist(geo_muestra)
-set.seed(152)
->>>>>>> origin/VasEstay
 #Generar mantel
 mantel.rtest(
   geo_muestra, # La primera de las dos matrices de disimilitud

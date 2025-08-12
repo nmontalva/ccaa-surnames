@@ -68,13 +68,11 @@ Ts <- hy
 Tg <- phyDPS
 
 ## Tc (Consensus (Dps x Surnames) in sampled communities)
-<<<<<<< HEAD
 # Tc_ori <- 
 # Tc_logit <- 
 
 ## T_geo (Geographic distance matrix converted to tree)
 # T_geo <- 
-=======
 Tc <- consensus_tree
 
 ## == TRAITS == #
@@ -82,4 +80,3 @@ Tc <- consensus_tree
 result_traits # Traits in all communities
 
 GM_df # Only G and M traits in all communities
->>>>>>> origin/VasEstay
