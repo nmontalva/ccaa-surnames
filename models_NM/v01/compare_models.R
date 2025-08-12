@@ -1,4 +1,5 @@
 compare_models <- function(var_summary) {
+  require(dplyr)
   single_aic <- var_summary$single_models$AIC
   multi_aic <- tryCatch({
     val <- var_summary$surface$final_model$aic

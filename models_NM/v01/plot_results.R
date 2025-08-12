@@ -4,13 +4,18 @@ plot_result <- function(results) {
   #require(paletteer)  # For better color scales
   require(RColorBrewer)
   plots <- list()
-  okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442","#CC79A7", "#0072B2", "#D55E00", "#999999") # discrete color palette
+
+  color_pal <- c("#F0E442","#00FF66", "#0066FF","#FF0000","#aaFF00" ) 
+  #okabe_ito <- c("#E69F00", "#56B4E9", "#CC79A7","#009E73", "#F0E442", "#0072B2", "#D55E00", "#999999") # discrete color palette
+  
   # 1. AIC Comparison Plot (always created)
+  n_models <- if (!is.null(nrow(results$single_models$AIC))) nrow(results$single_models$AIC) else length(results$single_models$AIC)
+  
   plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
     geom_col(width = 0.6, alpha = 0.8) +
     geom_text(aes(label = round(AIC, 1)), vjust = -0.5, size = 3.5) +
     #scale_fill_viridis(discrete = TRUE, option = "D", begin = 0.2, end = 0.8)+
-    scale_fill_manual(values = okabe_ito[1:nrow(results$single_models$AIC)])+
+    scale_fill_manual(values = color_pal[seq_len(n_models)])+
     labs(title = paste("Model Comparison for", results$prepped$original_var),
          subtitle = "Akaike Information Criterion (AIC)",
          y = "AIC", x = "") +
@@ -20,12 +25,12 @@ plot_result <- function(results) {
           plot.subtitle = element_text(size = 10))
   if (!is.null(results$surface$named_tree)) {
     tip_data <- results$data %>%
+      dplyr::filter(!is.na(regime)) %>% 
       left_join(results$regimes, by = "regime") %>%
       mutate(
-        label = sprintf("%s (θ=%.2f, α=%.2f)",  # Include alpha and theta
-                        regime, 
-                        theta_original,
-                        ifelse(!is.na(alpha), paste0(", α=", round(alpha, 2)), ""))
+        theta_fmt = ifelse(!is.na(theta_original), sprintf("%.2f", theta_original), "NA"),
+        alpha_fmt = ifelse(!is.na(alpha), sprintf("%.2f", alpha), "NA"),
+        label = sprintf("%s (θ=%s, α=%s)", regime, theta_fmt, alpha_fmt)
       )
     n_tips <- length(results$data$community)
     line_size <- ifelse(n_tips > 100, 0.5, 0.8)  # thicker lines
@@ -36,11 +41,11 @@ plot_result <- function(results) {
     regimes_unique <- regimes_unique[!is.na(regimes_unique)]  # Quitar NA
     n_regimes <- length(unique(results$regimes$regime))
     #regime_colors <- viridis(n_regimes, option = "D",begin = 0.1, end = 0.9)
-    regime_colors <- setNames(okabe_ito[1:n_regimes], unique(results$regimes$regime))
+    regime_colors <- setNames(color_pal[1:n_regimes], unique(results$regimes$regime))
     names(regime_colors) <- results$regimes$regime
     
     # Prepare tip labels with regime information
-    tip_data <- results$data %>% filter(!is.na(regime)) %>%
+    tip_data <- results$data %>% dplyr::filter(!is.na(regime)) %>%
       left_join(results$regimes, by = "regime")
     tip_data$theta_label <- sapply(1:nrow(tip_data), function(i) {
       r <- tip_data$regime[i]
