@@ -31,7 +31,7 @@ Da_geo <- geo_filtered # Geographic distances for all communities
 
 ## Sampled (16) communities (15?).
 Ds <- surname_matrix_muestra# Surnames distances for sampled communities
-D_geo <- surname_muestra # Geographic distances for sampled communities
+D_geo <- geo_muestra # Geographic distances for sampled communities
 
 ## Plus many genetic distances:
 
@@ -40,18 +40,18 @@ D_geo <- surname_muestra # Geographic distances for sampled communities
 # D_ch <- cs #Object cs not found
  # D_sw <- DSW #Object cs not found
  # G_st <- GST #Not found
- D_s <- Nei
+ # D_s <- Nei # Nei object not found
 # D_m <- 
- F_st <- FST
+ #F_st <- FST #FST not found
 # theta_w <- 
 # D_r <- 
 # C_p <- 
 # D_a <- 
 # X2 <- 
- R_st <- RST
+# R_st <- RST
 # phi <- 
 # D_st <- 
- delta_mu2 <- Dmu2
+# delta_mu2 <- Dmu2
 
 ##== CONSENSUS ==##
 # I don't know if this was made from a Tree or from matrices. @VasEstay

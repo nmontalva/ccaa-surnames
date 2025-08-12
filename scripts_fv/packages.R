@@ -49,6 +49,7 @@ packages <- c(
   "png",
   "readr",
   "reldist",
+  "rr2",
   "sf",
   "stargazer",
   "stringr",
