@@ -17,12 +17,6 @@
 # Tg  = genetic tree (16 tips, UPGMA on Dps)  # final choice per Methods
 # Tc  = consensus tree (15/16 tips — verify)
 
-# ??_* = Used traits (*_ori, *_logit)
-
-# Ta_ori =  all communities, original traits
-# Ta_logit = all communities, logit transformed traits
-
-
 ## === PROCEDURE === ##
 # We don't need to do it all over again.
 # We only need to add the renaming script at the end of the wrapper
@@ -32,32 +26,32 @@
 ## == MATRICES == #
 
 ## All communities:
-# Da <- # Surnames distances for all communities
-# Da_geo <- # Geographic distances for all communities
+Da <-  surname_matrix # Surnames distances for all communities
+Da_geo <- geo_filtered # Geographic distances for all communities
 
 ## Sampled (16) communities (15?).
-# Ds <- # Surnames distances for sampled communities
-# D_geo <- # Geographic distances for sampled communities
+Ds <- surname_matrix_muestra# Surnames distances for sampled communities
+D_geo <- surname_muestra # Geographic distances for sampled communities
 
 ## Plus many genetic distances:
 
-# Dg_dps <- 
-# Dg <- Dg_dps # Since this is the one we choose to use in the end
-# D_ch <- 
-# D_sw <- 
-# G_st <- 
-# D_s <- 
+ Dg_dps <- DPS
+ Dg <- Dg_dps # Since this is the one we choose to use in the end
+ D_ch <- cs
+ D_sw <- DSW
+ G_st <- GST
+ D_s <- Nei
 # D_m <- 
-# F_st <- 
+ F_st <- FST
 # theta_w <- 
 # D_r <- 
 # C_p <- 
 # D_a <- 
 # X2 <- 
-# R_st <- 
+ R_st <- RST
 # phi <- 
 # D_st <- 
-# delta_mu2 <- 
+ delta_mu2 <- Dmu2
 
 ##== CONSENSUS ==##
 # I don't know if this was made from a Tree or from matrices. @VasEstay
@@ -65,17 +59,19 @@
 ## == TREES == #
 
 ## Ta (All communities)
-# Ta_ori <- 
-# Ta_logit <-
+Ta <- y_total
 
 ## Ts (Surnames in sampled communities)
-# Ts_ori <- 
-# Ts_logit <- 
+Ts <- hy
 
 ## Tg (Genetic (Dps) in sampled communties)
-# Tg_ori <- 
-# Tg_logit <- 
+Tg <- phyDPS
 
 ## Tc (Consensus (Dps x Surnames) in sampled communities)
-# Tc_ori <- 
-# Tc_logit <- 
+Tc <- consensus_tree
+
+## == TRAITS == #
+
+result_traits # Traits in all communities
+
+GM_df # Only G and M traits in all communities

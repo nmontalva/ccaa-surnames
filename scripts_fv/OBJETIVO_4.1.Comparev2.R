@@ -147,15 +147,14 @@ set.seed(NULL)
 ################ BAKER GAMMA:COMPARACION T_s/GEO #########################
 # Encontrar p-valor
 set.seed(10000)
-T_s<-upgma(surname_matrix_muestra) # Matriz de apellidos muestra
-the_cor6 <- cor_bakers_gamma(T_s,T_s)
-the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(T_s))
+the_cor6 <- cor_bakers_gamma(hy,hy)
+the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
-dend_mixed <- as.dendrogram(T_s)
+dend_mixed <- as.dendrogram(hy)
 for(i in 1:R) {
   dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
-  cor_bakers_gamma_results[i] <- cor_bakers_gamma(as.dendrogram(T_s), dend_mixed)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(as.dendrogram(hy), dend_mixed)
 }
 plot(density(cor_bakers_gamma_results),
      main = "Baker's gamma distribution under H0",

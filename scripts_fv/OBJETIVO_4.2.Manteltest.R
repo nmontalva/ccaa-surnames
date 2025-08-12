@@ -49,33 +49,7 @@ geo_muestra2
 
 #Crar una matriz de distancia con arbol de consenso
 con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
-
-#=======
-#TODO: REVISAR.
-#Warning message:
-#  In dist.nodes(x) : the tree has no branch length: fixing them to one.
-#=======
-#REVISIÓN: No me aparece este error.
-#18/04: A mi si me aparece.
-
 con2 <-as.matrix(cophenetic.phylo(consensus_tree2)) #PhyDSW primero, s/PUCLARO
-#con3 <-as.matrix(cophenetic.phylo(consensus_tree3)) #hy primero, c/PUCLARO
-
-#=======
-#TODO: REVISAR. No existe el objeto "consensus_tree3"
-#Error in h(simpleError(msg, call)) : 
-#  error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree3' not found
-#=======
-
-#con4 <-as.matrix(cophenetic.phylo(consensus_tree4)) #PhyDSW primero, c/PUCLARO
-
-#=======
-#TODO: REVISAR. No existe el objeto "consensus_tree4"
-#Error in h(simpleError(msg, call)) : 
-#error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'consensus_tree4' not found
-#=======
-
-#REVISIÓN: Consensus 3 y 4 ya no existen en el objetivo 4.1 que los creaba porque eliminamos la idea de hacerlos con puclaro agrupado.
 
 mantel_function <- function(t1,t2) {
   #Conversir en matrix
@@ -122,20 +96,9 @@ mantel_function <- function(t1,t2) {
 
 mantel_con1 <- mantel_function(con1, geo_muestra)
 mantel_con2 <- mantel_function(con2, geo_muestra)
-#mantel_con3 <- mantel_function(con3, geo_muestra2)
-#mantel_con4 <- mantel_function(con4,geo_muestra2) 
 
 mantel_con1_ap <- mantel_function(con1, surname_matrix_muestra)
 mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
-#mantel_con3_ap <- mantel_function(con3, surname_matrix_muestra2)
-#mantel_con4_ap <- mantel_function(con4, surname_matrix_muestra2) 
-
-#mantel_con1_str <- mantel_function(con1, as.matrix(DSW))
-#mantel_con2_str <- mantel_function(con2, as.matrix(DSW))
-
-#mantel_con3_str <- mantel_function(con3, as.matrix(DSW2)) 
-#mantel_con4_str <- mantel_function(con4, as.matrix(DSW2))
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
-
