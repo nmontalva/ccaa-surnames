@@ -31,7 +31,7 @@ Da_geo <- geo_filtered # Geographic distances for all communities
 
 ## Sampled (16) communities (15?).
 Ds <- surname_matrix_muestra# Surnames distances for sampled communities
-D_geo <- surname_muestra # Geographic distances for sampled communities
+D_geo <- geo_muestra # Geographic distances for sampled communities
 
 ## Plus many genetic distances:
 
