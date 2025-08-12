@@ -1,4 +1,4 @@
-evolutionary_analysis <- function(data, variables, tree, steps = 1:5, verbose = TRUE) {
+evolutionary_analysis <- function(data, variables, tree, steps = 1:6, verbose = TRUE) {
   # Initialize results list
   results <- list()
   
@@ -43,10 +43,19 @@ evolutionary_analysis <- function(data, variables, tree, steps = 1:5, verbose = 
           var_results$single_regime
         )
       }
-      
-      # Step 5: Generate plots
-      if (5 %in% steps && !is.null(var_results$summary)) {
-        if (verbose) message("Step 5: Generating plots")
+      # Step5: Compare models
+      if (5 %in% steps && !is.null(var_results$summary) && !is.null(var_results$single_regime)) {
+        if (verbose) message ("Step 5: Comparing models")
+        var_results$comparison <- tryCatch({
+          compare_models(var_results$summary)
+        }, error = function(e){
+          warning("Model comparison failed for ", var, ": ", e$message)
+          NULL
+        })
+      }
+      # Step 6: Generate plots
+      if (6 %in% steps && !is.null(var_results$summary)) {
+        if (verbose) message("Step 6: Generating plots")
         var_results$plots <- plot_result(var_results$summary)
       }
       

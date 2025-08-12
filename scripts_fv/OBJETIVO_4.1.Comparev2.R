@@ -16,7 +16,7 @@ library(geiger)
 library(phangorn)
 library(phytools)
 library(stringr)
-
+library(geosphere)
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
 hy <- reorder(hy, "postorder")
@@ -81,7 +81,12 @@ abline(v = the_cor2, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
 the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+<<<<<<< HEAD
 ################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
+=======
+set.seed(NULL)
+################ BAKER GAMMA:COMPARACION T_a/GEO #########################
+>>>>>>> origin/VasEstay
 ### Cargar DATOS geograficos ###
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
@@ -138,6 +143,32 @@ abline(v = the_cor5, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
 sum(the_cor5 < cor_bakers_gamma_results)/ R #p-valor = 0.03
 the_cor5 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+<<<<<<< HEAD
+=======
+set.seed(NULL)
+################ BAKER GAMMA:COMPARACION T_s/GEO #########################
+# Encontrar p-valor
+set.seed(10000)
+the_cor6 <- cor_bakers_gamma(hy,hy)
+the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- as.dendrogram(hy)
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(as.dendrogram(hy), dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor6, lty = 2, col = 2)
+abline(v = the_cor7, lty = 2, col = 4)
+legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor7 #Baker's gamma correlation coeff = 0.7056561 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+>>>>>>> origin/VasEstay
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)

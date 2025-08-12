@@ -179,4 +179,3 @@ stargazer(muestred_stats,
 GM_logit <- as.data.frame(dplyr::select(result_traits,community, G_logit,M_logit))
 rownames(GM_logit) <- GM_logit$community
 GM_logit <- GM_logit[, -1]
-

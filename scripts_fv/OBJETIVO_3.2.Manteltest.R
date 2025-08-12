@@ -17,13 +17,6 @@ coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEnco
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
 
-#=======
-#TODO: REVISAR. Al igual que en el objetivo_1.2. las lineas 15,16 y 17 arrojan error por un problema de codificación de caracteres.
-# Arreglé manualmente, pero seguro que se va a revertir cuando se abra desde el equipo con el problema.
-# Vamos a tener que resolverlo, o seguirá pasando.
-## REVISION: Agregué la misma solución que en 1.2
-
-
 ##Administraci?n de datos ##
 rownames(coordenadas) <- coordenadas$community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
@@ -40,20 +33,7 @@ my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selecte
 my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 
-#=======
-#TODO: REVISAR. El paquete conflicted nos obliga a definir cuál proveedor de la función "filter estamos usando.
-# Asumí que es la de dplyr:
-# my_points_t <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
-# Hay que revisar si es correcto.
-
 geo_muestra <- distm (my_points_t, fun = distGeo )
-
-#TODO: REVISAR. Aquí aparecío el objeto "geo_muestra".
-# ¿Es ese el qie faltaba para correr O1.2?
-# De ser así, habría que incluir este código allá en vez de acá.
-# O bien, correr esto primero y O1.2. después 
-# (e inidicar en alguna parte que deben correrse en ese orden)
-
 
 rownames(geo_muestra) <- as.factor(rownames(my_points_t))
 colnames(geo_muestra) <- as.factor(rownames(my_points_t))
@@ -61,30 +41,14 @@ geo_muestra <- as.matrix(geo_muestra)
 geo_muestra
 
 # como arbol
-
 Geo_tree <- upgma(as.dist(geo_muestra),method="average")
-
 Geo_tree <- phangorn::upgma(as.dist(geo_muestra),method="average")
-
 Geo_tree <- phangorn::upgma(as.dist(geo_muestra),method="average")
-
-
-#=======
-#TODO: REVISAR. Ninguna de las librerías cargadas hasta ahora provee la función UPGMA.
-# Podría asumir que es upgma de Phangorn,  upgma de numbat, u otro.
-# Asumí phangorn:
-# library(phangorn)
-# Revisar si es correcto, y si lo es, añadir al preambulo.
-
 plot.phylo(Geo_tree)
 
-##Matriz de Geo_tree##Matriz de distancia con datos de apellidos
+##Matriz de Geo_tree#
+#Matriz de distancia con datos de apellidos
 surname_matrix_muestra
-#surname_matrix_muestra2
-
-#TODO: REVISAR. El objeto surname_matrix_muestra2 no existe.
-# ¿Tal vez se creaba en "Objetivo_1.2.Manteltest.R" que no corrió completamente?
-
 
 ###Intersecci?n entre distintas matrices
 ##Mantel function
@@ -123,4 +87,3 @@ mantel_DPS<- mantel_function(DPS,geo_muestra)
 
 ##Resultados de mantel tests con apellidos
 mantel_DPS_Ap<- mantel_function(DPS,surname_matrix_muestra)
-
