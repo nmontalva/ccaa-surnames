@@ -44,13 +44,13 @@ sapply(list(Ta=Ta, Tc=Tc), sackin_norm)
 }
 
 # Ta vs surname distances (all)
-coph_corr(Ta, D_s_all)
+coph_corr(Ta, Da)
 
 # Ts vs surname distances (subset)
-coph_corr(Ts, D_s_16)
+coph_corr(Ts, Ds)
 
 # Tg vs chosen genetic distance (subset; e.g., D_ps)
-coph_corr(Tg, D_ps)
+coph_corr(Tg, Dg_dps)
 
 # Tc: just compute the cophenetic correlation (no native “source” D); you can still report this number
 cor(as.numeric(cophenetic(Tc)[lower.tri(cophenetic(Tc))]),
@@ -63,16 +63,16 @@ mantel_quick <- function(A,B,perms=iter){
 }
 
 # All
-mantel_quick(D_s_all, D_geo_all)
+mantel_quick(Da, Da_geo)
 
 # 16‑tip subset
-mantel_quick(D_s_16, D_geo_16)
-mantel_quick(D_ps,    D_geo_16)
-mantel_quick(D_s_16,  D_ps)
+mantel_quick(Ds, D_geo)
+mantel_quick(Dg_dps,    D_geo)
+mantel_quick(Ds,  Dg_dps)
 
 # (Optional) Tc cophenetic vs Geo
 C_tc <- cophenetic(Tc)
-mantel_quick(C_tc, D_geo_16[rownames(C_tc), colnames(C_tc)])
+mantel_quick(C_tc, D_geo[rownames(C_tc), colnames(C_tc)])
 
 # Baker’s Gamma (tree ↔ tree; 16‑tip shared set only)
 # Make sure tip sets match exactly

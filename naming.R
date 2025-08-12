@@ -37,9 +37,9 @@ D_geo <- surname_muestra # Geographic distances for sampled communities
 
  Dg_dps <- DPS
  Dg <- Dg_dps # Since this is the one we choose to use in the end
- D_ch <- cs
- D_sw <- DSW
- G_st <- GST
+# D_ch <- cs #Object cs not found
+ # D_sw <- DSW #Object cs not found
+ # G_st <- GST #Not found
  D_s <- Nei
 # D_m <- 
  F_st <- FST
