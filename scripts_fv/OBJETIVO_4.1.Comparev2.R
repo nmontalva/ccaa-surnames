@@ -111,7 +111,7 @@ the_cor3 <- cor_bakers_gamma(as.dendrogram(Ta_fill), as.dendrogram(Ta_fill))
 the_cor4 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(Ta_fill))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
-dend_mixed <- Ta_fill
+dend_mixed <- as.dendrogram(Ta_fill)
 for(i in 1:R) {
   dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
   cor_bakers_gamma_results[i] <- cor_bakers_gamma(Ta_fill, dend_mixed)
