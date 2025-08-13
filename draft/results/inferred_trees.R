@@ -9,12 +9,17 @@ suppressPackageStartupMessages({
   library(dendextend)
   library(vegan)
   suppressWarnings(try(library(treestats), silent = TRUE))
+  suppressWarnings(try(library(conflicted), silent = TRUE))
 })
+
+## ---------- global settings ----------
 
 ## ---------- prefer dendextend where names clash ----------
 if (requireNamespace("conflicted", quietly = TRUE)) {
   conflicted::conflicts_prefer(dendextend::ladderize)
   conflicted::conflicts_prefer(dendextend::untangle)
+  conflicted::conflicts_prefer(dendextend::prune)
+  conflicted::conflicts_prefer(dendextend::rotate)
 }
 
 ## ---------- helpers ----------
@@ -25,8 +30,7 @@ colless_norm  <- function(tr) {
   if (requireNamespace("treestats", quietly = TRUE)) {
     treestats::colless(tr, normalization = "pda")
   } else {
-    # fallback (not normalized the same way)
-    suppressWarnings(as.numeric(colless.phylo(tr))) # from apTreeshape if available
+    suppressWarnings(as.numeric(colless.phylo(tr))) # fallback (may differ)
   }
 }
 
@@ -34,8 +38,7 @@ sackin_norm   <- function(tr) {
   if (requireNamespace("treestats", quietly = TRUE)) {
     treestats::sackin(tr, normalization = "pda")
   } else {
-    # rough fallback using ape::sackin (unnormalized)
-    NA_real_
+    NA_real_  # ape::sackin is unnormalized; better to skip than mix scales
   }
 }
 
@@ -68,30 +71,45 @@ mantel_quick <- function(A, B, perms = iter) {
        perms = perms)
 }
 
-# Baker’s gamma with a simple permutation test (shuffle labels of d2)
-bg_gamma_with_p <- function(t1, t2, perms = iter, force_ultra = FALSE, seed = 123) {
+# ---------- Baker’s gamma with permutation p (only replace THIS function) ----------
+
+bg_gamma_with_p <- function(t1, t2, perms = iter, force_ultra = FALSE, seed = 9) {
   if (force_ultra) {
     if (!is.ultrametric(t1)) t1 <- chronoMPL(t1)
     if (!is.ultrametric(t2)) t2 <- chronoMPL(t2)
   }
+  # keep common tips and ladderize
   keep <- intersect(t1$tip.label, t2$tip.label)
   t1k  <- ladderize(reorder(keep.tip(t1, keep), "postorder"))
   t2k  <- ladderize(reorder(keep.tip(t2, keep), "postorder"))
+
+  # to dendrograms
   d1 <- as.dendrogram(t1k)
   d2 <- as.dendrogram(t2k)
-  d2 <- rotate(d2, order = labels(d1))
+
+  # Align label sets and rotate d2 to d1's order (cosmetic)
+  labs <- intersect(labels(d1), labels(d2))
+  d1   <- prune(d1, setdiff(labels(d1), labs))
+  d2   <- prune(d2, setdiff(labels(d2), labs))
+  d2   <- rotate(d2, order = labels(d1))
+
+  # observed gamma
   g_obs <- cor_bakers_gamma(d1, d2)
-  
+
+  # permutation: RANDOMIZE LABELS of d2 (not just rotate order)
   set.seed(seed)
-  g_perm <- replicate(perms, {
-    d2p <- rotate(d2, order = sample(labels(d2)))
-    cor_bakers_gamma(d1, d2p)
-  })
+  g_perm <- numeric(perms)
+  base_labels <- labels(d2)
+  for (i in seq_len(perms)) {
+    d2p <- d2
+    labels(d2p) <- sample(base_labels, length(base_labels), replace = FALSE)
+    g_perm[i] <- cor_bakers_gamma(d1, d2p)
+  }
+
+  # two-sided p
   p_two <- (1 + sum(abs(g_perm) >= abs(g_obs))) / (perms + 1)
-  list(gamma = unname(g_obs), p = p_two, perms = perms, tips = length(labels(d1)))
+  list(gamma = unname(g_obs), p = p_two, perms = perms, tips = length(labs))
 }
-
-
 ## ---------- 1) BASIC TREE STATS ----------
 cat("\n# === TREE STATS ===\n")
 trees <- list(Ta = Ta, Ts = Ts, Tg = Tg, Tc = Tc)
@@ -175,9 +193,25 @@ Ts3 <- keep.tip(Ts, keep_all)
 Tg3 <- keep.tip(Tg, keep_all)
 Tc3 <- keep.tip(Tc, keep_all)
 
-bg_Ts_Tg <- bg_gamma_with_p(Ts3, Tg3, perms = iter, force_ultra = FALSE, seed = 123)
-bg_Ts_Tc <- bg_gamma_with_p(Ts3, Tc3, perms = iter, force_ultra = FALSE, seed = 123)
-bg_Tg_Tc <- bg_gamma_with_p(Tg3, Tc3, perms = iter, force_ultra = FALSE, seed = 123)
+bg_Ts_Tg <- bg_gamma_with_p(Ts3, Tg3, perms = iter, force_ultra = FALSE, seed = 9)
+bg_Ts_Tc <- bg_gamma_with_p(Ts3, Tc3, perms = iter, force_ultra = FALSE, seed = 9)
+bg_Tg_Tc <- bg_gamma_with_p(Tg3, Tc3, perms = iter, force_ultra = FALSE, seed = 9)
+
+set.seed(9)
+bg_raw  <- list(
+  Ts_Tg = bg_gamma_with_p(Ts3, Tg3, perms = iter, force_ultra = FALSE),
+  Ts_Tc = bg_gamma_with_p(Ts3, Tc3, perms = iter, force_ultra = FALSE),
+  Tg_Tc = bg_gamma_with_p(Tg3, Tc3, perms = iter, force_ultra = FALSE)
+)
+
+set.seed(9)
+bg_ultra <- list(
+  Ts_Tg = bg_gamma_with_p(Ts3, Tg3, perms = iter, force_ultra = TRUE),
+  Ts_Tc = bg_gamma_with_p(Ts3, Tc3, perms = iter, force_ultra = TRUE),
+  Tg_Tc = bg_gamma_with_p(Tg3, Tc3, perms = iter, force_ultra = TRUE)
+)
+
+print(bg_raw); print(bg_ultra)
 
 cat(sprintf("Ts vs Tg:  gamma = %.3f, p = %.4f, tips = %d, perms = %d\n",
             bg_Ts_Tg$gamma, bg_Ts_Tg$p, bg_Ts_Tg$tips, bg_Ts_Tg$perms))
