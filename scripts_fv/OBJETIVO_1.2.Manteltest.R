@@ -103,6 +103,7 @@ print(geo_muestra_outside)
 #configurar como matrices de Distancias
 mat2_filtered<-as.dist(mat2_filtered)
 mat1_filtered <- as.dist(mat1_filtered)
+#TODO Las dos lineas de arriba dan error
 surname_muestra<-as.dist(surname_muestra)
 geo_muestra <- as.dist(geo_muestra)
 #Generar mantel

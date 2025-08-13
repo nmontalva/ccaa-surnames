@@ -41,6 +41,7 @@ colnames(geo_muestra)<- as.factor(rownames(my_points_v))
 geo_muestra
 
 my_points_w <- my_points_w %>% dplyr::filter(row.names(shape.data2) %in% selected_communities2)
+#TODO la linea de arriba tampoco corre.
 coords <- sf::st_coordinates(my_points_w)# Estraer coordenadas
 geo_muestra2 <- sf::st_distance(my_points_w)# Calcular matriz de distancias
 rownames(geo_muestra2) <- as.factor(rownames(my_points_w))
@@ -114,3 +115,4 @@ mantel_con2_ap <- mantel_function(con2, surname_matrix_muestra)
 
 mantel_con1_str <- mantel_function(con1, as.matrix(DPS))
 mantel_con2_str <- mantel_function(con2, as.matrix(DPS))
+
