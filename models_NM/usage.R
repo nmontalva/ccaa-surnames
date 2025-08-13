@@ -1,9 +1,9 @@
 # Test with your data
 results <- evolutionary_analysis(
   data = GM_df,
-  variables = c("G"),
+  variables = c("G","M"),
   tree = y_total,
-  steps = 1:5,
+  steps = 1:6,
   verbose = TRUE
 )
 

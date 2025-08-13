@@ -2,12 +2,8 @@
 # SCRIPT PARA SINCRONIZAR OUTPUTS A SERVICIOS EN LA NUBE
 # ------------------------------------------------------------------------------
 
-# 1. CONFIGURACIÓN INICIAL -----------------------------------------------------
 library(fs)       # Manejo de archivos
 library(googledrive) #Googledrive
-
-# Autenticación (solo primera vez)
-#if (!drive_has_token()) drive_auth() # Autentificacion: Sigue las instrucciones en el navegador para autorizar. Es necesario sólo la primera vez
 
 # Subir un archivo individual
 #drive_upload(
@@ -67,19 +63,38 @@ upload_folder_to_drive <- function(local_path, drive_folder_id) {
 }
 
 # Uso (reemplaza con tus rutas)
-upload_folder_to_drive(
-  local_path = "outputs",  # Carpeta local a subir
-  drive_folder_id = "1w79TvFv_yfsfseyYOFFLB9LpA_byhIbX" #Esto lo guarda en la carpeta de Drive: Análisis filogenético comparado CCAA 2024/2024
-  #NM path 1Xme26NbVnfTOuxugIb_yI9aNDHF5yCwP
-)
+sync_outputs_to_drive <- function() {
+  
+  # Detectar usuario y sistema operativo
+  usuario <- Sys.info()[["user"]]     
+  so <- Sys.info()[["sysname"]]       # "Windows", "Linux", "Darwin"
+  
+  message("👤 Usuario detectado: ", usuario)
+  message("💻 Sistema operativo: ", so)
+  
+  # Configuración por usuario y SO
+  if (usuario == "fafi_pachy" && so == "Windows") {
+    local_path <- "outputs"
+    drive_folder_id <- "1w79TvFv_yfsfseyYOFFLB9LpA_byhIbX"
+  } else {
+    local_path <- "outputs"
+    drive_folder_id <- "1Xme26NbVnfTOuxugIb_yI9aNDHF5yCwP"
+  }
+  
+  # Autenticación si no hay token
+  if (!googledrive::drive_has_token()) {
+    message("🔑 Autenticando usuario ", usuario)
+    googledrive::drive_auth()
+  }
+  
+  # Ejecutar subida
+  upload_folder_to_drive(
+    local_path = local_path,
+    drive_folder_id = drive_folder_id
+  )
+}
 
-# Listar archivos en la carpeta Google Drive
-#archivos <- drive_ls(as_id(folder_id))
-#print(archivos)
+# ------------------------------------------------------------------------------
 
-# Descargar un archivo por nombre
-#drive_download(
-#  "mi_archivo_en_drive.csv",
-#  path = "ruta/local/destino.csv",
-#  overwrite = TRUE
-#)
+# Ejecución
+sync_outputs_to_drive()

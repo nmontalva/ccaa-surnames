@@ -61,9 +61,10 @@ x %>% plot(main = paste("entanglement =", round(entanglement(x), 2)),common_subt
 legend(x = 5.8, y = 7.5,legend = leyenda, cex = 0.3, pt.cex = 0.5,inset=c(0.05,0.05),text.width = 0.8,box.lty = 2)
 dev.off()
 
-################ BAKER GAMMA:COMPARACION APELLIDOS/STR #########################
+##################### BAKER GAMMA:COMPARACION Ts/STR ###########################
 # Encontrar p-valor
-the_cor <- cor_bakers_gamma(hy,hy)
+set.seed(10000)
+the_cor1 <- cor_bakers_gamma(hy,hy)
 the_cor2 <- cor_bakers_gamma(as.dendrogram(phyDPS), as.dendrogram(hy))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
@@ -76,14 +77,15 @@ plot(density(cor_bakers_gamma_results),
      main = "Baker's gamma distribution under H0",
      xlim = c(-1,1))
 abline(v = 0, lty = 2)
-abline(v = the_cor, lty = 2, col = 2)
+abline(v = the_cor1, lty = 2, col = 2)
 abline(v = the_cor2, lty = 2, col = 4)
-legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
+legend("topleft", legend = c("cor1", "cor2"), fill = c(2,1))
 sum(the_cor2 < cor_bakers_gamma_results)/ R #p-valor = 0.013
 the_cor2 #Baker's gamma correlation coeff = 0.5660764 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-################ BAKER GAMMA:COMPARACION APELLIDOS/GEO #########################
-################ BAKER GAMMA:COMPARACION T_a/GEO #########################
-## Cargar DATOS geograficos ###
+set.seed(NULL)
+
+############## BAKER GAMMA:COMPARACION Ta/GEO TOTAL########################
+### Cargar DATOS geograficos ###
 coordenadas <- read.csv("scripts_fv/Datos/coordenadas.csv", header = T, fileEncoding = "UTF-8-BOM")
 coordenadas$community <- gsub(" ", "_", coordenadas$community)
 coordenadas$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , coordenadas$community)] <- "RINCONADA_DE_PUNITAQUI"
@@ -91,6 +93,41 @@ rownames(coordenadas) <- coordenadas$community
 colnames(coordenadas)<- c("community","lon","lat","org_name")
 my_points_t <- dplyr::select(coordenadas, lon, lat)
 rownames(my_points_t) <- coordenadas$community
+common_communities <- unique(comuneros$community)
+geo_total <- distm (my_points_t, fun = distGeo )
+rownames(geo_total) <- as.factor(rownames(my_points_t))
+colnames(geo_total) <- as.factor(rownames(my_points_t))
+geo_total <- as.matrix(geo_total)
+geo_total
+surname_matrix <- as.matrix(surname_matrix)
+common_rows <- intersect(row.names(surname_matrix), row.names(geo_total))
+Ta_filtered <- surname_matrix[common_rows, common_rows]
+geo_filtered <- geo_total[common_rows, common_rows]
+Ta_fill <- upgma(Ta_filtered)
+Geo_tree <- upgma(geo_filtered)
+# Encontrar p-valor
+set.seed(10000)
+the_cor3 <- cor_bakers_gamma(as.dendrogram(Ta_fill), as.dendrogram(Ta_fill))
+the_cor4 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(Ta_fill))
+R <- 1000
+cor_bakers_gamma_results <- numeric(R)
+dend_mixed <- as.dendrogram(Ta_fill)
+for(i in 1:R) {
+  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
+  cor_bakers_gamma_results[i] <- cor_bakers_gamma(Ta_fill, dend_mixed)
+}
+plot(density(cor_bakers_gamma_results),
+     main = "Baker's gamma distribution under H0",
+     xlim = c(-1,1))
+abline(v = 0, lty = 2)
+abline(v = the_cor3, lty = 2, col = 2)
+abline(v = the_cor4, lty = 2, col = 4)
+legend("topleft", legend = c("cor3", "cor4"), fill = c(2,1))
+sum(the_cor4 < cor_bakers_gamma_results)/ R #p-valor = 0
+the_cor4 #Baker's gamma correlation coeff = 0.2430697 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+
+############# BAKER GAMMA:COMPARACION STR/GEO muestra#######################
 selected_communities <- unique(STR$pop)
 my_points_v <- my_points_t %>% dplyr::filter(row.names(my_points_t) %in% selected_communities)
 geo_muestra <- distm (my_points_v, fun = distGeo )
@@ -98,31 +135,13 @@ rownames(geo_muestra) <- as.factor(rownames(my_points_v))
 colnames(geo_muestra) <- as.factor(rownames(my_points_v))
 geo_muestra <- as.matrix(geo_muestra)
 geo_muestra
-Geo_tree <- upgma(as.dist(geo_muestra),method="average")
-Geo_tree$root.edge <- 0
-plotTree(Geo_tree)
+T_geo_muestra <- upgma(as.dist(geo_muestra),method="average")
+T_geo_muestra$root.edge <- 0
+plotTree(T_geo_muestra)
 # Encontrar p-valor
-the_cor3 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
-R <- 1000
-cor_bakers_gamma_results <- numeric(R)
-dend_mixed <- hd
-for(i in 1:R) {
-  dend_mixed <- sample.dendrogram(dend_mixed, replace = F)
-  cor_bakers_gamma_results[i] <- cor_bakers_gamma(hd, dend_mixed)
-}
-plot(density(cor_bakers_gamma_results),
-     main = "Baker's gamma distribution under H0",
-     xlim = c(-1,1))
-abline(v = 0, lty = 2)
-abline(v = the_cor, lty = 2, col = 2)
-abline(v = the_cor3, lty = 2, col = 4)
-legend("topleft", legend = c("cor", "cor3"), fill = c(2,1))
-sum(the_cor3 < cor_bakers_gamma_results)/ R #p-valor = 0.003
-the_cor3 #Baker's gamma correlation coeff = 0.705656 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
-################ BAKER GAMMA:COMPARACION STR/GEO #########################
-# Encontrar p-valor
-the_cor4 <- cor_bakers_gamma(phyDPS,phyDPS)
-the_cor5 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(phyDPS))
+set.seed(10000)
+the_cor5 <- cor_bakers_gamma(phyDPS,phyDPS)
+the_cor6 <- cor_bakers_gamma(as.dendrogram(T_geo_muestra), as.dendrogram(phyDPS))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
 dend_mixed <- as.dendrogram(phyDPS)
@@ -134,15 +153,18 @@ plot(density(cor_bakers_gamma_results),
      main = "Baker's gamma distribution under H0",
      xlim = c(-1,1))
 abline(v = 0, lty = 2)
-abline(v = the_cor4, lty = 2, col = 2)
-abline(v = the_cor5, lty = 2, col = 4)
+abline(v = the_cor5, lty = 2, col = 2)
+abline(v = the_cor6, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
-sum(the_cor5 < cor_bakers_gamma_results)/ R #p-valor = 0.03
-the_cor5 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+sum(the_cor6 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor6 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+
 ################ BAKER GAMMA:COMPARACION T_s/GEO #########################
 # Encontrar p-valor
-the_cor6 <- cor_bakers_gamma(hy,hy)
-the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(hy))
+set.seed(10000)
+the_cor7 <- cor_bakers_gamma(hy,hy)
+the_cor8 <- cor_bakers_gamma(as.dendrogram(T_geo_muestra), as.dendrogram(hy))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
 dend_mixed <- as.dendrogram(hy)
@@ -154,11 +176,13 @@ plot(density(cor_bakers_gamma_results),
      main = "Baker's gamma distribution under H0",
      xlim = c(-1,1))
 abline(v = 0, lty = 2)
-abline(v = the_cor6, lty = 2, col = 2)
-abline(v = the_cor7, lty = 2, col = 4)
+abline(v = the_cor7, lty = 2, col = 2)
+abline(v = the_cor8, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
-sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
-the_cor7 #Baker's gamma correlation coeff = 0.7056561 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+sum(the_cor8 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor8 #Baker's gamma correlation coeff = 0.7056561 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
+
 ###################### ARBOL DE CONSENSO #######################################
 # Combina los árboles en una lista de clase "multiPhylo"
 combined_trees1 <- as.multiPhylo(hy,phyDPS)
@@ -197,8 +221,9 @@ is.ultrametric(consensus_tree2)
 consensus_tree<-(consensus_tree2)
 ################ BAKER GAMMA:COMPARACION CONSENSUS/GEO #########################
 # Encontrar p-valor
-the_cor6 <- cor_bakers_gamma(consensus_tree,consensus_tree)
-the_cor7 <- cor_bakers_gamma(as.dendrogram(Geo_tree), as.dendrogram(consensus_tree))
+set.seed(10000)
+the_cor9 <- cor_bakers_gamma(consensus_tree,consensus_tree)
+the_cor10 <- cor_bakers_gamma(as.dendrogram(T_geo_muestra), as.dendrogram(consensus_tree))
 R <- 1000
 cor_bakers_gamma_results <- numeric(R)
 dend_mixed <- as.dendrogram(consensus_tree)
@@ -210,11 +235,12 @@ plot(density(cor_bakers_gamma_results),
      main = "Baker's gamma distribution under H0",
      xlim = c(-1,1))
 abline(v = 0, lty = 2)
-abline(v = the_cor6, lty = 2, col = 2)
-abline(v = the_cor7, lty = 2, col = 4)
+abline(v = the_cor9, lty = 2, col = 2)
+abline(v = the_cor10, lty = 2, col = 4)
 legend("topleft", legend = c("cor", "cor2"), fill = c(2,1))
-sum(the_cor7 < cor_bakers_gamma_results)/ R #p-valor = 0.03
-the_cor7 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+sum(the_cor10 < cor_bakers_gamma_results)/ R #p-valor = 0.03
+the_cor10 #Baker's gamma correlation coeff = 0.4466161 (Va de -1 a 1, 0 significa que NO son estadisticamente similares)
+set.seed(NULL)
 
 ###################### DENDROPLOT CONSENSO & TRAITS ############################
 ## Generar dendroplot con el ?rbol de consenso y los traits anotados
@@ -348,11 +374,6 @@ consensus_dendrogram <- function(result_dendro2, save_as=NULL,group_by_col="comm
 }
 
 consensus_dendrogram(result_dendro2, save_as = "outputs/Figures/dendrograma_consenso_DPS.png")
-# Esto da un warning que hay que mirar:
-# Warning message:
-#In max(consensus_tree$edge.length) :
-#  no non-missing arguments to max; returning -Inf
-
 
 consensus_tree<-(consensus_tree2)
 
