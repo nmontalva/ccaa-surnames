@@ -63,6 +63,7 @@ plot_result <- function(results) {
       theme(legend.position = "right",
             legend.text = element_text(size = 8),
             legend.title = element_text(size = 9),
+            axis.line.x = element_blank(),
             axis.text.x = element_blank(),
             axis.ticks.x = element_blank(),
             plot.title = element_text(size = 11)) +

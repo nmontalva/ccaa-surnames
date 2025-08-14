@@ -98,3 +98,4 @@ sync_outputs_to_drive <- function() {
 
 # Ejecución
 sync_outputs_to_drive()
+
