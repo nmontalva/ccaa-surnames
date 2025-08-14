@@ -16,7 +16,7 @@ library(phytools)
 ################################################################################
 ######################## Comunidades muestreadas ###############################
 ################################################################################
-
+consensus_tree<- read.tree("outputs/Figures/T_c.nwk")
 # Cluster
 df_tree <- as.data.frame(cophenetic.phylo(consensus_tree))
 df_tree <- na.omit(df_tree)
