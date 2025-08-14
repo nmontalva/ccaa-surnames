@@ -60,7 +60,6 @@ surname_filtered<-as.dist(surname_filtered)
 geo_filtered<-as.dist(geo_filtered)
 
 #Generar mantel
-set.seed(152)
 mantel.rtest(
   geo_filtered, # La primera de las dos matrices de disimilitud
   surname_filtered, # La segunda matriz
@@ -102,9 +101,11 @@ print("Filas/columnas que quedaron fuera de mat2:")
 print(geo_muestra_outside)
 
 #configurar como matrices de Distancias
+mat2_filtered<-as.dist(mat2_filtered)
+mat1_filtered <- as.dist(mat1_filtered)
+#TODO Las dos lineas de arriba dan error
 surname_muestra<-as.dist(surname_muestra)
 geo_muestra <- as.dist(geo_muestra)
-set.seed(152)
 #Generar mantel
 mantel.rtest(
   geo_muestra, # La primera de las dos matrices de disimilitud

@@ -71,7 +71,6 @@ mantel_function <- function(t1,t2) {
   #Distancias
   mat2_filtered<-as.dist(mat2_filtered)
   mat1_filtered <- as.dist(mat1_filtered)
-  set.seed(152)
   #Generar mantel
   mantel.test <- mantel.rtest(
     mat2_filtered, # La primera de las dos matrices de disimilitud

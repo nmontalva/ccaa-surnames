@@ -119,6 +119,39 @@ png("outputs/Figures/T_model_G_M_combined.png", width = 4000, height = 2000, res
 print(p_combined)
 dev.off()
 
+library(cowplot)
+library(ggplot2)
+
+# Modificar los plots para que la leyenda esté en el borde
+T_model_G2 <- T_model_G + theme(legend.position = "left",
+                                plot.title = element_text(hjust = 0.5) )+
+  ggtitle("G")
+T_model_M2 <- T_model_M +
+  scale_x_reverse() + 
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5) )+
+  ggtitle("M")
+
+# Combinar con cowplot
+p_combined <- plot_grid(
+  T_model_G2,
+  T_model_M2,
+  ncol = 2,
+  align = "h",
+  rel_widths = c(1, 1) # igual tamaño
+)
+final_plot <- plot_grid(
+  ggdraw() + draw_label("Phylogenetic regimes comparison", fontface = 'bold', size = 18),
+  p_combined,
+  ncol = 1,
+  rel_heights = c(0.1, 1)  # altura del título y del contenido
+)
+print(final_plot)
+# Guardar como PNG
+png("outputs/Figures/T_model_G_M_combined.png", width = 4000, height = 2000, res = 300)
+print(p_combined)
+dev.off()
+
 ## Regimes
 # Summaries already have thetha and logit(theta).
 # I think we may also need alpha and other numbers. Maybe checkout what papers normally report.

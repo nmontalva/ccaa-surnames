@@ -18,6 +18,8 @@ packages <- c(
   "ade4",
   "adegenet",
   "ape",
+  "bayesplot",
+  "brms",
   "caper",
   "car",
   "cluster",
@@ -49,12 +51,14 @@ packages <- c(
   "png",
   "readr",
   "reldist",
+  "rr2",
   "sf",
   "stargazer",
   "stringr",
   "surface",
   "tidyr",
   "tidyverse",
+  "treestats",
   "vegan",
   "wesanderson"
 )

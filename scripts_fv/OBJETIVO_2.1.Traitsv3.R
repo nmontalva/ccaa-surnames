@@ -17,6 +17,9 @@ library(phytools)
 library(REAT)
 library(stargazer)
 
+conflicted::conflicts_prefer(dplyr::select)
+conflicted::conflicts_prefer(dplyr::filter)
+
 ##Calcular traits
 # Definir la funcion gini
 gini <- function (x, weights = rep(1, length = length(x))) {
