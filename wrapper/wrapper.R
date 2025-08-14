@@ -14,10 +14,11 @@ rm(list = ls())
 # ¿Podemos solucionar la incompatibilidad entre O2.2. y O.5.?
 
 ## Agregué esto para tener consistencia en resultados aleatorios
-set.seed(9)
+seed <- 9
+set.seed(seed)
 
 ## Agregué esto para poder setear el número de repeticiones de las pruebas de mantel y correr el script más rápido
-iter <- 1000 # set to 10000 for actual analyses
+iter <- 1000 # set to 9999 for actual analyses
 
 scripts <- c(
   "scripts_fv/packages.R",
@@ -38,8 +39,9 @@ scripts <- c(
   "scripts_fv/OBJETIVO_5.6.Clades_vs_Ancv2.R",
   "scripts_fv/OBJETIVO_5.7.HIP_1.R",
   "scripts_fv/OBJETIVO_5.8.I_de_Moran.R",
- # "scripts_fv/OBJETIVO_5.9.Random_trees.R", #Lo comenté por que se demora mucho
-  "naming.R,"
+  #"scripts_fv/OBJETIVO_5.9.Random_trees.R", #Lo comenté por que se demora mucho
+  "naming.R",
+  #"draft/results/inferred_trees.R",
   "Save_outputs.R"
 )
 
