@@ -3,7 +3,7 @@
 
 #Instalación de paquetes
 library(dplyr)
-DPSlibrary(ade4)
+library(ade4)
 library(tidyr)
 
 

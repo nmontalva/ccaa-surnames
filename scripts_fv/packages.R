@@ -18,6 +18,8 @@ packages <- c(
   "ade4",
   "adegenet",
   "ape",
+  "bayesplot",
+  "brms",
   "caper",
   "car",
   "cluster",
