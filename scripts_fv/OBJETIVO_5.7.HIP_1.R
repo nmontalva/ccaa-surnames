@@ -14,7 +14,8 @@
 ###non-partible multigeniture, R and S should be both low at the following internal nodes of the tree.
 
 ### Estados basales sampled communities###
-
+load("outputs/ancestral_states_sampled.RData")
+load("outputs/ancestral_states_all.RData")
 crear_grafico <- function(vc,v1, label,filename) {
   png(filename,width = 2800, height = 1600, res = 300)
   # Ajustar margen y tama?o de texto para evitar colapso

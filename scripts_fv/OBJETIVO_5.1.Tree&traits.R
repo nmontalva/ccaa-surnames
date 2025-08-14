@@ -181,6 +181,8 @@ gvc <- estimacion_estados_ancestrales(consensus_tree, gv1, "G")
 avc <- estimacion_estados_ancestrales(consensus_tree, av1, "A")
 mvc <- estimacion_estados_ancestrales(consensus_tree, mv1, "M")
 
+save(svcp, gvcp, avcp, mvcp, file = "outputs/Figuras/ancestral_states_sampled.RData")
+
 estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   sorted_trait_vector <- trait_vector[sort(tree$tip.label)]
   anc <- fastAnc(tree, sorted_trait_vector, vars = TRUE, CI = TRUE)
@@ -203,11 +205,12 @@ png("outputs/Figures/M_total.png")
 mvtp <- estimacion_estados_ancestrales(y_total, mv2p, "M")
 dev.off()
 
-
 svt <- estimacion_estados_ancestrales(y_total, sv2, "S")
 gvt <- estimacion_estados_ancestrales(y_total, gv2, "G")
 avt <- estimacion_estados_ancestrales(y_total, av2, "A")
 mvt <- estimacion_estados_ancestrales(y_total, mv2, "M")
+
+save(svtp, gvtp, avtp, mvtp, file = "outputs/Figuras/ancestral_states_all.RData")
 
 ###Comparaciones
 ##Comunidades muestreadas

@@ -377,3 +377,4 @@ consensus_dendrogram(result_dendro2, save_as = "outputs/Figures/dendrograma_cons
 
 consensus_tree<-(consensus_tree2)
 
+write.tree(consensus_tree, file = "outputs/Figures/T_c.nwk")
