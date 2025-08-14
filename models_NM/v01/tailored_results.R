@@ -1,4 +1,5 @@
 # Selected results
+load("models_NM/sandbox/model_resullts.RData")
 
 ## Idea:
 # 1. After running evolutionary analysis.R
@@ -25,35 +26,77 @@ Publish::publish(results$M$comparison)
 # Eliminate the numeric scale at the bottom 
 # For some reason, the smaller display sinked to RStudio visual device looks better thant the sinked output. No idea why.
 # View plots for a specific variable
-T_model_G <- results$G$plots$tree_plot
-T_model_G <- T_model_G +
-  scale_color_manual(values = c("#aaFF00", "#0066FF", "#CC00FF"), na.translate = FALSE)+
-  ggtitle("Phylogenetic regimes for G")
-png("outputs/Figures/T_model_g.png",width = 2200, height = 1900, res = 300)
+plot_regimes <- function(result_obj, regime_colors, title_text, file_path) {
+  library(dplyr)
+  library(ggplot2)
+  
+  # Extraer datos únicos por régimen
+  regime_info <- result_obj$plots$tree_plot$data %>%
+    filter(!is.na(regime)) %>%
+    distinct(regime, theta_original, alpha) %>%
+    mutate(label_txt = sprintf("%s (θ=%.2f)", regime, theta_original))  # solo θ
+  
+  # Crear vector de etiquetas para la leyenda
+  regime_labels <- setNames(regime_info$label_txt, regime_info$regime)
+  
+  # Asignar nombres a colores
+  names(regime_colors) <- regime_info$regime
+  
+  # α único
+  alpha_val <- unique(na.omit(regime_info$alpha))
+  alpha_text <- sprintf("\u03B1 = %.2f", alpha_val)
+  
+  # Modificar el plot
+  plot_out <- result_obj$plots$tree_plot +
+    scale_color_manual(
+      values = regime_colors,
+      labels = regime_labels,
+      na.translate = FALSE
+    ) +
+    ggtitle(title_text, subtitle = alpha_text) +
+    theme(
+      legend.position = "right",
+      legend.justification = "top"
+    )
+  
+  # Guardar
+  png(file_path, width = 2200, height = 1900, res = 300)
+  print(plot_out)
+  dev.off()
+  
+  return(plot_out)
+}
+T_model_G <- plot_regimes(
+  result_obj = results$G,
+  regime_colors = c("#aaFF00", "#0066FF", "#CC00FF"),
+  title_text = "Phylogenetic regimes for G",
+  file_path = "outputs/Figures/T_model_g.png"
+)
+
+T_model_M <- plot_regimes(
+  result_obj = results$M,
+  regime_colors = c("#aaFF00", "#0066FF", "#CC00FF", "#FF0000"),
+  title_text = "Phylogenetic regimes for M",
+  file_path = "outputs/Figures/T_model_m.png"
+)
+
 print(T_model_G)
-dev.off()
-#print(results$G$plots$tree_plot)+
-#scale_color_brewer(palette = "Spectral") #Posibilidad 2
-
-T_model_M <- results$M$plots$tree_plot
-T_model_M <- T_model_M +
-  scale_color_manual(values = c("#aaFF00", "#0066FF", "#CC00FF","#FF0000"), na.translate = FALSE)+
-  ggtitle("Phylogenetic regimes for M")
-png("outputs/Figures/T_model_m.png",width = 2200, height = 1900, res = 300)
 print(T_model_M)
-dev.off()
 
+# Gráfico combinado
 library(cowplot)
 library(ggplot2)
 
 # Modificar los plots para que la leyenda esté en el borde
 T_model_G2 <- T_model_G + theme(legend.position = "left",
-                                plot.title = element_text(hjust = 0.5) )+
+                                plot.title = element_text(hjust = 0.5),
+                                plot.subtitle = element_text(hjust = 0.5) )+
   ggtitle("G")
 T_model_M2 <- T_model_M +
   scale_x_reverse() + 
   theme(legend.position = "right",
-        plot.title = element_text(hjust = 0.5) )+
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))+
   ggtitle("M")
 
 # Combinar con cowplot
@@ -94,6 +137,9 @@ reg_summary_G <-as.data.frame(table(results$G$summary$data$regime))
 colnames(reg_summary_G) <- c("regime", "count")
 reg_summary_G$percent <- round(100 * reg_summary_G$count / sum(reg_summary_G$count), 1)
 print(reg_summary_G)
+plot(results$G$plots$regime_dist)
+plot(results$G$plots$aic_plot)
+
 
 print(results$M$summary$regimes)
 print.table(results$M$surface$final_model$n_regimes)
@@ -102,6 +148,8 @@ reg_summary_M <-as.data.frame(table(results$M$summary$data$regime))
 colnames(reg_summary_M) <- c("regime", "count")
 reg_summary_M$percent <- round(100 * reg_summary_M$count / sum(reg_summary_M$count), 1)
 print(reg_summary_M)
+
+
 
 # What's next?
 # I need to list actual things to get and sort them.

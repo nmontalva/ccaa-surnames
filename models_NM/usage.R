@@ -6,6 +6,7 @@ results <- evolutionary_analysis(
   steps = 1:6,
   verbose = TRUE
 )
+save(results, file="models_NM/sandbox/model_resullts.RData")
 
 # 2. Check results
 print(results$G$plots$tree_plot)
