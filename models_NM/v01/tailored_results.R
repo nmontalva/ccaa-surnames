@@ -132,23 +132,70 @@ print.table(results$G$surface$final_model$n_regimes)
 #9              3              6              8              2 
 #kprime_nonconv 
 #1
-ggplot_build(results$G$plots$regime_dist)$data[[1]]
-reg_summary_G <-as.data.frame(table(results$G$summary$data$regime))
-colnames(reg_summary_G) <- c("regime", "count")
-reg_summary_G$percent <- round(100 * reg_summary_G$count / sum(reg_summary_G$count), 1)
-print(reg_summary_G)
-plot(results$G$plots$regime_dist)
-plot(results$G$plots$aic_plot)
+library(ggplot2)
 
+# Función para generar tablas compatibles con Markdown de Notion
+library(ggplot2)
 
-print(results$M$summary$regimes)
-print.table(results$M$surface$final_model$n_regimes)
-gplot_build(results$M$plots$regime_dist)$data[[1]]
-reg_summary_M <-as.data.frame(table(results$M$summary$data$regime))
-colnames(reg_summary_M) <- c("regime", "count")
-reg_summary_M$percent <- round(100 * reg_summary_M$count / sum(reg_summary_M$count), 1)
-print(reg_summary_M)
+process_results_markdown <- function(results, type) {
+  res <- results[[type]]
+  
+  # 1. Datos del plot
+  plot_data <- ggplot_build(res$plots$regime_dist)$data[[1]]
+  
+  # 2. Resumen de regimes
+  reg_summary <- as.data.frame(table(res$summary$data$regime))
+  colnames(reg_summary) <- c("regime", "count")
+  reg_summary$percent <- round(100 * reg_summary$count / sum(reg_summary$count), 1)
+  
+  # 3. Detalles de regimes
+  if (!is.null(res$summary$regimes)) {
+    reg_details <- res$summary$regimes
+    reg_table <- merge(reg_summary, reg_details, by = "regime", all = TRUE)
+  } else {
+    reg_table <- reg_summary
+  }
+  
+  # 4. Número de regimes en el modelo final
+  final_model <- res$surface$final_model$n_regimes
+  final_model_df <- data.frame(
+    parameter = names(final_model),
+    value = unlist(final_model, use.names = FALSE)
+  )
+  
+  # Función para convertir a Markdown
+  to_markdown <- function(df) {
+    header <- paste("|", paste(colnames(df), collapse=" | "), "|")
+    separator <- paste("|", paste(rep("---", ncol(df)), collapse=" | "), "|")
+    rows <- apply(df, 1, function(x) paste("|", paste(x, collapse=" | "), "|"))
+    md_table <- paste(c(header, separator, rows), collapse="\n")
+    return(md_table)
+  }
+  
+  # Convertir ambas tablas a Markdown
+  reg_table_md <- to_markdown(reg_table)
+  final_model_md <- to_markdown(final_model_df)
+  
+  # 5. Imprimir tablas Markdown
+  cat("\n**Tabla de resumen y detalles de regimes para", type, "**\n")
+  cat(reg_table_md, "\n\n")
+  
+  cat("**Tabla de número de regimes en el modelo final**\n")
+  cat(final_model_md, "\n\n")
+  
+  # 6. Graficar
+  print(res$plots$regime_dist)
+  if (!is.null(res$plots$aic_plot)) {
+    print(res$plots$aic_plot)
+  }
+  
+  # 7. Retornar información
+  return(list(plot_data = plot_data, reg_table_md = reg_table_md, final_model_md = final_model_md))
+}
 
+# Uso
+res_G_md <- process_results_markdown(results, "G")
+res_M_md <- process_results_markdown(results, "M")
 
 
 # What's next?
