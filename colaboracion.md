@@ -65,7 +65,7 @@ git merge --abort
 
 ### Decidir (web)
 - Si ok → *Rebase and merge (o Squash and merge)* hacia `master`.
-- Si choca → pedir a Francisca rebasear su rama contra `master`.
+- Si choca → pedir al otro rebasear su rama contra `master`.
 
 ### Tras el merge del PR
 
