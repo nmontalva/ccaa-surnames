@@ -1,3 +1,10 @@
+source("models_NM/v01/prep_traits.R")
+source("models_NM/v01/fit_single_regime.R")
+source("models_NM/v01/run_surface.R")
+source("models_NM/v01/summarise_results.R")
+source("models_NM/v01/compare_models.R")
+source("models_NM/v01/plot_results.R")
+source("models_NM/v01/evolutionary_analysis.R")
 # Run analysis (now with large tree)
 results <- evolutionary_analysis(
   data = GM_df,
