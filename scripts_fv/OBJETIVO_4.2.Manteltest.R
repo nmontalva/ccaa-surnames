@@ -48,7 +48,7 @@ rownames(geo_muestra2) <- as.factor(rownames(my_points_w))
 colnames(geo_muestra2)<- as.factor(rownames(my_points_w))
 geo_muestra2
 
-#Crar una matriz de distancia con arbol de consenso
+#Crear una matriz de distancia con arbol de consenso
 con1 <-as.matrix(cophenetic.phylo(consensus_tree1)) #hy primero, s/PUCLARO
 # La línea anterior también da un Warning que hay que revisar:
 # Warning message:
