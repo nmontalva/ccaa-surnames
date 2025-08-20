@@ -245,18 +245,19 @@ dev.off()
 
 ##Comunidades totales
 plot_comparison2 <- function(obj1, obj2, xlabel) {
-  par(pin=c(10, 10))
-  par(mai = c(1.5, 4, 1.5, 4))
+  par(pin=c(15, 15))
+  par(mai = c(2, 10, 2, 10))
   layout(matrix(1:3, 1, 3), widths=c(0.48, 0.01, 0.48)) 
-  plot(obj1, lwd=4, ftype="off", outline=FALSE,legend=0.4*max(nodeHeights(y_total)),fsize=c(0.3,1.2),leg.txt=xlabel[1])
+  plot(obj1, lwd=6, ftype="off", outline=FALSE,legend=0.5*max(nodeHeights(y_total)),fsize=c(3,1.7),leg.txt=xlabel[1])
   plot.new()
   plot.window(xlim=c(1,2), ylim=get("last_plot.phylo", envir=.PlotPhyloEnv)$y.lim)
-  plot(obj2, lwd=4,outline=FALSE, direction="leftwards", legend=0.4*max(nodeHeights(y_total)),ftype="off",fsize=c(0.3,1.2),leg.txt=xlabel[2])
+  plot(obj2, lwd=6,outline=FALSE, direction="leftwards", legend=0.5*max(nodeHeights(y_total)),
+       ftype="off",fsize=c(3,1.7),leg.txt=xlabel[2])
 }
 
 # Comparaciones
 dev.off()
-png("outputs/Figures/S_G_total.png",width = 2800, height = 2800, res = 300)
+png("outputs/Figures/S_G_total.png",width = 3500, height = 3500, res = 300)
 plot_comparison2(svtp$obj, gvtp$obj, c("S", "G"))
 dev.off()
 png("outputs/Figures/S_A_total.png",width = 2800, height = 2800, res = 300)

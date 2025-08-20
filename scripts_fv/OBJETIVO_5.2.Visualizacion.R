@@ -119,6 +119,43 @@ ggpairs(data1,
         upper = list(continuous =wrap(annotate_r_squared))
 )
 dev.off()
+#Gráfico 3
+image_paths1 <- c(
+  "outputs/Figures/S_A_muestra.png",
+  "outputs/Figures/S_G_muestra.png",
+  "outputs/Figures/A_G_muestra.png",
+  "outputs/Figures/S_M_muestra.png",
+  "outputs/Figures/A_M_muestra.png",
+  "outputs/Figures/G_M_muestra.png")
+
+plot_with_image <- function(image_path) {
+  # Cargar la imagen usando cowplot
+  image <- cowplot::ggdraw() + cowplot::draw_image(image_path, scale = 1)
+  return(image)
+}
+image_index <- 1
+
+# Definir la funci?n personalizada para ggally que utilice la imagen correspondiente
+custom_image_plot <- function(data1, mapping) {
+  image_path <- image_paths1[image_index]
+  p <- plot_with_image(image_path)
+  image_index <<- image_index + 1
+  ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
+}
+png("outputs/Figures/Scatterplot_muestra_3.png",width = 3000, height = 3000, res = 300)
+# Ajustar margen y tama?o de texto para evitar colapso
+par(mar = c(1, 1, 0.5, 0.5) + 0.1)
+ggpairs(data1,
+        columnLabels = c("S","A","G","M"), 
+        lower= list(continuous = custom_image_plot, image_path = image_paths1),
+        upper = list(continuous =function(data1, mapping, ...) {
+          ggplot(data = data1, mapping = mapping) +
+            geom_point() +
+            geom_smooth(method = "lm", color = "red", fill = "#69b3a2", se = TRUE)
+        })
+)
+dev.off()
+
 # Extraer valores sin grafico
 extract_r_values <- function(data, mapping) {
   x <- eval_data_col(data, mapping$x)
@@ -252,6 +289,44 @@ ggpairs(data,
         }),
         upper = list(continuous =wrap(annotate_r_squared))
         )
+dev.off()
+# Gráfico 3
+image_paths <- c(
+  "outputs/Figures/S_A_total.png",
+  "outputs/Figures/S_G_total.png",
+  "outputs/Figures/A_G_total.png",
+  "outputs/Figures/S_M_total.png",
+  "outputs/Figures/A_M_total.png",
+  "outputs/Figures/G_M_total.png"
+)
+
+plot_with_image <- function(image_path) {
+  # Cargar la imagen usando cowplot
+  image <- cowplot::ggdraw() + cowplot::draw_image(image_path, scale = 1)
+  return(image)
+}
+image_index <- 1
+
+# Definir la funci?n personalizada para ggally que utilice la imagen correspondiente
+custom_image_plot <- function(data, mapping) {
+  image_path <- image_paths[image_index]
+  p <- plot_with_image(image_path)
+  image_index <<- image_index + 1
+  ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
+}
+
+png("outputs/Figures/Scatterplot_total_3.png",width = 3000, height = 3000, res = 300)
+# Ajustar margen y tama?o de texto para evitar colapso
+par(mar = c(1, 1, 0.5, 0.5) + 0.1)
+
+ggpairs(data,
+        columnLabels = c("S", "A","G","M"), 
+        lower= list(continuous = custom_image_plot, image_path = image_paths),
+        upper = list(continuous =function(data, mapping, ...) {
+          ggplot(data = data, mapping = mapping) +
+            geom_point() +
+            geom_smooth(method = "lm", color = "red", fill = "#69b3a2", se = TRUE)
+        }))
 dev.off()
 
 #Tabla 

@@ -62,45 +62,79 @@ crear_grafico2(mvtp, mv2p, "M", "outputs/Figures/M_ancestral_tree_total.pdf")
 ## Hombre,una sola persona, con un solo derecho, un apellido.
 
 ##COMUNIDADES MUESTREADAS (consensus_tree)
-incorporacion_fosil <- function(fosil,valor,or_tree,label,filename, valor_raiz = 0)  {
-  #incorporar fosil
-  pm<-setNames(c(1000,rep(fosil,or_tree$Nnode)),
-               c("sig2",1:or_tree$Nnode+length(or_tree$tip.label)))
-  #incorporacion en la raiz
-  nn<-as.character((length(or_tree$tip.label)+1))
-  pm[nn]<- valor_raiz
-  # Varianza previa
+incorporacion_fosil <- function(fosil, valor, or_tree, label, filename, valor_raiz = 0) {
+  # Ajustar ramas de longitud 0
+  or_tree$edge.length[or_tree$edge.length == 0] <- 1e-8
+  
+  # Preparar priors
+  pm <- setNames(c(1000, rep(fosil, or_tree$Nnode)),
+                 c("sig2", 1:or_tree$Nnode + length(or_tree$tip.label)))
+  nn <- as.character(length(or_tree$tip.label) + 1)  # nodo raíz
+  pm[nn] <- valor_raiz
+  
   pv <- setNames(c(1000^2, rep(1000, length(pm) - 1)), names(pm))
-  pv[as.character(nn)] <- 1e-100
+  pv[nn] <- 1e-100
+  
   # Ejecutar MCMC
-  mcmc <- anc.Bayes(or_tree, valor, ngen = 100000,
-                    control = list(pr.mean = pm, pr.var = pv,
-                                   a = pm[nn],
-                                   y = pm[as.character(2:or_tree$Nnode + length(or_tree$tip.label))]))
+  mcmc <- anc.Bayes(
+    or_tree, valor, ngen = 100000,
+    control = list(
+      pr.mean = pm,
+      pr.var = pv,
+      a = pm[nn],
+      y = pm[as.character(2:or_tree$Nnode + length(or_tree$tip.label))]
+    )
+  )
+  
   mcmc_tree <- mcmc$tree
-  # Obtener valores ancestrales estimados
+  
+  # Extraer medias posteriores
   w <- as.data.frame(mcmc$mcmc)
   exclude_cols <- c("gen", "sig2", "logLik")
-  existing_cols <- intersect(exclude_cols, colnames(w))
-  w <- colMeans(w[, !(colnames(w) %in% existing_cols)])
-  # Agregar valor tip.labels
-  trait_name <- paste0(label, "_logit2")
-  tip.community <- paste0 (mcmc_tree$tip.label)
-  name <- get(trait_name)[tip.community,]
+  w <- colMeans(w[, !(colnames(w) %in% intersect(exclude_cols, colnames(w)))])
   
-  # Guardar el grafico como una imagen PNG
-
-  png(filename,width = 2600, height = 1600, res = 200)
-  # Ajustar la separacion entre nodos y otros parametros
+  # Valores de las puntas
+  tip_trait <- setNames(valor[mcmc_tree$tip.label], mcmc_tree$tip.label)
+  
+  # Nodo raíz
+  nt <- length(mcmc_tree$tip.label)
+  w_nodes <- w[as.character((nt + 1):(nt + mcmc_tree$Nnode))]
+  w_nodes[as.character(nt + 1)] <- valor_raiz  # fijar raíz
+  
+  # Crear contMap sin plot
+  obj <- contMap(mcmc_tree, tip_trait, plot = FALSE)
+  obj$anc <- w_nodes
+  obj$lims <- range(c(tip_trait, w_nodes, valor_raiz), na.rm = TRUE)
+  obj <- setMap(obj, viridisLite::viridis(n = 30))
+  
+  # Guardar PNG
+  png(filename, width = 2600, height = 1600, res = 200)
   par(mar = c(1, 1, 4, 1) + 0.1)
-  sorted_trait_vector <- valor[sort(or_tree$tip.label)]
-  obj <- contMap(mcmc_tree, sorted_trait_vector, plot = TRUE)
-  obj <- setMap(obj, viridisLite::viridis(n=30))
-  plot(obj,lwd=10, type = "phylogram",outline=FALSE,offset = 3.2, legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label, no.margin = F)
-  title(main = paste(label, "ancestral tree"), line = 2)
-  nodelabels(text = round(w, 4), cex = 1, bg = "white")
-  tip_values <- valor[or_tree$tip.label] 
-  tiplabels(text = round(tip_values, 4), cex = 1, bg = "white", offset = 0.02)
+  plot(obj, lwd = 10, type = "phylogram", outline = FALSE, offset = 3.2,
+       legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label,
+       no.margin = FALSE)
+  
+  # Dibujar explícitamente la rama que parte de la raíz con color exacto
+  # Paleta viridis
+  pal <- viridisLite::viridis(n = 100)
+  # Normalizar valor de raíz al rango
+  root_norm <- (valor_raiz - min(obj$lims)) / (max(obj$lims) - min(obj$lims))
+  root_color <- pal[ceiling(root_norm * 99) + 1]
+  root_edge <- which(obj$tree$edge[,1] == nt + 1)[1]
+  #root_color <- obj$cols[root_edge]
+  edge_coords <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+  segments(
+    x0 = edge_coords$xx[obj$tree$edge[root_edge,1]],
+    y0 = edge_coords$yy[obj$tree$edge[root_edge,1]],
+    x1 = edge_coords$xx[obj$tree$edge[root_edge,2]],
+    y1 = edge_coords$yy[obj$tree$edge[root_edge,2]],
+    col = root_color, lwd = 10
+  )
+  
+  # Etiquetas de nodos y puntas
+  nodelabels(text = round(w_nodes, 4), cex = 1, bg = "white")
+  tiplabels(text = round(tip_trait, 4), cex = 1, bg = "white", offset = 0.02)
+  title(main = paste(label, "fossil ancestral tree. Root =", valor_raiz), line = 2)
   dev.off()
 }
 consensus_tree$edge.length <- consensus_tree$edge.length + 1e-8 # Se le agrega una distancia mínima
@@ -110,51 +144,90 @@ incorporacion_fosil(0,gv1p,consensus_tree, "G", "outputs/Figures/G_fosil_muestra
 incorporacion_fosil(0,mv1p,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
 
 ##COMUNIDADES TOTALES (y_total)
-incorporacion_fosil2 <- function(fosil, valor, tree, label, filename) {
+incorporacion_fosil2 <- function(fosil, valor, tree, label, filename, valor_raiz = 0) {
   # Verificar y corregir ramas de longitud 0
   tree$edge.length[tree$edge.length == 0] <- 1e-6
   
   # Preparar priors
   pm <- setNames(c(1000, rep(fosil, tree$Nnode)),
                  c("sig2", 1:tree$Nnode + length(tree$tip.label)))
-  nn <- as.character((length(tree$tip.label) + 1))
-  pm[nn] <- 0
-  pv <- setNames(c(1000^2, rep(1000, length(pm) - 1)), names(pm))
-  pv[as.character(nn)] <- 1e-100
   
-  # Ejecutar MCMC
-  mcmc <- anc.Bayes(tree, valor, ngen = 100000,
-                    control = list(pr.mean = pm, pr.var = pv,
-                                   a = pm[nn],
-                                   y = pm[as.character(2:tree$Nnode + length(tree$tip.label))]))
+  # Nodo de la raíz
+  nn <- as.character(length(tree$tip.label) + 1)
+  pm[nn] <- valor_raiz
+  
+  # Varianzas previas (muy baja para fijar la raíz)
+  pv <- setNames(c(1000^2, rep(1000, length(pm) - 1)), names(pm))
+  pv[nn] <- 1e-100
+  
+  # Ejecutar MCMC para reconstrucción ancestral
+  mcmc <- anc.Bayes(
+    tree, valor, ngen = 100000,
+    control = list(
+      pr.mean = pm,
+      pr.var = pv,
+      a = pm[nn],
+      y = pm[as.character(2:tree$Nnode + length(tree$tip.label))]
+    )
+  )
+  
   mcmc_tree <- mcmc$tree
   
-  # Obtener valores ancestrales
+  # Extraer medias posteriores de estados ancestrales
   w <- as.data.frame(mcmc$mcmc)
   exclude_cols <- c("gen", "sig2", "logLik")
   existing_cols <- intersect(exclude_cols, colnames(w))
   w <- colMeans(w[, !(colnames(w) %in% existing_cols)])
   
-  # Obtener valores para tips
-  trait_name <- paste0(label, "_logit2")
-  tip.community <- paste0(mcmc_tree$tip.label)
-  name <- get(trait_name)[tip.community, ]
+  # Vector nombrado de rasgos para tips
+  tip_trait <- setNames(valor[mcmc_tree$tip.label], mcmc_tree$tip.label)
   
-  # Crear gráfico con gradiente de color
-  pdf(filename, width = 200, height = 250)
-  par(mar = c(4, 4, 2, 2) + 0.1)
+  # Identificadores de nodos internos
+  nt <- length(mcmc_tree$tip.label)
+  nnodes <- mcmc_tree$Nnode
+  node_ids <- as.character((nt + 1):(nt + nnodes))
   
-  # Mapear valores sobre tips
-  sorted_trait_vector <- valor[sort(tree$tip.label)]
-  obj <- contMap(mcmc_tree, sorted_trait_vector, plot = FALSE)
-  obj <- setMap(obj, viridisLite::viridis(n=30))
-  plot(obj, type = "phylogram", offset = 3, legend = 0.7 * max(nodeHeights(obj$tree)), 
-       ftype = "reg", leg.txt = label, no.margin = FALSE)
+  # Filtrar valores ancestrales solo para nodos internos
+  w_nodes <- w[node_ids]
   
-  title(main = paste(label, "fossil ancestral tree. Root =", fosil), line = 2)
-  nodelabels(text = round(w, 4), cex = 5, bg = "lightblue")
-  tip_values <- valor[tree$tip.label]
-  tiplabels(text = round(tip_values, 4), cex = 5, bg = "lightpink", offset = 0.02)
+  # Fijar explícitamente el valor de la raíz
+  w_nodes[as.character(nt + 1)] <- valor_raiz
+  
+  # Crear contMap SIN plotear
+  obj <- contMap(mcmc_tree, tip_trait, plot = FALSE)
+  
+  # Sobrescribir valores ancestrales por los estimados de MCMC
+  obj$anc <- w_nodes
+  
+  # Ajustar límites del gradiente para abarcar puntas + nodos
+  obj$lims <- range(c(tip_trait, w_nodes), na.rm = TRUE)
+  
+  # Elegir paleta de colores
+  obj <- setMap(obj, viridisLite::viridis(n = 30))
+  
+  # Guardar en PDF
+  pdf(filename, width = 12, height = 10)
+  par(mar = c(4, 4, 4, 4) + 0.1)
+  
+  # Graficar el árbol recoloreado
+  plot(
+    obj,
+    type = "phylogram",
+    lwd = 6,
+    offset = 3,
+    legend = 0.7 * max(nodeHeights(obj$tree)),
+    ftype = "reg",
+    leg.txt = label,
+    no.margin = FALSE
+  )
+  
+  # Título del gráfico
+  title(main = paste(label, "fossil ancestral tree. Root =", valor_raiz), line = 2)
+  
+  # Etiquetas para nodos y tips
+  nodelabels(text = round(w_nodes, 4), cex = 1.2, bg = "lightblue")
+  tiplabels(text = round(tip_trait, 4), cex = 1.2, bg = "lightpink", offset = 0.02)
+  
   dev.off()
 }
 
