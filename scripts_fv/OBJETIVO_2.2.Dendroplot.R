@@ -11,6 +11,7 @@ library(ggplot2)
 library(gridExtra)
 library(stringr)
 library(conflicted)
+library(omsvg)
 
 ##Conflict preference
 conflict_prefer("label","ggdendro")
@@ -23,7 +24,7 @@ row.names(result_dendro) <-result_dendro$community
 result_dendro <- result_dendro%>%dplyr::select(-community)
 write.table(result_dendro, file='outputs/Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
 # Imprimir im?gen en png y en pdf
-png("outputs/Figures/Tabla_indices.png", height=4000, width=1500)
+svg("outputs/Figures/Tabla_indices.svg", height=4000, width=1500)
 p<-tableGrob(result_dendro)
 grid.arrange(p)
 dev.off()
@@ -42,7 +43,7 @@ STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 write.table(result_dendro2, file='outputs/Figures/Tabla_indices_sample.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
 # Imprimir im?gen en png y en pdf
-png("outputs/Figures/Tabla_indices_sample.png", height=800, width=800)
+svg("outputs/Figures/Tabla_indices_sample.svg", height=800, width=800)
 p<-tableGrob(result_dendro2)
 grid.arrange(p)
 dev.off()

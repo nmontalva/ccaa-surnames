@@ -16,6 +16,7 @@ library(NbClust)
 library(phytools)
 library(REAT)
 library(stargazer)
+library(omsvg)
 
 conflicted::conflicts_prefer(dplyr::select)
 conflicted::conflicts_prefer(dplyr::filter)
@@ -121,7 +122,7 @@ stargazer(muestred_stats,
           out = "outputs/Figures/original_muestred_stats.tex")
 #Normalidad
 #histogramas
-png(filename = "outputs/Figures/Traits_hist.png")
+svg(filename = "outputs/Figures/Traits_hist.svg")
 par(mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
 par(mfrow = c(2, 3)) 
 exclude_cols <- c("community", "commune", "R")

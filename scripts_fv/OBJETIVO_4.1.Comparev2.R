@@ -17,6 +17,8 @@ library(phangorn)
 library(phytools)
 library(stringr)
 library(geosphere)
+library(omsvg)
+
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
 hy <- reorder(hy, "postorder")
@@ -47,8 +49,8 @@ dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangl
   tanglegram(common_subtrees_color_lines = FALSE, highlight_distinct_edges  = FALSE)
 x <- dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step2side") 
 
-#PNG DPS
-png("outputs/Figures/Tanglegram_DPS.png",width = 800, height = 400, units = "px", pointsize = 12,bg = "white")
+#svg DPS
+svg("outputs/Figures/Tanglegram_DPS.svg",width = 800, height = 400, pointsize = 12,bg = "white")
 x %>% plot(main = paste("entanglement =", round(entanglement(x), 2)),common_subtrees_color_branches = T, highlight_distinct_edges  = FALSE,
   main_left = "Surnames",
   main_right = "STR",
@@ -203,7 +205,7 @@ plot(consensus_tree2, main="DPS primero")
 par(mfrow=c(1,1))
 dev.off()
 
-png("outputs/Figures/Consensus_tree.png",width = 800, height = 800, units = "px", pointsize = 12,bg = "white")
+svg("outputs/Figures/Consensus_tree.svg",width = 800, height = 800, pointsize = 12,bg = "white")
 plot.phylo(consensus_tree2)
 dev.off()
 
@@ -311,7 +313,7 @@ dendroplot <- function(consensus_tree,result_dendro2, save_as = NULL, group_by_c
     if (!dir.exists(dir_path)) {
       dir.create(dir_path, recursive = TRUE)
     }
-    png(filename = save_as, width = 10 + 4 * lastrow / 170, height = 1 + 40 * lastrow / 170, units = "in", res = 300)
+    svg(filename = save_as, width = 10 + 4 * lastrow / 170, height = 1 + 40 * lastrow / 170)
   }
   
   size <- function(xs) {
@@ -373,7 +375,7 @@ consensus_dendrogram <- function(result_dendro2, save_as=NULL,group_by_col="comm
   dendroplot(raised_tree,result_dendro2, save_as, group_by_col)
 }
 
-consensus_dendrogram(result_dendro2, save_as = "outputs/Figures/dendrograma_consenso_DPS.png")
+consensus_dendrogram(result_dendro2, save_as = "outputs/Figures/dendrograma_consenso_DPS.svg")
 
 consensus_tree<-(consensus_tree2)
 

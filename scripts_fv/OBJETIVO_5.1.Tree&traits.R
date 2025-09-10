@@ -27,7 +27,7 @@ library(ggplot2)
 library(gridExtra)
 library(viridisLite) #colores
 library(rr2)
-
+library(omsvg)
 # Resolver conflictos de funciones
 conflict_prefer("select", "dplyr")
 conflict_prefer("filter", "dplyr")
@@ -160,19 +160,19 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
 }
 
 # ANCESTRAL STATES FOR SAMPLED COMMUNITIES
-png("outputs/Figures/S_muestra.png")
+svg("outputs/Figures/S_muestra.svg")
 svcp <- estimacion_estados_ancestrales(consensus_tree, sv1p, "S")
 dev.off()
 
-png("outputs/Figures/G_muestra.png")
+svg("outputs/Figures/G_muestra.svg")
 gvcp <- estimacion_estados_ancestrales(consensus_tree, gv1p, "G")
 dev.off()
 
-png("outputs/Figures/A_muestra.png")
+svg("outputs/Figures/A_muestra.svg")
 avcp <- estimacion_estados_ancestrales(consensus_tree, av1p, "A")
 dev.off()
 
-png("outputs/Figures/M_muestra.png")
+svg("outputs/Figures/M_muestra.svg")
 mvcp <- estimacion_estados_ancestrales(consensus_tree, mv1p, "M")
 dev.off()
 
@@ -192,16 +192,16 @@ estimacion_estados_ancestrales <- function(tree, trait_vector, leg_txt) {
   return(list(anc=anc, obj = obj))
 }
 # Estimar estados ancestrales para los ?rboles de apellidos totales
-png("outputs/Figures/S_total.png")
+svg("outputs/Figures/S_total.svg")
 svtp <- estimacion_estados_ancestrales(y_total, sv2p, "S")
 dev.off()
-png("outputs/Figures/G_total.png")
+svg("outputs/Figures/G_total.svg")
 gvtp <- estimacion_estados_ancestrales(y_total, gv2p, "G")
 dev.off()
-png("outputs/Figures/A_total.png")
+svg("outputs/Figures/A_total.svg")
 avtp <- estimacion_estados_ancestrales(y_total, av2p, "A")
 dev.off()
-png("outputs/Figures/M_total.png")
+svg("outputs/Figures/M_total.svg")
 mvtp <- estimacion_estados_ancestrales(y_total, mv2p, "M")
 dev.off()
 
@@ -224,22 +224,22 @@ plot_comparison <- function(obj1, obj2, xlabel) {
 }
 
 # Comparaciones
-png("outputs/Figures/S_A_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/S_A_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(svcp$obj, avcp$obj, c("S", "A"))
 dev.off()
-png("outputs/Figures/S_G_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/S_G_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(svcp$obj, gvcp$obj, c("S", "G"))
 dev.off()
-png("outputs/Figures/S_M_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/S_M_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(svcp$obj, mvcp$obj, c("S", "M"))
 dev.off()
-png("outputs/Figures/A_G_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/A_G_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(avcp$obj, gvcp$obj, c("G", "A"))
 dev.off()
-png("outputs/Figures/A_M_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/A_M_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(avcp$obj, mvcp$obj, c("A", "M"))
 dev.off()
-png("outputs/Figures/G_M_muestra.png",width = 2200, height = 1900, res = 300)
+svg("outputs/Figures/G_M_muestra.svg",width = 2200, height = 1900, res = 300)
 plot_comparison(gvcp$obj, mvcp$obj, c("G", "M"))
 dev.off()
 
@@ -257,22 +257,22 @@ plot_comparison2 <- function(obj1, obj2, xlabel) {
 
 # Comparaciones
 dev.off()
-png("outputs/Figures/S_G_total.png",width = 3500, height = 3500, res = 300)
+svg("outputs/Figures/S_G_total.svg",width = 3500, height = 3500, res = 300)
 plot_comparison2(svtp$obj, gvtp$obj, c("S", "G"))
 dev.off()
-png("outputs/Figures/S_A_total.png",width = 2800, height = 2800, res = 300)
+svg("outputs/Figures/S_A_total.svg",width = 2800, height = 2800, res = 300)
 plot_comparison2(svtp$obj, avtp$obj, c("S", "A"))
 dev.off()
-png("outputs/Figures/S_M_total.png",width = 2800, height = 2800, res = 300)
+svg("outputs/Figures/S_M_total.svg",width = 2800, height = 2800, res = 300)
 plot_comparison2(svtp$obj, mvtp$obj, c("S", "M"))
 dev.off()
-png("outputs/Figures/A_G_total.png",width = 2800, height = 2800, res = 300)
+svg("outputs/Figures/A_G_total.svg",width = 2800, height = 2800, res = 300)
 plot_comparison2(avtp$obj,gvtp$obj, c("G", "A"))
 dev.off()
-png("outputs/Figures/A_M_total.png",width = 2800, height = 2800, res = 300)
+svg("outputs/Figures/A_M_total.svg",width = 2800, height = 2800, res = 300)
 plot_comparison2(avtp$obj, mvtp$obj, c("A", "M"))
 dev.off()
-png("outputs/Figures/G_M_total.png",width = 2800, height = 2800, res = 300)
+svg("outputs/Figures/G_M_total.svg",width = 2800, height = 2800, res = 300)
 plot_comparison2(gvtp$obj, mvtp$obj, c("G", "M"))
 dev.off()
 
@@ -306,7 +306,7 @@ Phy_sig <- data.frame(
   pvalue_K = format(round(sapply(Phy_sigx, function(x) x$Blomberg_K$P), 5), nsmall = 5)
 )
 publish(Phy_sig)
-png("outputs/Figures/Phylosignal_muestra2.png", width = 400, height = 200)
+svg("outputs/Figures/Phylosignal_muestra2.svg", width = 400, height = 200)
 grid.table(Phy_sig)
 dev.off()
 
@@ -368,7 +368,7 @@ Phy_sig_total <- do.call(rbind, lapply(Phy_sig_t , function(x) {
   )
 }))
 publish(Phy_sig_total)
-png("outputs/Figures/Phylosignal_total.png", width = 400, height = 200)
+svg("outputs/Figures/Phylosignal_total.svg", width = 400, height = 200)
 grid.table(Phy_sig_total)
 dev.off()
 
