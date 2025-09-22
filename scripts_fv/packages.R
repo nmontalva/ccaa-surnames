@@ -40,6 +40,7 @@ packages <- c(
   "ggpubr",
   "googledrive",
   "graph4lg",
+  "grDevices",
   "grid",
   "gridExtra",
   "igraph",
@@ -48,7 +49,6 @@ packages <- c(
   "phylogram",
   "phytools",
   "picante",
-  "png",
   "readr",
   "reldist",
   "rr2",
@@ -155,3 +155,45 @@ tryCatch({
 }, error = function(e) {
   message("Failed to load ggtree: ", e$message)
 })
+
+#-------------- CiteR---------------------
+citeR <- function(packages) {
+  Rbibs <- ""
+  
+  for (package in packages) {
+    if (!requireNamespace(package, quietly = TRUE)) {
+      message("Skipping missing package: ", package)
+      next
+    }
+    
+    Rbib <- capture.output(print(citation(package), bibtex = TRUE))    
+    Rbib <- mapply(function(x, y) Rbib[x:y], 
+                   grep("  @.+[{]", Rbib), 
+                   which(Rbib == "  }"))
+    
+    if (is.matrix(Rbib)) {
+      Rbib[1, 1] <- gsub(",", paste0(package, ","), Rbib[1, 1])
+      Rbib <- paste0(Rbib, collapse = "\n")
+    } else {
+      Rbib <- unlist(lapply(Rbib, function(x) {
+        x[1] <- gsub(",", paste0(package, ","), x[1])
+        paste0(unlist(x), collapse = "\n")
+      }))
+    }
+    
+    if (length(Rbib) > 1) {
+      if (any(grepl("@Manual", Rbib))) {
+        Rbib <- Rbib[grep("@Manual", Rbib)][1]
+      } else {
+        Rbib <- Rbib[1]
+      }
+    }
+    
+    Rbibs <- paste(Rbibs, Rbib, sep = "\n\n")
+  }
+  
+  writeBin(charToRaw(utf8::as_utf8(Rbibs)), "packages.bib")
+}
+
+packages <- unlist(lapply(as.list(match.call()), deparse))[-1]
+citeR(packages)

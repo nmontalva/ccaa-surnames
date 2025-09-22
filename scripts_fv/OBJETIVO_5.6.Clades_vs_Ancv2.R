@@ -12,6 +12,7 @@ library(ape)
 library(dplyr)
 library(ggplot2)
 library(phytools)
+library(grDevices)
 
 ################################################################################
 ######################## Comunidades muestreadas ###############################
@@ -139,7 +140,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = S_value, color = as.factor(Cluste
   theme_minimal() +
   scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-png("outputs/Figures/S_TRAIT.png",width = 2000, height = 750, res = 300)
+svg("outputs/Figures/S_TRAIT.svg",width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = S_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 1) +
   geom_point(size = 2) +  # Añadir puntos en cada nodo
@@ -257,7 +258,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = A_value, color = as.factor(Cluste
   theme_minimal() +
   scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-png("outputs/Figures/A_TRAIT.png",width = 2000, height = 750, res = 300)
+svg("outputs/Figures/A_TRAIT.svg",width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = A_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 1) +
   geom_point(size = 2) +  # Añadir puntos en cada nodo
@@ -375,7 +376,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = G_value, color = as.factor(Cluste
   theme_minimal() +
   scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-png("outputs/Figures/G_TRAIT.png",width = 2000, height = 750, res = 300)
+svg("outputs/Figures/G_TRAIT.svg",width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = G_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 1) +
   geom_point(size = 2) +  # Añadir puntos en cada nodo
@@ -493,7 +494,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = M_value, color = as.factor(Cluste
   theme_minimal() +
   scale_color_manual(values = c("blue", "green", "red"))  # Colores para cada cluster
 
-png("outputs/Figures/M_TRAIT.png",width = 2000, height = 750, res = 300)
+svg("outputs/Figures/M_TRAIT.svg",width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = M_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 1) +
   geom_point(size = 2) +  # Añadir puntos en cada nodo
@@ -645,7 +646,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = S_value, color = as.factor(Cluste
   scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de S a lo largo del camino de nodos desde la raíz para cada cluster
-png("outputs/Figures/S_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+svg("outputs/Figures/S_TRAIT_TOTAL.svg", width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = S_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 0.1, alpha = 0.6) +
   geom_point(size = 0.1) +  # Añadir puntos en cada nodo
@@ -780,7 +781,7 @@ dev.off()
 #  scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de R a lo largo del camino de nodos desde la raíz para cada cluster
-#png("outputs/Figures/R_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+#svg("outputs/Figures/R_TRAIT_TOTAL.svg", width = 2000, height = 750, res = 300)
 #ggplot(expanded_df_extended, aes(x = Step, y = R_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
 #  geom_line(size = 0.1, alpha = 0.6) +
 #  geom_point(size = 0.1) +  # Añadir puntos en cada nodo
@@ -915,7 +916,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = A_value, color = as.factor(Cluste
   scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de A a lo largo del camino de nodos desde la raíz para cada cluster
-png("outputs/Figures/A_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+svg("outputs/Figures/A_TRAIT_TOTAL.svg", width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = A_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 0.1, alpha = 0.6) +
   geom_point(size = 0.1) +  # Añadir puntos en cada nodo
@@ -1050,7 +1051,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = G_value, color = as.factor(Cluste
   scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de G a lo largo del camino de nodos desde la raíz para cada cluster
-png("outputs/Figures/G_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+svg("outputs/Figures/G_TRAIT_TOTAL.svg", width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = G_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 0.1, alpha = 0.6) +
   geom_point(size = 0.1) +  # Añadir puntos en cada nodo
@@ -1185,7 +1186,7 @@ ggplot(expanded_df_extended, aes(x = Step, y = M_value, color = as.factor(Cluste
   scale_color_manual(values = c("blue", "green"))  # Colores para cada cluster
 
 # Graficar los valores de M a lo largo del camino de nodos desde la raíz para cada cluster
-png("outputs/Figures/M_TRAIT_TOTAL.png", width = 2000, height = 750, res = 300)
+svg("outputs/Figures/M_TRAIT_TOTAL.svg", width = 2000, height = 750, res = 300)
 ggplot(expanded_df_extended, aes(x = Step, y = M_value, color = as.factor(Cluster), group = interaction(Cluster, Terminal_Node))) +
   geom_line(size = 0.1, alpha = 0.6) +
   geom_point(size = 0.1) +  # Añadir puntos en cada nodo

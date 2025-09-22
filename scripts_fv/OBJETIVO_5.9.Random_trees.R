@@ -89,7 +89,7 @@ results_M_consensus <- phylo_signal_analysis(consensus_tree, trait_data_M_s, ran
 # Comparaciones
 comparar_phylo_signal <- function(results, nombre = "", archivo = NULL) {
   if (!is.null(archivo)) {
-    png(archivo, width = 1000, height = 1000, res = 150)  # Espacio amplio
+    svg(archivo, width = 1000, height = 1000, res = 150)  # Espacio amplio
   }
   layout(matrix(1:4, 2, 2, byrow = TRUE))  # Panel 2x2 ordenado por filas
   par(mar = c(5, 4, 4, 2) + 0.1)           # Márgenes cómodos
@@ -144,7 +144,7 @@ comparar_phylo_signal <- function(results, nombre = "", archivo = NULL) {
     dev.off()
   }
   }
-comparar_phylo_signal(results_G_complete, "G (Árbol completo)",archivo = "outputs/Figures/phylo_signal_G_total.png")
-comparar_phylo_signal(results_M_complete, "M (Árbol completo)",archivo = "outputs/Figures/phylo_signal_M_total.png")
-comparar_phylo_signal(results_G_consensus, "G (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_G_consenso.png")
-comparar_phylo_signal(results_M_consensus, "M (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_M_consenso.png")
+comparar_phylo_signal(results_G_complete, "G (Árbol completo)",archivo = "outputs/Figures/phylo_signal_G_total.svg")
+comparar_phylo_signal(results_M_complete, "M (Árbol completo)",archivo = "outputs/Figures/phylo_signal_M_total.svg")
+comparar_phylo_signal(results_G_consensus, "G (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_G_consenso.svg")
+comparar_phylo_signal(results_M_consensus, "M (Árbol consenso)",archivo = "outputs/Figures/phylo_signal_M_consenso.svg")
