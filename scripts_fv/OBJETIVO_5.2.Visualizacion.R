@@ -9,7 +9,7 @@
 ## CARGAR LIBRERIAS ##
 library(cowplot)
 library(GGally)
-library(png)
+library(grDevices)
 library(grid)
 library(magick)
 library(stargazer)
@@ -49,12 +49,12 @@ annotate_r_squared <- function(data1, mapping, ...) {
 }
 
 image_paths1 <- c(
-  "outputs/Figures/S_A_muestra.png",
-  "outputs/Figures/S_G_muestra.png",
-  "outputs/Figures/A_G_muestra.png",
-  "outputs/Figures/S_M_muestra.png",
-  "outputs/Figures/A_M_muestra.png",
-  "outputs/Figures/G_M_muestra.png")
+  "outputs/Figures/S_A_muestra.svg",
+  "outputs/Figures/S_G_muestra.svg",
+  "outputs/Figures/A_G_muestra.svg",
+  "outputs/Figures/S_M_muestra.svg",
+  "outputs/Figures/A_M_muestra.svg",
+  "outputs/Figures/G_M_muestra.svg")
 
 plot_with_image <- function(image_path) {
   # Cargar la imagen usando cowplot
@@ -72,7 +72,7 @@ custom_image_plot <- function(data1, mapping) {
 }
 
 
-png("outputs/Figures/Scatterplot_muestra_1.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_muestra_1.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -106,7 +106,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
-png("outputs/Figures/Scatterplot_muestra_2.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_muestra_2.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -121,12 +121,12 @@ ggpairs(data1,
 dev.off()
 #Gráfico 3
 image_paths1 <- c(
-  "outputs/Figures/S_A_muestra.png",
-  "outputs/Figures/S_G_muestra.png",
-  "outputs/Figures/A_G_muestra.png",
-  "outputs/Figures/S_M_muestra.png",
-  "outputs/Figures/A_M_muestra.png",
-  "outputs/Figures/G_M_muestra.png")
+  "outputs/Figures/S_A_muestra.svg",
+  "outputs/Figures/S_G_muestra.svg",
+  "outputs/Figures/A_G_muestra.svg",
+  "outputs/Figures/S_M_muestra.svg",
+  "outputs/Figures/A_M_muestra.svg",
+  "outputs/Figures/G_M_muestra.svg")
 
 plot_with_image <- function(image_path) {
   # Cargar la imagen usando cowplot
@@ -142,7 +142,7 @@ custom_image_plot <- function(data1, mapping) {
   image_index <<- image_index + 1
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
-png("outputs/Figures/Scatterplot_muestra_3.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_muestra_3.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -218,12 +218,12 @@ annotate_r_squared <- function(data, mapping, ...) {
 }
 
 image_paths <- c(
-  "outputs/Figures/S_A_total.png",
-  "outputs/Figures/S_G_total.png",
-  "outputs/Figures/A_G_total.png",
-  "outputs/Figures/S_M_total.png",
-  "outputs/Figures/A_M_total.png",
-  "outputs/Figures/G_M_total.png"
+  "outputs/Figures/S_A_total.svg",
+  "outputs/Figures/S_G_total.svg",
+  "outputs/Figures/A_G_total.svg",
+  "outputs/Figures/S_M_total.svg",
+  "outputs/Figures/A_M_total.svg",
+  "outputs/Figures/G_M_total.svg"
 )
 
 plot_with_image <- function(image_path) {
@@ -242,7 +242,7 @@ custom_image_plot <- function(data, mapping) {
 }
 
 
-png("outputs/Figures/Scatterplot_total_1.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_total_1.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 
@@ -277,7 +277,7 @@ annotate_r_squared <- function(data, mapping, ...) {
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
-png("outputs/Figures/Scatterplot_total_2.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_total_2.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data,
@@ -292,12 +292,12 @@ ggpairs(data,
 dev.off()
 # Gráfico 3
 image_paths <- c(
-  "outputs/Figures/S_A_total.png",
-  "outputs/Figures/S_G_total.png",
-  "outputs/Figures/A_G_total.png",
-  "outputs/Figures/S_M_total.png",
-  "outputs/Figures/A_M_total.png",
-  "outputs/Figures/G_M_total.png"
+  "outputs/Figures/S_A_total.svg",
+  "outputs/Figures/S_G_total.svg",
+  "outputs/Figures/A_G_total.svg",
+  "outputs/Figures/S_M_total.svg",
+  "outputs/Figures/A_M_total.svg",
+  "outputs/Figures/G_M_total.svg"
 )
 
 plot_with_image <- function(image_path) {
@@ -315,7 +315,7 @@ custom_image_plot <- function(data, mapping) {
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
 
-png("outputs/Figures/Scatterplot_total_3.png",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_total_3.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 

@@ -17,7 +17,7 @@
 load("outputs/ancestral_states_sampled.RData")
 load("outputs/ancestral_states_all.RData")
 crear_grafico <- function(vc,v1, label,filename) {
-  png(filename,width = 2800, height = 1600, res = 300)
+  svg(filename,width = 2800, height = 1600, res = 300)
   # Ajustar margen y tama?o de texto para evitar colapso
   par(mar = c(1, 10, 10, 1) + 0.1)
   # Ajustar la separacion entre nodos y otros parametros
@@ -29,10 +29,10 @@ crear_grafico <- function(vc,v1, label,filename) {
   dev.off()
 }
 # Llamar a la funcion para cada comunidad muestreada
-crear_grafico(svcp,sv1p, "S", "outputs/Figures/S_ancestral_tree_muestra.png")
-crear_grafico(gvcp,gv1p,"G", "outputs/Figures/G_ancestral_tree_muestra.png")
-crear_grafico(avcp,av1p, "A", "outputs/Figures/A_ancestral_tree_muestra.png")
-crear_grafico(mvcp,mv1p, "M", "outputs/Figures/M_ancestral_tree_muestra.png")
+crear_grafico(svcp,sv1p, "S", "outputs/Figures/S_ancestral_tree_muestra.svg")
+crear_grafico(gvcp,gv1p,"G", "outputs/Figures/G_ancestral_tree_muestra.svg")
+crear_grafico(avcp,av1p, "A", "outputs/Figures/A_ancestral_tree_muestra.svg")
+crear_grafico(mvcp,mv1p, "M", "outputs/Figures/M_ancestral_tree_muestra.svg")
 
 ### Estados basales total communities###
 crear_grafico2 <- function(vt,v2, label,filename) {
@@ -107,8 +107,8 @@ incorporacion_fosil <- function(fosil, valor, or_tree, label, filename, valor_ra
   obj$lims <- range(c(tip_trait, w_nodes, valor_raiz), na.rm = TRUE)
   obj <- setMap(obj, viridisLite::viridis(n = 30))
   
-  # Guardar PNG
-  png(filename, width = 2600, height = 1600, res = 200)
+  # Guardar svg
+  svg(filename, width = 2600, height = 1600, res = 200)
   par(mar = c(1, 1, 4, 1) + 0.1)
   plot(obj, lwd = 10, type = "phylogram", outline = FALSE, offset = 3.2,
        legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label,
@@ -138,10 +138,10 @@ incorporacion_fosil <- function(fosil, valor, or_tree, label, filename, valor_ra
   dev.off()
 }
 consensus_tree$edge.length <- consensus_tree$edge.length + 1e-8 # Se le agrega una distancia mínima
-incorporacion_fosil(0,sv1p,consensus_tree,"S","outputs/Figures/S_fosil_muestra.png", valor_raiz = 0) #S
-incorporacion_fosil(1,av1p,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.png",valor_raiz = 1) #A
-incorporacion_fosil(0,gv1p,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.png",valor_raiz = 0) #G
-incorporacion_fosil(0,mv1p,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.png",valor_raiz = 0) #M
+incorporacion_fosil(0,sv1p,consensus_tree,"S","outputs/Figures/S_fosil_muestra.svg", valor_raiz = 0) #S
+incorporacion_fosil(1,av1p,consensus_tree,"A", "outputs/Figures/A_fosil_muestra.svg",valor_raiz = 1) #A
+incorporacion_fosil(0,gv1p,consensus_tree, "G", "outputs/Figures/G_fosil_muestra.svg",valor_raiz = 0) #G
+incorporacion_fosil(0,mv1p,consensus_tree, "M", "outputs/Figures/M_fosil_muestra.svg",valor_raiz = 0) #M
 
 ##COMUNIDADES TOTALES (y_total)
 incorporacion_fosil2 <- function(fosil, valor, tree, label, filename, valor_raiz = 0) {

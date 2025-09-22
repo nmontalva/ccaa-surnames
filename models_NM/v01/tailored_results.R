@@ -60,7 +60,7 @@ plot_regimes <- function(result_obj, regime_colors, title_text, file_path) {
     )
   
   # Guardar
-  png(file_path, width = 2200, height = 1900, res = 300)
+  svg(file_path, width = 2200, height = 1900, res = 300)
   print(plot_out)
   dev.off()
   
@@ -70,14 +70,14 @@ T_model_G <- plot_regimes(
   result_obj = results$G,
   regime_colors = c("#aaFF00", "#0066FF", "#CC00FF"),
   title_text = "Phylogenetic regimes for G",
-  file_path = "outputs/Figures/T_model_g.png"
+  file_path = "outputs/Figures/T_model_g.svg"
 )
 
 T_model_M <- plot_regimes(
   result_obj = results$M,
   regime_colors = c("#aaFF00", "#0066FF", "#CC00FF", "#FF0000"),
   title_text = "Phylogenetic regimes for M",
-  file_path = "outputs/Figures/T_model_m.png"
+  file_path = "outputs/Figures/T_model_m.svg"
 )
 
 print(T_model_G)
@@ -114,8 +114,8 @@ final_plot <- plot_grid(
   rel_heights = c(0.1, 1)  # altura del título y del contenido
 )
 print(final_plot)
-# Guardar como PNG
-png("outputs/Figures/T_model_G_M_combined.png", width = 4000, height = 2000, res = 300)
+# Guardar como svg
+svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000, res = 300)
 print(p_combined)
 dev.off()
 
@@ -147,8 +147,8 @@ final_plot <- plot_grid(
   rel_heights = c(0.1, 1)  # altura del título y del contenido
 )
 print(final_plot)
-# Guardar como PNG
-png("outputs/Figures/T_model_G_M_combined.png", width = 4000, height = 2000, res = 300)
+# Guardar como svg
+svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000, res = 300)
 print(p_combined)
 dev.off()
 

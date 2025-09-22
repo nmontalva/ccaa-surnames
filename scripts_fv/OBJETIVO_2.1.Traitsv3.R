@@ -16,7 +16,7 @@ library(NbClust)
 library(phytools)
 library(REAT)
 library(stargazer)
-library(omsvg)
+library(grDevices)
 
 conflicted::conflicts_prefer(dplyr::select)
 conflicted::conflicts_prefer(dplyr::filter)

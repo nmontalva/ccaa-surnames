@@ -17,7 +17,7 @@ library(phangorn)
 library(phytools)
 library(stringr)
 library(geosphere)
-library(omsvg)
+library(grDevices)
 
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
