@@ -5,7 +5,6 @@
 # Clean environment
 rm(list = ls())
 
-
 # Configuration
 
 #TODO Revisar con FVE si estos son los que hay que correr
@@ -40,9 +39,9 @@ scripts <- c(
   "scripts_fv/OBJETIVO_5.7.HIP_1.R",
   "scripts_fv/OBJETIVO_5.8.I_de_Moran.R",
   #"scripts_fv/OBJETIVO_5.9.Random_trees.R", #Lo comenté por que se demora mucho
-  "naming.R",
+  "naming.R"
   #"draft/results/inferred_trees.R",
-  "Save_outputs.R"
+  #"Save_outputs.R"
 )
 
 log_dir <- "outputs/logs"
@@ -55,6 +54,7 @@ generated_files_log <- file.path(log_dir, "generated_files.log")
 objects_log <- file.path(log_dir, "objects_created.log")
 summary_log <- file.path(log_dir, "run_summary.txt")
 status_flag <- file.path(log_dir, "run_status.flag")
+citation_log <- file.path(log_dir, "packages_used.log")
 
 # Clear old logs (safely)
 safe_remove <- function(x) if (file.exists(x)) file.remove(x)
