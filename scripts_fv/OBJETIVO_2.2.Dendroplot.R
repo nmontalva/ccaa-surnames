@@ -13,6 +13,7 @@ library(stringr)
 library(conflicted)
 library(grDevices)
 
+
 ##Conflict preference
 conflict_prefer("label","ggdendro")
 conflict_prefer("theme_dendro","ggdendro")
@@ -23,7 +24,9 @@ row.names(result_dendro) <-result_dendro$community
 #result_dendro$commune <- gsub("Ñ", "N", result_dendro$commune)
 result_dendro <- result_dendro%>%dplyr::select(-community)
 write.table(result_dendro, file='outputs/Figures/Tabla_indices.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
+
 # Imprimir im?gen en svg y en pdf
+
 svg("outputs/Figures/Tabla_indices.svg", height=4000, width=1500)
 p<-tableGrob(result_dendro)
 grid.arrange(p)
@@ -42,7 +45,9 @@ result_dendro2 <- result_dendro %>% dplyr::filter(row.names(result_dendro) %in% 
 STR$pop <- gsub(" ", "_", STR$pop)
 selected_communities <- unique(STR$pop)
 write.table(result_dendro2, file='outputs/Figures/Tabla_indices_sample.txt', sep = '\t', row.names = T, quote = FALSE, fileEncoding = "UTF-8")
+
 # Imprimir im?gen en svg y en pdf
+
 svg("outputs/Figures/Tabla_indices_sample.svg", height=800, width=800)
 p<-tableGrob(result_dendro2)
 grid.arrange(p)

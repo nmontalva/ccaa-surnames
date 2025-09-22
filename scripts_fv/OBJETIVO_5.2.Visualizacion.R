@@ -128,6 +128,7 @@ image_paths1 <- c(
   "outputs/Figures/A_M_muestra.svg",
   "outputs/Figures/G_M_muestra.svg")
 
+
 plot_with_image <- function(image_path) {
   # Cargar la imagen usando cowplot
   image <- cowplot::ggdraw() + cowplot::draw_image(image_path, scale = 1)
@@ -143,6 +144,7 @@ custom_image_plot <- function(data1, mapping) {
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
 svg("outputs/Figures/Scatterplot_muestra_3.svg",width = 3000, height = 3000, res = 300)
+
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -314,7 +316,6 @@ custom_image_plot <- function(data, mapping) {
   image_index <<- image_index + 1
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
-
 svg("outputs/Figures/Scatterplot_total_3.svg",width = 3000, height = 3000, res = 300)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)

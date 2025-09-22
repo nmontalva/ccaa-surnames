@@ -109,6 +109,7 @@ incorporacion_fosil <- function(fosil, valor, or_tree, label, filename, valor_ra
   
   # Guardar svg
   svg(filename, width = 2600, height = 1600, res = 200)
+
   par(mar = c(1, 1, 4, 1) + 0.1)
   plot(obj, lwd = 10, type = "phylogram", outline = FALSE, offset = 3.2,
        legend = 0.7 * max(nodeHeights(obj$tree)), ftype = "reg", leg.txt = label,

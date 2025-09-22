@@ -19,6 +19,7 @@ library(stringr)
 library(geosphere)
 library(grDevices)
 
+
 ################ TANGLEGRAMA:COMPARACION APELLIDOS/STR #########################
 # Etiquetas están en el mismo orden
 hy <- reorder(hy, "postorder")

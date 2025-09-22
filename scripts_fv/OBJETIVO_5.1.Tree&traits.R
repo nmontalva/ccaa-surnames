@@ -28,6 +28,7 @@ library(gridExtra)
 library(viridisLite) #colores
 library(rr2)
 library(grDevices)
+
 # Resolver conflictos de funciones
 conflict_prefer("select", "dplyr")
 conflict_prefer("filter", "dplyr")
