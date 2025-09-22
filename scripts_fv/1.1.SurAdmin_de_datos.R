@@ -6,7 +6,6 @@ library(dplyr)
 library(ade4)
 library(tidyr)
 
-
 #Abrir y explorar bases de datos
 primera<- read.csv("scripts_fv/Datos/all_tabulated.csv", sep=",", header=TRUE, fill = T)
 segunda<- read.csv("scripts_fv/Datos/Muestras Fondecyt 11160402 Alelos - RACK 1.csv", sep =",", header = TRUE, fill = TRUE)
