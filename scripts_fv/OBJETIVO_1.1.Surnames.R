@@ -124,16 +124,5 @@ write.nexus(y_total, file = "outputs/Figures/Apellidos.nex", translate = TRUE) #
 write.dendrogram(hd,file = "outputs/Figures/Apellidos_muestra.phy", edges = FALSE) #Guardar dendrograma archivo phy
 write.nexus(hy, file = "outputs/Figures/Apellidos_muestra.nex", translate = TRUE) #Guardar archivo nexus desde phy
 
-# Distancia con apellidos reales
-orig <- surname_distance_matrix(comuneros)
-# Hacer copia anonimizada
-anon <- comuneros
-anon$surname_father <- sapply(tolower(trimws(anon$surname_father)), 
-                              function(x) substr(digest(x, algo="sha256"), 1, 10))
-anon_dist <- surname_distance_matrix(anon)
-
-# Comparar
-cor(as.vector(orig), as.vector(anon_dist))  # debería dar 1
-
 #Eliminar objetos que no se volveran a ocupar más adelante
 rm(ddata,p,selected_communities2,STR2,surnames)
