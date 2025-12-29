@@ -342,4 +342,4 @@ corr_total[order(corr_total$values.p_value), ]
 md_total <- corr_total %>%
   knitr::kable(format = "markdown")
 # Copia al portapapeles
-clipr::write_clip(md_total) # Ahora pega (Ctrl+V) directamente en Notion
+clipr::write_clip(md_total)

@@ -4,7 +4,7 @@
 ##########################################################################################################################################################
 
 #Anonimizacion de apellidos
-
+library(Biodem)
 library(digest)
 
 ## Cargar DATOS ##
@@ -17,7 +17,7 @@ comuneros$community[grepl("LA_RINCONADA_DE_PUNITAQUI" , comuneros$community)] <-
 anon_comuneros <- comuneros
 
 # Anonimizar columnas de apellidos (puedes agregar o quitar según necesites)
-cols_apellidos <- c("surname", "surname_father", "surname_mother")
+cols_apellidos <- c("firstname","firstname1","firstname2","surname", "surname_father", "surname_mother")
 
 for (col in cols_apellidos) {
   anon_comuneros[[col]] <- sapply(
@@ -26,5 +26,29 @@ for (col in cols_apellidos) {
   )
 }
 
+# Distancia con apellidos reales
+surname_distance_matrix <- function(comuneros,
+                                    group_by_col="community") {
+  # cross tabulate
+  surnames_freq <- table(comuneros$surname_father,
+                         comuneros[[group_by_col]])
+  # generates Hedrick (1971) kinship matrix
+  # there are other methods (i.e. lasker, uri)
+  hedkin <- hedrick(surnames_freq)
+  # hedrick returns values of similarity
+  # transform them into values of dissimilarity (distance)
+  as.dist(1-hedkin)
+  #as.dist(1-hedkin) #IMPORTANT: This is likely wrong. We figured out a better way.
+  #as.dist(Biodem::Fst(hedkin, sum(colSums(surnames_freq) )))
+}
+orig <- surname_distance_matrix(comuneros)
+# Hacer distancia anonimizada
+anon_dist <- surname_distance_matrix(anon_comuneros)
+# Comparar
+cor(as.vector(orig), as.vector(anon_dist))  # debería dar 1
+
 # Guardar en CSV (sin modificar el archivo original)
 write.csv(anon_comuneros, "scripts_fv/Datos/comuneros_anon.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
+#Eliminar objetos
+rm(anon,anon_comuneros,anon_dist,col,cols_apellidos,comuneros,orig,surname_distance_matrix)
