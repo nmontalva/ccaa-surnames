@@ -18,7 +18,7 @@ result <- evolutionary_analysis(
   tree = consensus_tree,
   steps = 1:2
 )
-print(result$single_regime$AIC)
+print(result$single_regime$AICc)
 
 # 3. Add SURFACE analysis:
 

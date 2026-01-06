@@ -1,5 +1,5 @@
 # Selected results
-load("models_NM/sandbox/model_resullts.RData")
+load("models_NM/sandbox/model_results.RData")
 
 ## Idea:
 # 1. After running evolutionary analysis.R
@@ -10,7 +10,7 @@ load("models_NM/sandbox/model_resullts.RData")
 # Compare BM, single OU, multi OU
 # For both G and M
 # Include relevant numbers such as:
-# - AIC
+# - AICc
 # - What else?
 # Comparison G
 Publish::publish(results$G$comparison)
@@ -26,58 +26,71 @@ Publish::publish(results$M$comparison)
 # Eliminate the numeric scale at the bottom 
 # For some reason, the smaller display sinked to RStudio visual device looks better thant the sinked output. No idea why.
 # View plots for a specific variable
-plot_regimes <- function(result_obj, regime_colors, title_text, file_path) {
+plot_regimes <- function(result_obj, full_palette, title_text, file_path, line_size = 1.2) {
   library(dplyr)
   library(ggplot2)
+  library(RColorBrewer)
+  # 1. Recuperar el gráfico base
+  plot_out <- result_obj$plots$tree_plot
+  plot_out$layers[[1]]$aes_params$size <- line_size
   
-  # Extraer datos únicos por régimen
-  regime_info <- result_obj$plots$tree_plot$data %>%
+  # 2. Extraer datos para la leyenda correcta
+  regime_info <- plot_out$data %>%
     filter(!is.na(regime)) %>%
     distinct(regime, theta_original, alpha) %>%
-    mutate(label_txt = sprintf("%s (θ=%.2f)", regime, theta_original))  # solo θ
+    mutate(label_txt = sprintf("%s (θ=%.2f)", regime, theta_original)) %>%
+    arrange(regime)
   
-  # Crear vector de etiquetas para la leyenda
+  # 3. Asignar colores
+  # Verificar si hay suficientes colores
+  n_regimes <- nrow(regime_info)
+  if(n_regimes > length(full_palette)) {
+    warning(paste("Necesitas", n_regimes, "colores, pero diste", length(full_palette)))
+  }
+  
+  my_colors <- full_palette[1:n_regimes]
+  names(my_colors) <- regime_info$regime
+  
+  # 4. Etiquetas
   regime_labels <- setNames(regime_info$label_txt, regime_info$regime)
   
-  # Asignar nombres a colores
-  names(regime_colors) <- regime_info$regime
-  
-  # α único
+  # 5. Alpha (subtítulo)
   alpha_val <- unique(na.omit(regime_info$alpha))
-  alpha_text <- sprintf("\u03B1 = %.2f", alpha_val)
+  alpha_text <- if(length(alpha_val) > 0) sprintf("\u03B1 = %.2f", alpha_val[1]) else ""
   
-  # Modificar el plot
-  plot_out <- result_obj$plots$tree_plot +
+  # 6. Aplicar estilos
+  plot_out <- plot_out +
     scale_color_manual(
-      values = regime_colors,
+      values = my_colors,
       labels = regime_labels,
       na.translate = FALSE
     ) +
     ggtitle(title_text, subtitle = alpha_text) +
     theme(
       legend.position = "right",
-      legend.justification = "top"
+      legend.justification = "top",
+      plot.title = element_text(face = "bold", size = 14)
     )
   
-  # Guardar
-  svg(file_path, width = 2200, height = 1900, res = 300)
-  print(plot_out)
-  dev.off()
+  # 7. Guardar
+  ggsave(filename = file_path, plot = plot_out, width = 10, height = 8, device = "svg")
   
   return(plot_out)
 }
+
 T_model_G <- plot_regimes(
   result_obj = results$G,
-  regime_colors = c("#aaFF00", "#0066FF", "#CC00FF"),
+  full_palette =  c("#DDCC77","#CC6677", "#117733"), 
   title_text = "Phylogenetic regimes for G",
-  file_path = "outputs/Figures/T_model_g.svg"
-)
+  file_path = "outputs/Figures/T_model_g.svg",
+  line_size = 0.6)
 
 T_model_M <- plot_regimes(
   result_obj = results$M,
-  regime_colors = c("#aaFF00", "#0066FF", "#CC00FF", "#FF0000"),
+  full_palette = c("#E69F00", "#332288","#88CCEE" ,"#AA4499" ),
   title_text = "Phylogenetic regimes for M",
-  file_path = "outputs/Figures/T_model_m.svg"
+  file_path = "outputs/Figures/T_model_m.svg",
+  line_size = 0.6
 )
 
 print(T_model_G)
@@ -115,7 +128,7 @@ final_plot <- plot_grid(
 )
 print(final_plot)
 # Guardar como svg
-svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000, res = 300)
+svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000)
 print(p_combined)
 dev.off()
 
@@ -148,7 +161,7 @@ final_plot <- plot_grid(
 )
 print(final_plot)
 # Guardar como svg
-svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000, res = 300)
+svg("outputs/Figures/T_model_G_M_combined.svg", width = 4000, height = 2000)
 print(p_combined)
 dev.off()
 
@@ -218,8 +231,8 @@ process_results_markdown <- function(results, type) {
   
   # 6. Graficar
   print(res$plots$regime_dist)
-  if (!is.null(res$plots$aic_plot)) {
-    print(res$plots$aic_plot)
+  if (!is.null(res$plots$aicc_plot)) {
+    print(res$plots$aicc_plot)
   }
   
   # 7. Retornar información

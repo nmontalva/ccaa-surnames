@@ -63,7 +63,7 @@ summarise_results <- function(prepped, surface_res, single_regime) {
         sigma2 = hmod@sigma.squared,
         stat_var = hmod@sigma.squared/(2*hmod@alpha),
         n_shifts = length(unique(regimes)) - 1,
-        delta_aic_vs_OU = final_model$aic - single_regime$AIC$AIC[2]
+        delta_aicc_vs_OU = final_model$aicc - single_regime$AICc$AICc[2]
       )
     }
   }
