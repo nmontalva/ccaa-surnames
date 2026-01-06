@@ -28,6 +28,3 @@ results$M$plots$tree_plot +
   scale_color_brewer(palette = "Set1")
 
 # Access results for each variable
-
-
-

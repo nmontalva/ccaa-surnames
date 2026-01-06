@@ -10,9 +10,9 @@ fit_single_regime <- function(prepped) {
   return(list(
     BM = bm,
     OU = ou,
-    AIC = data.frame(
+    AICc = data.frame(
       Model = c("BM", "OU"),
-      AIC = c(bm$opt$aic, ou$opt$aic),
+      AICc = c(bm$opt$aicc, ou$opt$aicc),
       stringsAsFactors = FALSE
     )
   ))

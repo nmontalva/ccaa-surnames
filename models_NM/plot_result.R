@@ -7,11 +7,11 @@ plot_result <- function(results) {
   
   plots <- list()
   
-  # AIC Plot
-  plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
+  # AICc Plot
+  plots$aicc_plot <- ggplot(results$single_models$AICc, aes(x = Model, y = AICc, fill = Model)) +
     geom_col(width = 0.6) +
-    geom_text(aes(label = round(AIC, 1)), vjust = -0.5) +
-    labs(title = "Model Comparison", y = "AIC") +
+    geom_text(aes(label = round(AICc, 1)), vjust = -0.5) +
+    labs(title = "Model Comparison", y = "AICc") +
     theme_minimal() +
     theme(legend.position = "none")
   

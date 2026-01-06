@@ -413,8 +413,8 @@ get_model_metrics <- function(model, model_name) {
     coefficients = summary(model)$tTable,
     anova = anova(model),
     logLik = as.numeric(logLik(model)),
-    AIC = AIC(model),
-    AICc = AIC(model) + (2 * length(coef(model)) * (length(coef(model)) + 1)) / 
+    AICc = AICc(model),
+    AICc = AICc(model) + (2 * length(coef(model)) * (length(coef(model)) + 1)) / 
       (nobs(model) - length(coef(model)) - 1),
     BIC = BIC(model),
     R2 = R2_lik(model),

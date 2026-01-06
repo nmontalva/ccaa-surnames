@@ -95,9 +95,9 @@ run_evolutionary_analysis <- function(data, variable, tree, verbose = TRUE) {
     models = list(
       BM = bm,
       OU = ou,
-      AIC = data.frame(
+      AICc = data.frame(
         Model = c("BM", "OU"),
-        AIC = c(bm$opt$aic, ou$opt$aic),
+        AICc = c(bm$opt$aicc, ou$opt$aicc),
         stringsAsFactors = FALSE
       )
     ),
@@ -133,11 +133,11 @@ run_evolutionary_analysis <- function(data, variable, tree, verbose = TRUE) {
       setNames(rainbow(n_regimes), results$regimes$regime)
     }
     
-    # AIC plot
-    results$plots$aic_plot <- ggplot(results$models$AIC, aes(x = Model, y = AIC, fill = Model)) +
+    # AICc plot
+    results$plots$aicc_plot <- ggplot(results$models$AICc, aes(x = Model, y = AICc, fill = Model)) +
       geom_col() +
-      geom_text(aes(label = round(AIC, 1)), vjust = -0.5) +
-      labs(title = paste("AIC Comparison for", variable)) +
+      geom_text(aes(label = round(AICc, 1)), vjust = -0.5) +
+      labs(title = paste("AICc Comparison for", variable)) +
       theme_minimal()
     
     # Tree plot

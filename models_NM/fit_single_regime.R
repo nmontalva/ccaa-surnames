@@ -12,7 +12,7 @@ fit_single_regime <- function(prepped) {
     OU = ou,
     AIC = data.frame(
       Model = c("BM", "OU"),
-      AIC = c(bm$opt$aic, ou$opt$aic),
+      AIC = c(bm$opt$aicc, ou$opt$aicc),
       stringsAsFactors = FALSE
     )
   ))
