@@ -5,20 +5,18 @@ plot_result <- function(results) {
   require(RColorBrewer)
   plots <- list()
 
-  color_pal <- c("#F0E442","#00FF66", "#0066FF","#FF0000","#aaFF00" ) 
-  #okabe_ito <- c("#E69F00", "#56B4E9", "#CC79A7","#009E73", "#F0E442", "#0072B2", "#D55E00", "#999999") # discrete color palette
+  color_pal <- c("#E69F00","#56B4E9","#009E73","#D55E00","#0072B2" ) 
+  # 1. AICc Comparison Plot (always created)
+  n_models <- if (!is.null(nrow(results$single_models$AICc))) nrow(results$single_models$AICc) else length(results$single_models$AICc)
   
-  # 1. AIC Comparison Plot (always created)
-  n_models <- if (!is.null(nrow(results$single_models$AIC))) nrow(results$single_models$AIC) else length(results$single_models$AIC)
-  
-  plots$aic_plot <- ggplot(results$single_models$AIC, aes(x = Model, y = AIC, fill = Model)) +
+  plots$aicc_plot <- ggplot(results$single_models$AICc, aes(x = Model, y = AICc, fill = Model)) +
     geom_col(width = 0.6, alpha = 0.8) +
-    geom_text(aes(label = round(AIC, 1)), vjust = -0.5, size = 3.5) +
+    geom_text(aes(label = round(AICc, 1)), vjust = -0.5, size = 3.5) +
     #scale_fill_viridis(discrete = TRUE, option = "D", begin = 0.2, end = 0.8)+
     scale_fill_manual(values = color_pal[seq_len(n_models)])+
     labs(title = paste("Model Comparison for", results$prepped$original_var),
-         subtitle = "Akaike Information Criterion (AIC)",
-         y = "AIC", x = "") +
+         subtitle = "Corrected Akaike Information Criterion (AICc)",
+         y = "AICc", x = "") +
     theme_minimal(base_size = 11) +
     theme(legend.position = "none",
           plot.title = element_text(size = 12),

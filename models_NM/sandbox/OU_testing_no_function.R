@@ -15,9 +15,9 @@ library(geiger)
 bm.M <- fitContinuous(y_total, M_logit_vec, model="BM")
 ou.M <- fitContinuous(y_total, M_logit_vec, model="OU")
 
-# 4. Print AICs
-cat("BM AIC:", bm.M$opt$aic, "\n")
-cat("OU AIC:", ou.M$opt$aic, "\n")
+# 4. Print AICcs
+cat("BM AICc:", bm.M$opt$aicc, "\n")
+cat("OU AICc:", ou.M$opt$aicc, "\n")
 
 # Step 2: SURFACE forward for M_logit
 

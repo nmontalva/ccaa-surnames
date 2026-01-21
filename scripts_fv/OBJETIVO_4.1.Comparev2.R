@@ -47,8 +47,9 @@ e <- dendlist(as.dendrogram(hy_num), as.dendrogram(phyDPS_num)) %>%
 
 dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step1side") %>% entanglement # lower is better
 dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step1side") %>% 
-  tanglegram(common_subtrees_color_lines = FALSE, highlight_distinct_edges  = FALSE)
+  tanglegram(rank_branches = FALSE,common_subtrees_color_lines = FALSE, highlight_distinct_edges  = FALSE)
 x <- dendlist(as.dendrogram(hy_num),as.dendrogram(phyDPS_num))%>% dendextend::untangle(method = "step2side") 
+plot(x)
 
 #svg DPS
 svg("outputs/Figures/Tanglegram_DPS.svg",width = 800, height = 400, pointsize = 12,bg = "white")

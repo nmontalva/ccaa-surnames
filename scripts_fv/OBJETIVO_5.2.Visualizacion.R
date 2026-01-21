@@ -7,7 +7,7 @@
 ### To plot over tips of the resulting trees the estimated values of each trait, and compute the most likely values for each at the internal nodes ###
 
 ## CARGAR LIBRERIAS ##
-library(cowplot)
+#library(cowplot)
 library(GGally)
 library(grDevices)
 library(grid)
@@ -71,8 +71,7 @@ custom_image_plot <- function(data1, mapping) {
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
 
-
-svg("outputs/Figures/Scatterplot_muestra_1.svg",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_muestra_1.svg",width = 10, height = 10)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -106,7 +105,7 @@ annotate_r_squared <- function(data1, mapping, ...) {
     annotate("text", x = mean(x), y = max(y), label = label, hjust = 0.5, vjust = 0.5, size = 7, color = "black")
 }
 
-svg("outputs/Figures/Scatterplot_muestra_2.svg",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_muestra_2.svg",width = 10, height = 10)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -119,6 +118,7 @@ ggpairs(data1,
         upper = list(continuous =wrap(annotate_r_squared))
 )
 dev.off()
+
 #Gráfico 3
 image_paths1 <- c(
   "outputs/Figures/S_A_muestra.svg",
@@ -143,8 +143,7 @@ custom_image_plot <- function(data1, mapping) {
   image_index <<- image_index + 1
   ggplot() + annotation_custom(ggplotGrob(p), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) + theme_void()
 }
-svg("outputs/Figures/Scatterplot_muestra_3.svg",width = 3000, height = 3000, res = 300)
-
+svg("outputs/Figures/Scatterplot_muestra_3.svg",width = 10, height = 10)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
 ggpairs(data1,
@@ -244,15 +243,13 @@ custom_image_plot <- function(data, mapping) {
 }
 
 
-svg("outputs/Figures/Scatterplot_total_1.svg",width = 3000, height = 3000, res = 300)
+svg("outputs/Figures/Scatterplot_total_1.svg",width = 10, height = 10)
 # Ajustar margen y tama?o de texto para evitar colapso
 par(mar = c(1, 1, 0.5, 0.5) + 0.1)
-
 ggpairs(data,
         columnLabels = c("S", "A","G","M"), 
         lower= list(continuous = custom_image_plot, image_path = image_paths),
         upper = list(continuous =wrap(annotate_r_squared)))
-
 dev.off()
 
 # Gr?fico 2 Correlaciones
@@ -342,4 +339,4 @@ corr_total[order(corr_total$values.p_value), ]
 md_total <- corr_total %>%
   knitr::kable(format = "markdown")
 # Copia al portapapeles
-clipr::write_clip(md_total) # Ahora pega (Ctrl+V) directamente en Notion
+clipr::write_clip(md_total)

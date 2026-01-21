@@ -80,7 +80,7 @@ summarise_results <- function(prepped, surface_res, single_regime) {
   )
   
   # Return comprehensive results
-  list(
+  return(list(
     data = result_data,
     single_models = single_regime,
     parameters = data.frame(
@@ -91,5 +91,6 @@ summarise_results <- function(prepped, surface_res, single_regime) {
     regimes = regime_summary,
     convergence = convergence_stats,
     surface = surface_res
-  )
+    #single_models = single_regime$AICc
+  ))
 }

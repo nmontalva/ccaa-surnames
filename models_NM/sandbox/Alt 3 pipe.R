@@ -49,15 +49,15 @@ run_evolutionary_cl <- function(data, variable, tree, logit_transform = TRUE,
   bm_fit <- geiger::fitContinuous(tree, var_vec, model = "BM")
   ou_fit <- geiger::fitContinuous(tree, var_vec, model = "OU")
   
-  # Compare AIC values
-  bm_aic <- bm_fit$opt$aic
-  ou_aic <- ou_fit$opt$aic
+  # Compare AICc values
+  bm_aicc <- bm_fit$opt$aicc
+  ou_aicc <- ou_fit$opt$aicc
   
-  # Print AIC comparison
+  # Print AICc comparison
   cat("Model comparison:\n")
-  cat("BM AIC:", bm_aic, "\n")
-  cat("OU AIC:", ou_aic, "\n")
-  cat("AIC difference (BM - OU):", bm_aic - ou_aic, "\n\n")
+  cat("BM AICc:", bm_aicc, "\n")
+  cat("OU AICc:", ou_aicc, "\n")
+  cat("AIC difference (BM - OU):", bm_aicc - ou_aicc, "\n\n")
   
   # Step 3: SURFACE analysis
   # Ensure unique node names

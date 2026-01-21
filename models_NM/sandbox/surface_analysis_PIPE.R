@@ -25,7 +25,7 @@ prep_traits <- function(data, traits) {
 fit_single_regime <- function(trait_vec, tree) {
   bm <- fitContinuous(tree, trait_vec, model = "BM")
   ou <- fitContinuous(tree, trait_vec, model = "OU")
-  c(BM = bm$opt$aic, OU = ou$opt$aic)
+  c(BM = bm$opt$aicc, OU = ou$opt$aicc)
 }
 
 # 3. SURFACE pipeline: forward then backward phase

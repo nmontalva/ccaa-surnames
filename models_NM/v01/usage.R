@@ -5,6 +5,7 @@ source("models_NM/v01/summarise_results.R")
 source("models_NM/v01/compare_models.R")
 source("models_NM/v01/plot_results.R")
 source("models_NM/v01/evolutionary_analysis.R")
+
 # Run analysis (now with large tree)
 results <- evolutionary_analysis(
   data = GM_df,
@@ -28,6 +29,3 @@ results$M$plots$tree_plot +
   scale_color_brewer(palette = "Set1")
 
 # Access results for each variable
-
-
-
