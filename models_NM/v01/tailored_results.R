@@ -80,14 +80,14 @@ plot_regimes <- function(result_obj, full_palette, title_text, file_path, line_s
 
 T_model_G <- plot_regimes(
   result_obj = results$G,
-  full_palette =  c("#DDCC77","#CC6677", "#117733"), 
+  full_palette =  c("#D55E00","#88CCEE", "#117733"), 
   title_text = "Phylogenetic regimes for G",
   file_path = "outputs/Figures/T_model_g.svg",
   line_size = 0.6)
 
 T_model_M <- plot_regimes(
   result_obj = results$M,
-  full_palette = c("#E69F00", "#332288","#88CCEE" ,"#AA4499" ),
+  full_palette = c("#E69F00", "#332288","#CC6677" ,"#AA4499" ),
   title_text = "Phylogenetic regimes for M",
   file_path = "outputs/Figures/T_model_m.svg",
   line_size = 0.6
