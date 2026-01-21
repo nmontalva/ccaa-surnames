@@ -5,9 +5,7 @@ plot_result <- function(results) {
   require(RColorBrewer)
   plots <- list()
 
-  color_pal <- c("#E69F00","#56B4E9","#009E73","#D55E00","#0072B2" ) #"#aaFF00","#FF0000"
-  #okabe_ito <- c("#E69F00","#56B4E9","#009E73","D55E00","#0072B2") # discrete color palette
-  
+  color_pal <- c("#E69F00","#56B4E9","#009E73","#D55E00","#0072B2" ) 
   # 1. AICc Comparison Plot (always created)
   n_models <- if (!is.null(nrow(results$single_models$AICc))) nrow(results$single_models$AICc) else length(results$single_models$AICc)
   
