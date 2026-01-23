@@ -4,7 +4,7 @@
 
 -   [ ] Eliminar placeholders visibles en el manuscrito
     -   [ ] No quedan \todo{...} visibles
-    -   [ ] No quedan "CITATION", "XXXX", "(CITATION)"
+    -   [x] No quedan "CITATION", "XXXX", "(CITATION)"
     -   [ ] Reemplazar "DOI: XXXX" (por ejemplo Zenodo) por DOI real
 -   [ ] Data availability con informacion real
     -   [ ] URL o DOI definitivo (Zenodo, OSF, etc.)
