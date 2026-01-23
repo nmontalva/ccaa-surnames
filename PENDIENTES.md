@@ -1,73 +1,104 @@
-# Lista de cosas por hacer (pre-envio)
+# Checklist pre-envío
 
-## Bloqueos para envio.
+- Cada tarea tiene una o más subtareas con checkbox.
+- Las dependencias se indican como: `depende de: N, M`
+- A medida que las dependencias se resuelven, borarlas.
+- Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
+- Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
 
--   [ ] Eliminar placeholders visibles en el manuscrito
-    -   [ ] No quedan \todo{...} visibles
-    -   [ ] No quedan "CITATION", "XXXX", "(CITATION)"
-    -   [ ] Reemplazar "DOI: XXXX" (por ejemplo Zenodo) por DOI real
--   [ ] Data availability con informacion real
-    -   [ ] URL o DOI definitivo (Zenodo, OSF, etc.)
-    -   [ ] Que se publica y que no, con justificacion etica si aplica
--   [ ] Repo publicable minimo (reproducibilidad real)
-    -   [ ] Estructura minima (README, scripts/, data/, outputs/)
-    -   [ ] Script maestro run-all o wrapper (input -\> comando -\> outputs)
-    -   [ ] Paths relativos (sin rutas locales)
--   [ ] Reproducibilidad minima real
-    -   [ ] Seeds definidos en un unico lugar y documentados
-    -   [ ] Consolidar todas las instancias de seeds, permutaciones y repeticiones en el codigo
-    -   [ ] Re-correr analisis y actualizar numeros del paper si cambian
-    -   [ ] Registrar version de R y paquetes (renv o sessionInfo)
--   [ ] Anonimizacion de apellidos
-    -   [ ] Hashing estable apellido -\> hash, *con documentación*
-    -   [ ] Dataset derivado publicable sin apellidos en claro
--   [ ] Checklist "Guide for authors" (EHB)
-    -   [ ] Verificar compliance y completar faltantes
+## 1. Repo publicable mínimo
 
-## Editorial y formal (cierre del pdf)
+**lista para empezar**
 
--   [ ] Figuras y tablas
-    -   [ ] Formato correcto (vectorial donde corresponda, por ejemplo PDF o EPS)
-    -   [ ] Numeracion consistente y referencias cruzadas correctas
-    -   [ ] Captions consistentes y auto-contenidas (owners: pvarase, mreyes)
--   [ ] Consistencia texto vs tablas y figuras
-    -   [ ] N, unidades, etiquetas y numeros coinciden
--   [ ] Compilacion final
-    -   [ ] Compila limpio (sin warnings criticos recurrentes)
--   [ ] Appendix
-    -   [ ] Listado y numeracion consistente
-    -   [ ] Referencias cruzadas internas correctas
+- [ ] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
+- [ ] Paths relativos (sin rutas locales) [@franvasestay]
+- [ ] Script maestro run-all / wrapper (input -> comando -> outputs) [@franvasestay]
+- [ ] Seeds definidos en un único lugar y documentados [@franvasestay]
+- [ ] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
 
-## Bibliografia
+## 2. Reproducibilidad mínima real
 
--   [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) (owner: mreyes)
--   [ ] Compila sin errores
--   [ ] Consistencia de mayusculas y minusculas
--   [ ] Version en ingles cuando exista
--   [ ] DOIs completos cuando existan
+**depende de: 1**
 
-## Contenido final (decisiones)
+- [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@todos]
 
--   [ ] Abstract: revision final
--   [ ] Discussion: conformidad final del equipo
+## 3. Anonimización de apellidos
 
-## Extras del journal (si aplica)
+**depende de: 1**
 
--   [ ] AI usage statement
--   [ ] Highlights (version final)
--   [ ] Keywords y formato requerido
--   [ ] Word count \<= 8000 excluyendo referencias si aplica
--   [ ] Methods: etica, consentimiento y approvals completos ¿está?
+- [ ] Hashing estable apellido -> hash documentado [@franvasestay]
+- [ ] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
+## 4. Publicación de datos y enlaces
 
-## Coordinacion
+**depende de: 2, 3**
 
--   [ ] Repo (owner: franvasestay)
--   [ ] Bibliografia (owner: mreyes)
--   [ ] Captions figuras y tablas
+- [ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]
+- [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
 
-## Otros
+## 5. Data availability statement
 
--   [x] Usar "Appendix" y no "Supplementary Material"
--   [x] Argumentar por que la alta correlacion entre G y M no es tautologica o mecanica
--   [x] Justificar UPGMA frente a otros metodos
--   [x] Clarificar que analisis usan rasgos logit-transformados y cuales no
+**depende de: 4**
+
+- [ ] Justificación ética para datos no publicados [@nmontalva]
+- [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
+
+## 6. Figuras y tablas
+
+**lista para empezar**
+
+- [ ] Formato correcto (vectorial donde corresponda) [@franvasestay]
+- [ ] Numeración consistente [@pvarase]
+- [ ] Referencias cruzadas correctas en el texto [@pvarase]
+- [ ] Captions auto-contenidas y consistentes [@pvarase, @nmontalva, @mreyes]
+
+## 7. Consistencia texto vs figuras/tablas
+
+**depende de: 2, 6**
+
+- [ ] Numeros coinciden entre texto y tablas [@mreyes]
+- [ ] Unidades y etiquetas correctas [@mreyes]
+- [ ] Valores numéricos consistentes [@mreyes]
+
+## 8. Contenido final: abstract y discussion
+
+**listo para empezar**
+
+- [ ] Abstract: versión final acordada [@todos]
+- [ ] Discussion: conformidad final del equipo [@todos]
+- [ ] Aclarar referencia a nombres argentinos [@nmontalva]
+
+## 9. Appendix
+
+**listo para empezar**
+
+- [ ] Listado completo y numeración correcta [@pvarase]
+- [ ] Referencias internas correctas desde el texto [@pvarase]
+- [ ] Revisar estructura (outline) de anexos [@pvarase]
+
+## 10. Bibliografía
+
+**lista para empezar**
+
+- [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+- [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+- [ ] DOIs completos cuando existan [@mreyes]
+- [ ] Versión en inglés cuando exista [@mreyes]
+
+## 11. Compilación final del PDF
+
+**depende de: 6, 7, 9, 10**
+
+- [ ] Compila sin errores [@nmontalva]
+- [ ] Sin warnings críticos recurrentes [@nmontalva]
+- [ ] PDF final sin marcas de borrador [@nmontalva]
+
+## 12. Requisitos del journal (EHB)
+
+**depende de 8**
+
+- [ ] Checklist Guide for Authors completo [@nmontalva]
+- [ ] AI usage statement [@nmontalva]
+- [ ] Highlights versión final [@nmontalva]
+- [ ] Keywords y formato requerido [@nmontalva]
+- [ ] Word count dentro de límites [@nmontalva]
