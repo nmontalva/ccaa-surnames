@@ -21,7 +21,11 @@
 **depende de: 1**
 
 - [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
-- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@todos]
+- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [ ]  [@pvarase]
+  + [ ]  [@nmontalva]
+  + [ ]  [@mreyes]
 
 ## 3. Anonimización de apellidos
 
@@ -50,7 +54,10 @@
 - [ ] Formato correcto (vectorial donde corresponda) [@franvasestay]
 - [ ] Numeración consistente [@pvarase]
 - [ ] Referencias cruzadas correctas en el texto [@pvarase]
-- [ ] Captions auto-contenidas y consistentes [@pvarase, @nmontalva, @mreyes]
+- [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+  + [ ]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
 
 ## 7. Consistencia texto vs figuras/tablas
 
@@ -64,9 +71,17 @@
 
 **listo para empezar**
 
-- [ ] Abstract: versión final acordada [@todos]
-- [ ] Discussion: conformidad final del equipo [@todos]
-- [ ] Aclarar referencia a nombres argentinos [@nmontalva]
+- [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [ ]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
+- [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [ ]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
+- [x] Aclarar referencia a nombres argentinos [@nmontalva]
 
 ## 9. Appendix
 
@@ -75,6 +90,7 @@
 - [ ] Listado completo y numeración correcta [@pvarase]
 - [ ] Referencias internas correctas desde el texto [@pvarase]
 - [ ] Revisar estructura (outline) de anexos [@pvarase]
+- [ ] Figura de random plots [@franvasestay]
 
 ## 10. Bibliografía
 
