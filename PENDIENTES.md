@@ -15,6 +15,7 @@
 - [ ] Script maestro run-all / wrapper (input -> comando -> outputs) [@franvasestay]
 - [ ] Seeds definidos en un único lugar y documentados [@franvasestay]
 - [ ] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
+- [ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.
 
 ## 2. Reproducibilidad mínima real
 
@@ -33,6 +34,7 @@
 
 - [ ] Hashing estable apellido -> hash documentado [@franvasestay]
 - [ ] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
+
 ## 4. Publicación de datos y enlaces
 
 **depende de: 2, 3**
@@ -47,6 +49,7 @@
 
 - [ ] Justificación ética para datos no publicados [@nmontalva]
 - [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
+- [ ] Detalles sobre SHA [@franvasestay]
 
 ## 6. Figuras y tablas
 
