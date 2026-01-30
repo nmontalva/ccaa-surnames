@@ -114,7 +114,16 @@
 **depende de 8**
 
 - [ ] Checklist Guide for Authors completo [@nmontalva]
-- [ ] AI usage statement [@nmontalva]
-- [ ] Highlights versión final [@nmontalva]
-- [ ] Keywords y formato requerido [@nmontalva]
+- [x] AI usage statement [@nmontalva]
+- [x] Highlights versión final [@nmontalva]
+- [x] Keywords en formato requerido [@nmontalva]
 - [ ] Word count dentro de límites [@nmontalva]
+
+## 13. Versión anónima del paper.
+
+- [ ] Eliminar autores y afiliaciones [@nmontalva]
+- [ ] Eliminar financiamiento [@nmontalva]
+- [ ] Eliminar links a datos [@nmontalva]
+- [ ] Eliminar metadatos (también en PDF) [@nmontalva]
+- [ ] Eliminar agradecimientos [@nmontalva]
+- [ ] Eliminar referencia institucional a comité de ética
