@@ -39,6 +39,7 @@
 
 - [ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]
 - [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
+- [x] Enlace anónimo en OSF [@nmontalva]
 
 ## 5. Data availability statement
 
@@ -119,11 +120,25 @@
 - [x] Keywords en formato requerido [@nmontalva]
 - [ ] Word count dentro de límites [@nmontalva]
 
-## 13. Versión anónima del paper.
+## 13. Versión anónima del manuscrito.
+
+**depende de todo lo demás**
 
 - [ ] Eliminar autores y afiliaciones [@nmontalva]
 - [ ] Eliminar financiamiento [@nmontalva]
 - [ ] Eliminar links a datos [@nmontalva]
 - [ ] Eliminar metadatos (también en PDF) [@nmontalva]
 - [ ] Eliminar agradecimientos [@nmontalva]
-- [ ] Eliminar referencia institucional a comité de ética
+- [ ] Eliminar referencia institucional a comité de ética [@nmontalva]
+
+## 14. Versión anónima de OSF
+
+**depende de 2 y 3**
+
+- [ ] No hay hard-paths en ningún script. [@nmontalva]
+- [ ] No hay metadados en ningún archivo [@nmontalva]
+- [ ] Solo archivos de texto. Ningún ejecutable. [@nmontalva]
+- [ ] La llave SALT del hash de SHA no debe estar disponible [@nmontalva]
+- [ ] No hay identificadores en el texto o comentarios del código [@nmontalva]
+- [ ] No hay identificadores en nombres de archivos o directorios [@nmontalva]
+- [ ] Revisar en modo incognito de navegador [@nmontalva]
