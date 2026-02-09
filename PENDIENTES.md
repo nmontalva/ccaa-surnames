@@ -77,7 +77,7 @@
 
 - [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
   + [ ]  [@franvasestay]
-  + [ ]  [@pvarase]
+  + [x]  [@pvarase]
   + [x]  [@nmontalva]
   + [ ]  [@mreyes]
 - [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
