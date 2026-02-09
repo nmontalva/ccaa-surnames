@@ -91,9 +91,9 @@
 
 **listo para empezar**
 
-- [ ] Listado completo y numeración correcta [@pvarase]
-- [ ] Referencias internas correctas desde el texto [@pvarase]
-- [ ] Revisar estructura (outline) de anexos [@pvarase]
+- [x] Listado completo y numeración correcta [@pvarase]
+- [x] Referencias internas correctas desde el texto [@pvarase]
+- [x] Revisar estructura (outline) de anexos [@pvarase]
 - [ ] Figura de random plots [@franvasestay]
 
 ## 10. Bibliografía
