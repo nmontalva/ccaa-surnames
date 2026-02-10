@@ -56,10 +56,10 @@
 **lista para empezar**
 
 - [ ] Formato correcto (vectorial donde corresponda) [@franvasestay]
-- [ ] Numeración consistente [@pvarase]
+- [x] Numeración consistente [@pvarase]
 - [ ] Referencias cruzadas correctas en el texto [@pvarase]
 - [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
-  + [ ]  [@pvarase]
+  + [x]  [@pvarase]
   + [x]  [@nmontalva]
   + [ ]  [@mreyes]
 
@@ -82,7 +82,7 @@
   + [ ]  [@mreyes]
 - [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
   + [ ]  [@franvasestay]
-  + [ ]  [@pvarase]
+  + [x]  [@pvarase]
   + [x]  [@nmontalva]
   + [ ]  [@mreyes]
 - [x] Aclarar referencia a nombres argentinos [@nmontalva]
