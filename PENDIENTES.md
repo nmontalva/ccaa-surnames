@@ -62,6 +62,7 @@
   + [x]  [@pvarase]
   + [x]  [@nmontalva]
   + [ ]  [@mreyes]
+- [ ] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
 
