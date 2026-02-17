@@ -71,6 +71,7 @@
 - [ ] Numeros coinciden entre texto y tablas [@mreyes]
 - [ ] Unidades y etiquetas correctas [@mreyes]
 - [ ] Valores numéricos consistentes [@mreyes]
+- [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
 
 ## 8. Contenido final: abstract y discussion
 
