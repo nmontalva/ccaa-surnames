@@ -1,73 +1,149 @@
-# Lista de cosas por hacer (pre-envio)
+# Checklist pre-envío
 
-## Bloqueos para envio.
+- Cada tarea tiene una o más subtareas con checkbox.
+- Las dependencias se indican como: `depende de: N, M`
+- A medida que las dependencias se resuelven, borarlas.
+- Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
+- Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
 
--   [ ] Eliminar placeholders visibles en el manuscrito
-    -   [ ] No quedan \todo{...} visibles
-    -   [x] No quedan "CITATION", "XXXX", "(CITATION)"
-    -   [ ] Reemplazar "DOI: XXXX" (por ejemplo Zenodo) por DOI real
--   [ ] Data availability con informacion real
-    -   [ ] URL o DOI definitivo (Zenodo, OSF, etc.)
-    -   [ ] Que se publica y que no, con justificacion etica si aplica
--   [ ] Repo publicable minimo (reproducibilidad real)
-    -   [ ] Estructura minima (README, scripts/, data/, outputs/)
-    -   [ ] Script maestro run-all o wrapper (input -\> comando -\> outputs)
-    -   [ ] Paths relativos (sin rutas locales)
--   [ ] Reproducibilidad minima real
-    -   [ ] Seeds definidos en un unico lugar y documentados
-    -   [ ] Consolidar todas las instancias de seeds, permutaciones y repeticiones en el codigo
-    -   [ ] Re-correr analisis y actualizar numeros del paper si cambian
-    -   [ ] Registrar version de R y paquetes (renv o sessionInfo)
--   [ ] Anonimizacion de apellidos
-    -   [ ] Hashing estable apellido -\> hash, *con documentación*
-    -   [ ] Dataset derivado publicable sin apellidos en claro
--   [ ] Checklist "Guide for authors" (EHB)
-    -   [ ] Verificar compliance y completar faltantes
+## 1. Repo publicable mínimo
 
-## Editorial y formal (cierre del pdf)
+**lista para empezar**
 
--   [ ] Figuras y tablas
-    -   [ ] Formato correcto (vectorial donde corresponda, por ejemplo PDF o EPS)
-    -   [ ] Numeracion consistente y referencias cruzadas correctas
-    -   [ ] Captions consistentes y auto-contenidas (owners: pvarase, mreyes)
--   [ ] Consistencia texto vs tablas y figuras
-    -   [ ] N, unidades, etiquetas y numeros coinciden
--   [ ] Compilacion final
-    -   [ ] Compila limpio (sin warnings criticos recurrentes)
--   [ ] Appendix
-    -   [ ] Listado y numeracion consistente
-    -   [ ] Referencias cruzadas internas correctas
+- [ ] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
+- [ ] Paths relativos (sin rutas locales) [@franvasestay]
+- [ ] Script maestro run-all / wrapper (input -> comando -> outputs) [@franvasestay]
+- [ ] Seeds definidos en un único lugar y documentados [@franvasestay]
+- [ ] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
+- [ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.
 
-## Bibliografia
+## 2. Reproducibilidad mínima real
 
--   [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) (owner: mreyes)
--   [ ] Compila sin errores
--   [ ] Consistencia de mayusculas y minusculas
--   [ ] Version en ingles cuando exista
--   [ ] DOIs completos cuando existan
+**depende de: 1**
 
-## Contenido final (decisiones)
+- [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [ ]  [@pvarase]
+  + [ ]  [@nmontalva]
+  + [ ]  [@mreyes]
 
--   [ ] Abstract: revision final
--   [ ] Discussion: conformidad final del equipo
+## 3. Anonimización de apellidos
 
-## Extras del journal (si aplica)
+**depende de: 1**
 
--   [ ] AI usage statement
--   [ ] Highlights (version final)
--   [ ] Keywords y formato requerido
--   [ ] Word count \<= 8000 excluyendo referencias si aplica
--   [ ] Methods: etica, consentimiento y approvals completos ¿está?
+- [ ] Hashing estable apellido -> hash documentado [@franvasestay]
+- [ ] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
 
-## Coordinacion
+## 4. Publicación de datos y enlaces
 
--   [ ] Repo (owner: franvasestay)
--   [ ] Bibliografia (owner: mreyes)
--   [ ] Captions figuras y tablas
+**depende de: 2, 3**
 
-## Otros
+- [ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]
+- [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
+- [x] Enlace anónimo en OSF [@nmontalva]
 
--   [x] Usar "Appendix" y no "Supplementary Material"
--   [x] Argumentar por que la alta correlacion entre G y M no es tautologica o mecanica
--   [x] Justificar UPGMA frente a otros metodos
--   [x] Clarificar que analisis usan rasgos logit-transformados y cuales no
+## 5. Data availability statement
+
+**depende de: 4**
+
+- [ ] Justificación ética para datos no publicados [@nmontalva]
+- [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
+- [ ] Detalles sobre SHA [@franvasestay]
+
+## 6. Figuras y tablas
+
+**lista para empezar**
+
+- [ ] Formato correcto (vectorial donde corresponda) [@franvasestay]
+- [x] Numeración consistente [@pvarase]
+- [ ] Referencias cruzadas correctas en el texto [@pvarase]
+- [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+  + [x]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
+- [ ] Gráfico de `random-trees` para material suplementario [@franvasestay]
+
+## 7. Consistencia texto vs figuras/tablas
+
+**depende de: 2, 6**
+
+- [ ] Numeros coinciden entre texto y tablas [@mreyes]
+- [ ] Unidades y etiquetas correctas [@mreyes]
+- [ ] Valores numéricos consistentes [@mreyes]
+- [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+
+## 8. Contenido final: abstract y discussion
+
+**listo para empezar**
+
+- [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [x]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
+- [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
+  + [ ]  [@franvasestay]
+  + [x]  [@pvarase]
+  + [x]  [@nmontalva]
+  + [ ]  [@mreyes]
+- [x] Aclarar referencia a nombres argentinos [@nmontalva]
+
+## 9. Appendix
+
+**listo para empezar**
+
+- [x] Listado completo y numeración correcta [@pvarase]
+- [x] Referencias internas correctas desde el texto [@pvarase]
+- [x] Revisar estructura (outline) de anexos [@pvarase]
+- [ ] Figura de random plots [@franvasestay]
+
+## 10. Bibliografía
+
+**lista para empezar**
+
+- [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+- [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+- [ ] DOIs completos cuando existan [@mreyes]
+- [ ] Versión en inglés cuando exista [@mreyes]
+
+## 11. Compilación final del PDF
+
+**depende de: 6, 7, 9, 10**
+
+- [ ] Compila sin errores [@nmontalva]
+- [ ] Sin warnings críticos recurrentes [@nmontalva]
+- [ ] PDF final sin marcas de borrador [@nmontalva]
+
+## 12. Requisitos del journal (EHB)
+
+**depende de 8**
+
+- [ ] Checklist Guide for Authors completo [@nmontalva]
+- [x] AI usage statement [@nmontalva]
+- [x] Highlights versión final [@nmontalva]
+- [x] Keywords en formato requerido [@nmontalva]
+- [ ] Word count dentro de límites [@nmontalva]
+
+## 13. Versión anónima del manuscrito.
+
+**depende de todo lo demás**
+
+- [ ] Eliminar autores y afiliaciones [@nmontalva]
+- [ ] Eliminar financiamiento [@nmontalva]
+- [ ] Eliminar links a datos [@nmontalva]
+- [ ] Eliminar metadatos (también en PDF) [@nmontalva]
+- [ ] Eliminar agradecimientos [@nmontalva]
+- [ ] Eliminar referencia institucional a comité de ética [@nmontalva]
+
+## 14. Versión anónima de OSF
+
+**depende de 2 y 3**
+
+- [ ] No hay hard-paths en ningún script. [@nmontalva]
+- [ ] No hay metadados en ningún archivo [@nmontalva]
+- [ ] Solo archivos de texto. Ningún ejecutable. [@nmontalva]
+- [ ] La llave SALT del hash de SHA no debe estar disponible [@nmontalva]
+- [ ] No hay identificadores en el texto o comentarios del código [@nmontalva]
+- [ ] No hay identificadores en nombres de archivos o directorios [@nmontalva]
+- [ ] Revisar en modo incognito de navegador [@nmontalva]
