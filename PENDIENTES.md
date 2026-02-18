@@ -4,36 +4,37 @@
 - Las dependencias se indican como: `depende de: N, M`
 - A medida que las dependencias se resuelven, borarlas.
 - Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
-- Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
+-   Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
 
 ## 1. Repo publicable mínimo
 
 **lista para empezar**
 
-- [ ] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
-- [ ] Paths relativos (sin rutas locales) [@franvasestay]
-- [ ] Script maestro run-all / wrapper (input -> comando -> outputs) [@franvasestay]
-- [ ] Seeds definidos en un único lugar y documentados [@franvasestay]
-- [ ] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
-- [ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.
+- [x] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
+- [x] Paths relativos (sin rutas locales) [@franvasestay]
+- [x] Script maestro run-all / wrapper (input -\> comando -\> outputs) [@franvasestay]
+- [x] Seeds definidos en un único lugar y documentados [@franvasestay]
+- [x] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
+- ~~[ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.~~
+- [ ] Redactar otra vez la sección de datos para proveer los datos sin imputar [@nmontalva]
 
 ## 2. Reproducibilidad mínima real
 
-**depende de: 1**
+**lista para empezar (ver correo de Francisca del 17-02-2026)**
 
 - [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
 - [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@franvasestay, @pvarase, @nmontalva, @mreyes]
-  + [ ]  [@franvasestay]
-  + [ ]  [@pvarase]
-  + [ ]  [@nmontalva]
-  + [ ]  [@mreyes]
+  + [ ] [@franvasestay]
+  + [ ] [@pvarase]
+  + [ ] [@nmontalva]
+  + [ ] [@mreyes]
 
 ## 3. Anonimización de apellidos
 
 **depende de: 1**
 
-- [ ] Hashing estable apellido -> hash documentado [@franvasestay]
-- [ ] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
+- [ ] Hashing estable apellido -\> hash documentado [@franvasestay]
+- [x] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
 
 ## 4. Publicación de datos y enlaces
 
@@ -55,14 +56,14 @@
 
 **lista para empezar**
 
-- [ ] Formato correcto (vectorial donde corresponda) [@franvasestay]
+- [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
 - [x] Numeración consistente [@pvarase]
 - [ ] Referencias cruzadas correctas en el texto [@pvarase]
 - [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
-  + [x]  [@pvarase]
-  + [x]  [@nmontalva]
-  + [ ]  [@mreyes]
-- [ ] Gráfico de `random-trees` para material suplementario [@franvasestay]
+  + [x] [@pvarase]
+  + [x] [@nmontalva]
+  + [ ] [@mreyes]
+- [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
 
@@ -78,15 +79,15 @@
 **listo para empezar**
 
 - [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
-  + [ ]  [@franvasestay]
-  + [x]  [@pvarase]
-  + [x]  [@nmontalva]
-  + [ ]  [@mreyes]
+  + [ ] [@franvasestay]
+  + [x] [@pvarase]
+  + [x] [@nmontalva]
+  + [ ] [@mreyes]
 - [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
-  + [ ]  [@franvasestay]
-  + [x]  [@pvarase]
-  + [x]  [@nmontalva]
-  + [ ]  [@mreyes]
+  + [ ] [@franvasestay]
+  + [x] [@pvarase]
+  + [x] [@nmontalva]
+  + [ ] [@mreyes]
 - [x] Aclarar referencia a nombres argentinos [@nmontalva]
 
 ## 9. Appendix
@@ -96,7 +97,8 @@
 - [x] Listado completo y numeración correcta [@pvarase]
 - [x] Referencias internas correctas desde el texto [@pvarase]
 - [x] Revisar estructura (outline) de anexos [@pvarase]
-- [ ] Figura de random plots [@franvasestay]
+- [x] Figura de random plots [@franvasestay]
+- [ ] Texto e inserción de figura de random plots [@nmontalva]
 
 ## 10. Bibliografía
 
@@ -104,7 +106,7 @@
 
 - [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
 - [ ] Mayúsculas y minúsculas consistentes [@mreyes]
-- [ ] DOIs completos cuando existan [@mreyes]
+- [ ] DOIs completos cuando existan [@nmontalva]
 - [ ] Versión en inglés cuando exista [@mreyes]
 
 ## 11. Compilación final del PDF
