@@ -4,7 +4,7 @@
 - Las dependencias se indican como: `depende de: N, M`
 - A medida que las dependencias se resuelven, borarlas.
 - Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
--   Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
+- Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
 
 ## 1. Repo publicable mínimo
 
