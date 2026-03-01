@@ -8,7 +8,7 @@
 
 ## 1. Repo publicable mínimo
 
-**lista para empezar**
+~~**lista para empezar**~~
 
 - [x] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
 - [x] Paths relativos (sin rutas locales) [@franvasestay]
@@ -16,7 +16,7 @@
 - [x] Seeds definidos en un único lugar y documentados [@franvasestay]
 - [x] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
 - ~~[ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.~~
-- [ ] Redactar otra vez la sección de datos para proveer los datos sin imputar [@nmontalva]
+- [x] Redactar otra vez la sección de datos para proveer los datos sin imputar [@nmontalva]
 
 ## 2. Reproducibilidad mínima real
 
@@ -26,7 +26,7 @@
 - [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@franvasestay, @pvarase, @nmontalva, @mreyes]
   + [ ] [@franvasestay]
   + [ ] [@pvarase]
-  + [ ] [@nmontalva]
+  + [x] [@nmontalva]
   + [ ] [@mreyes]
 
 ## 3. Anonimización de apellidos
@@ -40,7 +40,7 @@
 
 **depende de: 2, 3**
 
-- [ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]
+- ~~[ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]~~
 - [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
 - [x] Enlace anónimo en OSF [@nmontalva]
 
@@ -48,7 +48,7 @@
 
 **depende de: 4**
 
-- [ ] Justificación ética para datos no publicados [@nmontalva]
+- [x] Justificación ética para datos no publicados [@nmontalva]
 - [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
 - [ ] Detalles sobre SHA [@franvasestay]
 
@@ -73,6 +73,31 @@
 - [ ] Unidades y etiquetas correctas [@mreyes]
 - [ ] Valores numéricos consistentes [@mreyes]
 - [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+- [ ] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
+- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
+
+    ```R
+    # Extract parameters safely
+      #alpha <- tryCatch(hmod@alpha, error = function(e) NA)
+      alpha <- tryCatch({
+        val <- hmod@sqrt.alpha
+        # sqrt.alpha is normaly a vector of names (one per regime)
+        # We take the average and sqare it
+        mean_val <- mean(as.numeric(val), na.rm = TRUE)
+        mean_val^2
+      }, error = function(e) NA)
+      #sigma2 <- tryCatch(hmod@sigma.squared, error = function(e) NA)
+      sigma2 <- tryCatch({
+        val <- hmod@sigma
+        # for sigma we did as for alpha **IS THIS DESCRIBED IN METHODS??**
+        mean_val <- mean(as.numeric(val), na.rm = TRUE)
+        mean_val^2
+      }, error = function(e) NA)
+    }
+  }
+  ```
+  
+    Revisar si esto es correcto, por que el paper dice que se usa el último, no el promedio al cuadrado. [@franvasestay]
 
 ## 8. Contenido final: abstract y discussion
 
@@ -92,13 +117,13 @@
 
 ## 9. Appendix
 
-**listo para empezar**
+~~**listo para empezar**~~
 
 - [x] Listado completo y numeración correcta [@pvarase]
 - [x] Referencias internas correctas desde el texto [@pvarase]
 - [x] Revisar estructura (outline) de anexos [@pvarase]
 - [x] Figura de random plots [@franvasestay]
-- [ ] Texto e inserción de figura de random plots [@nmontalva]
+- [x] Texto e inserción de figura de random plots [@nmontalva]
 
 ## 10. Bibliografía
 
@@ -142,9 +167,9 @@
 
 **depende de 2 y 3**
 
-- [ ] No hay hard-paths en ningún script. [@nmontalva]
+- [ ] No hay hard-paths en ningún script [@nmontalva]
 - [ ] No hay metadados en ningún archivo [@nmontalva]
-- [ ] Solo archivos de texto. Ningún ejecutable. [@nmontalva]
+- [ ] Solo archivos de texto. Ningún ejecutable [@nmontalva]
 - [ ] La llave SALT del hash de SHA no debe estar disponible [@nmontalva]
 - [ ] No hay identificadores en el texto o comentarios del código [@nmontalva]
 - [ ] No hay identificadores en nombres de archivos o directorios [@nmontalva]
