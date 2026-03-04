@@ -22,8 +22,8 @@
 
 **lista para empezar (ver correo de Francisca del 17-02-2026)**
 
-- [x] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
-- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
+-   [x] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+-   [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
 
 ## 3. Anonimización de apellidos
 
@@ -52,25 +52,30 @@
 
 **lista para empezar**
 
-- [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
-- [x] Numeración consistente [@pvarase]
-- [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
-- [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
-  + [x] [@pvarase]
-  + [x] [@nmontalva]
-  + [ ] [@mreyes]
-- [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
+-   [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
+-   [x] Numeración consistente [@pvarase]
+-   [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
+-   [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+    -   [x] [@pvarase]
+    -   [x] [@nmontalva]
+    -   [ ] [@mreyes]
+-   [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
 
 **depende de: 2, 6**
 
-- [ ] Numeros coinciden entre texto y tablas [@mreyes]
-- [ ] Unidades y etiquetas correctas [@mreyes]
-- [ ] Valores numéricos consistentes [@mreyes]
-- [x] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
-- [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-- [x] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
+-   [ ] Numeros coinciden entre texto y tablas [@mreyes]
+
+-   [ ] Unidades y etiquetas correctas [@mreyes]
+
+-   [ ] Valores numéricos consistentes [@mreyes]
+
+-   [x] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+
+-   [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
+
+-   [x] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
 
     ``` r
     # Extract parameters safely
@@ -92,7 +97,7 @@
     }
     }
     ```
-	
+
     Revisar si esto es correcto, por que el paper dice que se usa el último, no el promedio al cuadrado. [@franvasestay]
 
 ## 8. Contenido final: abstract y discussion
@@ -125,10 +130,10 @@
 
 **lista para empezar**
 
-- [x] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
-- [ ] Mayúsculas y minúsculas consistentes [@mreyes]
-- [x] DOIs completos cuando existan [@nmontalva]
-- [x] Versión en inglés cuando exista [@mreyes]
+-   [x] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+-   [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+-   [x] DOIs completos cuando existan [@nmontalva]
+-   [x] Versión en inglés cuando exista [@mreyes]
 
 ## 11. Compilación final del PDF
 
