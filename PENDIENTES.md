@@ -22,7 +22,7 @@
 
 **lista para empezar (ver correo de Francisca del 17-02-2026)**
 
-- [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+- [x] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
 - [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
 
 ## 3. Anonimización de apellidos
@@ -68,19 +68,9 @@
 - [ ] Numeros coinciden entre texto y tablas [@mreyes]
 - [ ] Unidades y etiquetas correctas [@mreyes]
 - [ ] Valores numéricos consistentes [@mreyes]
-- [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+- [x] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
 - [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
-
--   [ ] Unidades y etiquetas correctas [@mreyes]
-
--   [ ] Valores numéricos consistentes [@mreyes]
-
--   [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
-
--   [ ] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-
--   [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
+- [x] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
 
     ``` r
     # Extract parameters safely
@@ -102,7 +92,7 @@
     }
     }
     ```
-
+	
     Revisar si esto es correcto, por que el paper dice que se usa el último, no el promedio al cuadrado. [@franvasestay]
 
 ## 8. Contenido final: abstract y discussion
@@ -113,12 +103,12 @@
     -   [ ] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+    -   [x] [@mreyes]
 -   [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
     -   [ ] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+    -   [x] [@mreyes]
 -   [x] Aclarar referencia a nombres argentinos [@nmontalva]
 
 ## 9. Appendix
@@ -135,11 +125,10 @@
 
 **lista para empezar**
 
-- [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+- [x] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
 - [ ] Mayúsculas y minúsculas consistentes [@mreyes]
 - [x] DOIs completos cuando existan [@nmontalva]
-- [ ] Versión en inglés cuando exista [@mreyes]
->>>>>>> origin
+- [x] Versión en inglés cuando exista [@mreyes]
 
 ## 11. Compilación final del PDF
 
