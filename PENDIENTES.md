@@ -22,12 +22,8 @@
 
 **lista para empezar (ver correo de Francisca del 17-02-2026)**
 
--   [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
--   [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@franvasestay, @pvarase, @nmontalva, @mreyes]
-    -   [ ] [@franvasestay]
-    -   [ ] [@pvarase]
-    -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+- [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
 
 ## 3. Anonimización de apellidos
 
@@ -56,20 +52,25 @@
 
 **lista para empezar**
 
--   [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
--   [x] Numeración consistente [@pvarase]
--   [ ] Referencias cruzadas correctas en el texto [@pvarase]
--   [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
-    -   [x] [@pvarase]
-    -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
--   [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
+- [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
+- [x] Numeración consistente [@pvarase]
+- [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
+- [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+  + [x] [@pvarase]
+  + [x] [@nmontalva]
+  + [ ] [@mreyes]
+- [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
 
 **depende de: 2, 6**
 
--   [ ] Numeros coinciden entre texto y tablas [@mreyes]
+- [ ] Numeros coinciden entre texto y tablas [@mreyes]
+- [ ] Unidades y etiquetas correctas [@mreyes]
+- [ ] Valores numéricos consistentes [@mreyes]
+- [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+- [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
+- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
 
 -   [ ] Unidades y etiquetas correctas [@mreyes]
 
@@ -134,10 +135,11 @@
 
 **lista para empezar**
 
--   [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
--   [ ] Mayúsculas y minúsculas consistentes [@mreyes]
--   [ ] DOIs completos cuando existan [@nmontalva]
--   [ ] Versión en inglés cuando exista [@mreyes]
+- [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+- [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+- [x] DOIs completos cuando existan [@nmontalva]
+- [ ] Versión en inglés cuando exista [@mreyes]
+>>>>>>> origin
 
 ## 11. Compilación final del PDF
 
