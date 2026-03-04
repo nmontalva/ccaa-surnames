@@ -1,22 +1,22 @@
 # Checklist pre-envío
 
-- Cada tarea tiene una o más subtareas con checkbox.
-- Las dependencias se indican como: `depende de: N, M`
-- A medida que las dependencias se resuelven, borarlas.
-- Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
-- Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
+-   Cada tarea tiene una o más subtareas con checkbox.
+-   Las dependencias se indican como: `depende de: N, M`
+-   A medida que las dependencias se resuelven, borarlas.
+-   Las tareas que van quedando sin dependencias se marcan como: `lista para empezar`
+-   Tengo que preguntarme ¿Qué tareas llevan mi nombre? ¿Cuáles no depende de otras y puedo hacer ahora?
 
 ## 1. Repo publicable mínimo
 
 ~~**lista para empezar**~~
 
-- [x] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
-- [x] Paths relativos (sin rutas locales) [@franvasestay]
-- [x] Script maestro run-all / wrapper (input -\> comando -\> outputs) [@franvasestay]
-- [x] Seeds definidos en un único lugar y documentados [@franvasestay]
-- [x] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
-- ~~[ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.~~
-- [x] Redactar otra vez la sección de datos para proveer los datos sin imputar [@nmontalva]
+-   [x] Estructura mínima (README, scripts/, data/, outputs/) [@franvasestay]
+-   [x] Paths relativos (sin rutas locales) [@franvasestay]
+-   [x] Script maestro run-all / wrapper (input -\> comando -\> outputs) [@franvasestay]
+-   [x] Seeds definidos en un único lugar y documentados [@franvasestay]
+-   [x] Consolidar instancias de seeds, permutaciones y repeticiones [@franvasestay]
+-   ~~[ ] No poner los datos de STR en el repo. Poner en README que deben descargarse del otro paper.~~
+-   [x] Redactar otra vez la sección de datos para proveer los datos sin imputar [@nmontalva]
 
 ## 2. Reproducibilidad mínima real
 
@@ -29,24 +29,24 @@
 
 **depende de: 1**
 
-- [ ] Hashing estable apellido -\> hash documentado [@franvasestay]
-- [x] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
+-   [ ] Hashing estable apellido -\> hash documentado [@franvasestay]
+-   [x] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
 
 ## 4. Publicación de datos y enlaces
 
 **depende de: 2, 3**
 
-- ~~[ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]~~
-- [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
-- [x] Enlace anónimo en OSF [@nmontalva]
+-   ~~[ ] Release de Zenodo preparado (DOI real o paso explícito documentado) [@franvasestay]~~
+-   [ ] Enlaces a datos externos (por ejemplo OSF para STR) documentados y estables [@nmontalva]
+-   [x] Enlace anónimo en OSF [@nmontalva]
 
 ## 5. Data availability statement
 
 **depende de: 4**
 
-- [x] Justificación ética para datos no publicados [@nmontalva]
-- [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
-- [ ] Detalles sobre SHA [@franvasestay]
+-   [x] Justificación ética para datos no publicados [@nmontalva]
+-   [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
+-   [ ] Detalles sobre SHA [@franvasestay]
 
 ## 6. Figuras y tablas
 
@@ -72,7 +72,17 @@
 - [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
 - [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
 
-    ```R
+-   [ ] Unidades y etiquetas correctas [@mreyes]
+
+-   [ ] Valores numéricos consistentes [@mreyes]
+
+-   [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+
+-   [ ] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
+
+-   [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
+
+    ``` r
     # Extract parameters safely
       #alpha <- tryCatch(hmod@alpha, error = function(e) NA)
       alpha <- tryCatch({
@@ -90,36 +100,36 @@
         mean_val^2
       }, error = function(e) NA)
     }
-  }
-  ```
-  
+    }
+    ```
+
     Revisar si esto es correcto, por que el paper dice que se usa el último, no el promedio al cuadrado. [@franvasestay]
 
 ## 8. Contenido final: abstract y discussion
 
 **listo para empezar**
 
-- [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
-  + [ ] [@franvasestay]
-  + [x] [@pvarase]
-  + [x] [@nmontalva]
-  + [ ] [@mreyes]
-- [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
-  + [ ] [@franvasestay]
-  + [x] [@pvarase]
-  + [x] [@nmontalva]
-  + [ ] [@mreyes]
-- [x] Aclarar referencia a nombres argentinos [@nmontalva]
+-   [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
+    -   [ ] [@franvasestay]
+    -   [x] [@pvarase]
+    -   [x] [@nmontalva]
+    -   [ ] [@mreyes]
+-   [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
+    -   [ ] [@franvasestay]
+    -   [x] [@pvarase]
+    -   [x] [@nmontalva]
+    -   [ ] [@mreyes]
+-   [x] Aclarar referencia a nombres argentinos [@nmontalva]
 
 ## 9. Appendix
 
 ~~**listo para empezar**~~
 
-- [x] Listado completo y numeración correcta [@pvarase]
-- [x] Referencias internas correctas desde el texto [@pvarase]
-- [x] Revisar estructura (outline) de anexos [@pvarase]
-- [x] Figura de random plots [@franvasestay]
-- [x] Texto e inserción de figura de random plots [@nmontalva]
+-   [x] Listado completo y numeración correcta [@pvarase]
+-   [x] Referencias internas correctas desde el texto [@pvarase]
+-   [x] Revisar estructura (outline) de anexos [@pvarase]
+-   [x] Figura de random plots [@franvasestay]
+-   [x] Texto e inserción de figura de random plots [@nmontalva]
 
 ## 10. Bibliografía
 
@@ -129,44 +139,45 @@
 - [ ] Mayúsculas y minúsculas consistentes [@mreyes]
 - [x] DOIs completos cuando existan [@nmontalva]
 - [ ] Versión en inglés cuando exista [@mreyes]
+>>>>>>> origin
 
 ## 11. Compilación final del PDF
 
 **depende de: 6, 7, 9, 10**
 
-- [ ] Compila sin errores [@nmontalva]
-- [ ] Sin warnings críticos recurrentes [@nmontalva]
-- [ ] PDF final sin marcas de borrador [@nmontalva]
+-   [ ] Compila sin errores [@nmontalva]
+-   [ ] Sin warnings críticos recurrentes [@nmontalva]
+-   [ ] PDF final sin marcas de borrador [@nmontalva]
 
 ## 12. Requisitos del journal (EHB)
 
 **depende de 8**
 
-- [ ] Checklist Guide for Authors completo [@nmontalva]
-- [x] AI usage statement [@nmontalva]
-- [x] Highlights versión final [@nmontalva]
-- [x] Keywords en formato requerido [@nmontalva]
-- [ ] Word count dentro de límites [@nmontalva]
+-   [ ] Checklist Guide for Authors completo [@nmontalva]
+-   [x] AI usage statement [@nmontalva]
+-   [x] Highlights versión final [@nmontalva]
+-   [x] Keywords en formato requerido [@nmontalva]
+-   [ ] Word count dentro de límites [@nmontalva]
 
 ## 13. Versión anónima del manuscrito.
 
 **depende de todo lo demás**
 
-- [ ] Eliminar autores y afiliaciones [@nmontalva]
-- [ ] Eliminar financiamiento [@nmontalva]
-- [ ] Eliminar links a datos [@nmontalva]
-- [ ] Eliminar metadatos (también en PDF) [@nmontalva]
-- [ ] Eliminar agradecimientos [@nmontalva]
-- [ ] Eliminar referencia institucional a comité de ética [@nmontalva]
+-   [ ] Eliminar autores y afiliaciones [@nmontalva]
+-   [ ] Eliminar financiamiento [@nmontalva]
+-   [ ] Eliminar links a datos [@nmontalva]
+-   [ ] Eliminar metadatos (también en PDF) [@nmontalva]
+-   [ ] Eliminar agradecimientos [@nmontalva]
+-   [ ] Eliminar referencia institucional a comité de ética [@nmontalva]
 
 ## 14. Versión anónima de OSF
 
 **depende de 2 y 3**
 
-- [ ] No hay hard-paths en ningún script [@nmontalva]
-- [ ] No hay metadados en ningún archivo [@nmontalva]
-- [ ] Solo archivos de texto. Ningún ejecutable [@nmontalva]
-- [ ] La llave SALT del hash de SHA no debe estar disponible [@nmontalva]
-- [ ] No hay identificadores en el texto o comentarios del código [@nmontalva]
-- [ ] No hay identificadores en nombres de archivos o directorios [@nmontalva]
-- [ ] Revisar en modo incognito de navegador [@nmontalva]
+-   [ ] No hay hard-paths en ningún script [@nmontalva]
+-   [ ] No hay metadados en ningún archivo [@nmontalva]
+-   [ ] Solo archivos de texto. Ningún ejecutable [@nmontalva]
+-   [ ] La llave SALT del hash de SHA no debe estar disponible [@nmontalva]
+-   [ ] No hay identificadores en el texto o comentarios del código [@nmontalva]
+-   [ ] No hay identificadores en nombres de archivos o directorios [@nmontalva]
+-   [ ] Revisar en modo incognito de navegador [@nmontalva]
