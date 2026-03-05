@@ -23,7 +23,7 @@
 **lista para empezar (ver correo de Francisca del 17-02-2026)**
 
 - [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
-- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
+- [x] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
 
 ## 3. Anonimización de apellidos
 
@@ -70,17 +70,7 @@
 - [ ] Valores numéricos consistentes [@mreyes]
 - [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
 - [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
-
--   [ ] Unidades y etiquetas correctas [@mreyes]
-
--   [ ] Valores numéricos consistentes [@mreyes]
-
--   [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
-
--   [ ] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-
--   [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
+- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
 
     ``` r
     # Extract parameters safely
