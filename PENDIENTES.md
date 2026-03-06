@@ -29,7 +29,7 @@
 
 **depende de: 1**
 
--   [ ] Hashing estable apellido -\> hash documentado [@franvasestay]
+-   [x] Hashing estable apellido -\> hash documentado [@franvasestay]
 -   [x] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
 
 ## 4. Publicación de datos y enlaces
@@ -46,7 +46,7 @@
 
 -   [x] Justificación ética para datos no publicados [@nmontalva]
 -   [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
--   [ ] Detalles sobre SHA [@franvasestay]
+-   [x] Detalles sobre SHA [@franvasestay]
 
 ## 6. Figuras y tablas
 
@@ -58,7 +58,7 @@
 -   [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+    -   [x] [@mreyes]
 -   [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
@@ -67,9 +67,9 @@
 
 -   [ ] Numeros coinciden entre texto y tablas [@mreyes]
 
--   [ ] Unidades y etiquetas correctas [@mreyes]
+-   [x] Unidades y etiquetas correctas [@mreyes]
 
--   [ ] Valores numéricos consistentes [@mreyes]
+-   [x] Valores numéricos consistentes [@mreyes]
 
 -   [x] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
 
@@ -104,8 +104,8 @@
 
 **listo para empezar**
 
--   [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
-    -   [ ] [@franvasestay]
+-   [x] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
+    -   [x] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
     -   [x] [@mreyes]
