@@ -22,14 +22,14 @@
 
 **lista para empezar (ver correo de Francisca del 17-02-2026)**
 
-- [ ] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
-- [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
+-   [x] Registrar versión de R y paquetes (renv o sessionInfo) [@franvasestay]
+-   [ ] Re-correr análisis completo y reemplazar/revisar resultados reportados [@nmontalva]
 
 ## 3. Anonimización de apellidos
 
 **depende de: 1**
 
--   [ ] Hashing estable apellido -\> hash documentado [@franvasestay]
+-   [x] Hashing estable apellido -\> hash documentado [@franvasestay]
 -   [x] Dataset derivado publicable con apellidos anonimizados [@franvasestay]
 
 ## 4. Publicación de datos y enlaces
@@ -46,41 +46,36 @@
 
 -   [x] Justificación ética para datos no publicados [@nmontalva]
 -   [ ] Incluir URL/DOI definitivos en el manuscrito [@nmontalva]
--   [ ] Detalles sobre SHA [@franvasestay]
+-   [x] Detalles sobre SHA [@franvasestay]
 
 ## 6. Figuras y tablas
 
 **lista para empezar**
 
-- [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
-- [x] Numeración consistente [@pvarase]
-- [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
-- [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
-  + [x] [@pvarase]
-  + [x] [@nmontalva]
-  + [ ] [@mreyes]
-- [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
+-   [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
+-   [x] Numeración consistente [@pvarase]
+-   [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
+-   [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+    -   [x] [@pvarase]
+    -   [x] [@nmontalva]
+    -   [x] [@mreyes]
+-   [x] Gráfico de `random-trees` para material suplementario [@franvasestay]
 
 ## 7. Consistencia texto vs figuras/tablas
 
 **depende de: 2, 6**
 
-- [ ] Numeros coinciden entre texto y tablas [@mreyes]
-- [ ] Unidades y etiquetas correctas [@mreyes]
-- [ ] Valores numéricos consistentes [@mreyes]
-- [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
-- [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
-- [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice: 
+-   [ ] Numeros coinciden entre texto y tablas [@mreyes]
 
--   [ ] Unidades y etiquetas correctas [@mreyes]
+-   [x] Unidades y etiquetas correctas [@mreyes]
 
--   [ ] Valores numéricos consistentes [@mreyes]
+-   [x] Valores numéricos consistentes [@mreyes]
 
--   [ ] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
+-   [x] Aumentar el tamaño de la fuente de imágenes [@franvasestay]
 
--   [ ] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
+-   [x] En figura 2: Reportar thetas originales. Revisar regimen `l` en `M`.
 
--   [ ] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
+-   [x] Revisar (y luego borrar) comentario en en [Inheritance and inequality under communal land tenure](https://github.com/FranVasEstay/Inheritance-and-inequality-under-communal-land-tenure/tree/main), `06_models.R`, dice:
 
     ``` r
     # Extract parameters safely
@@ -109,16 +104,16 @@
 
 **listo para empezar**
 
--   [ ] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
-    -   [ ] [@franvasestay]
+-   [x] Abstract: versión final acordada [@franvasestay, @pvarase, @nmontalva, @mreyes]
+    -   [x] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+    -   [x] [@mreyes]
 -   [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
     -   [ ] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
-    -   [ ] [@mreyes]
+    -   [x] [@mreyes]
 -   [x] Aclarar referencia a nombres argentinos [@nmontalva]
 
 ## 9. Appendix
@@ -135,11 +130,10 @@
 
 **lista para empezar**
 
-- [ ] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
-- [ ] Mayúsculas y minúsculas consistentes [@mreyes]
-- [x] DOIs completos cuando existan [@nmontalva]
-- [ ] Versión en inglés cuando exista [@mreyes]
->>>>>>> origin
+-   [x] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
+-   [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+-   [x] DOIs completos cuando existan [@nmontalva]
+-   [x] Versión en inglés cuando exista [@mreyes]
 
 ## 11. Compilación final del PDF
 
