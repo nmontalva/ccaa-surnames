@@ -55,7 +55,7 @@
 -   [x] Formato correcto (vectorial donde corresponda) [@franvasestay]
 -   [x] Numeración consistente [@pvarase]
 -   [ ] Referencias cruzadas correctas en el texto [@pvarase @mreyes]
--   [ ] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
+-   [x] Captions auto-contenidas y consistentes en figuras y tablas [@pvarase, @nmontalva, @mreyes]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
     -   [x] [@mreyes]
@@ -104,8 +104,8 @@
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
     -   [x] [@mreyes]
--   [ ] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
-    -   [ ] [@franvasestay]
+-   [x] Discussion: conformidad final del equipo [@franvasestay, @pvarase, @nmontalva, @mreyes]
+    -   [x] [@franvasestay]
     -   [x] [@pvarase]
     -   [x] [@nmontalva]
     -   [x] [@mreyes]
@@ -126,7 +126,7 @@
 **lista para empezar**
 
 -   [x] Archivo .bib limpio (sin duplicados ni entradas rotas) [@mreyes]
--   [ ] Mayúsculas y minúsculas consistentes [@mreyes]
+-   [x] Mayúsculas y minúsculas consistentes [@mreyes]
 -   [x] DOIs completos cuando existan [@nmontalva]
 -   [x] Versión en inglés cuando exista [@mreyes]
 
